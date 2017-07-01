@@ -264,7 +264,7 @@ if (!empty($_POST)) {
     </div>
 
     <div>
-      イベント日程（開始日）（必須）※MM-DD-YYYYで入力してください。<br>
+      イベント日程（開始日）（必須）※YYYY-MM-DDで入力してください。<br>
       <input type="text" name="e_start_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
       <?php if(isset($errors['e_start_date']) && $errors['e_start_date'] == 'blank') { ?>
         <p class="error">メールアドレス名を入力してください</p>
@@ -272,7 +272,7 @@ if (!empty($_POST)) {
     </div>
 
     <div>
-      イベント日程（終了日）（必須）※MM-DD-YYYYで入力してください。<br>
+      イベント日程（終了日）（必須）※YYYY-MM-DDで入力してください。<br>
       <input type="text" name="e_end_date" value= "<?php echo htmlspecialchars($e_end_date); ?>">
       <?php if(isset($errors['e_end_date']) && $errors['e_end_date'] == 'blank') { ?>
         <p class="error">メールアドレス名を入力してください</p>
