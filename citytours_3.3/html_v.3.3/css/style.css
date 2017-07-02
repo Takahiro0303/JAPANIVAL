@@ -374,10 +374,10 @@ header.sticky #logo .logo_sticky{ display:block; }
 	padding:0;
 }
 #logo_home h1 a, header.sticky #logo_home h1 a, header#plain #logo_home h1 a, header#colored #logo_home h1 a{
-	width:160px;
-	height:34px;
+/*	width:160px;//TODO!:
+	height:34px;//TODO!:*/
 	display:block;
-	background-image:url(../img/logo.png);
+	background-image:url(../img/japanival_logo_red_black.png); /*//TODO!: 元々は(../img/logo.png)*/
 	background-repeat:no-repeat;
 	background-position:left top;
 	background-size: 160px 34px;
@@ -405,12 +405,12 @@ only screen and (min-device-pixel-ratio: 2) {
 	background-size: 160px 34px;
 }
 header.sticky #logo_home h1 a, header#plain #logo_home h1 a{
-    background-image: url(../img/logo_sticky_2x.png);
+    background-image: url(../img/japanival_logo_red_black.png);/*//TODO!: 元々は(../img/logo.png)*/
 	background-size: 160px 34px;
 }
 header.sticky#colored #logo_home h1 a{
     background-image: url(../img/logo_sticky_colored_2x.png);
-	background-size: 160px 34px;
+	/*background-size: 160px 34px;*//*//TODO!: */
 }
 }
 
@@ -2465,7 +2465,7 @@ ul.list_icons li i {
 	height: 100%;
 	min-height: 100%;
 	overflow-y: scroll;
-	padding-top: 115px;
+/*	padding-top: 115px;*//*all_tours_map_listing.htmlの微調整の為に修正*/ /*//TODO!:*/
 }
 
 .view_on_map {
