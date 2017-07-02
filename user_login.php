@@ -1,4 +1,4 @@
-	<?php 
+<?php 
 	session_start();
 	require('dbconnect.php');
 	require('layout/functions.php');
@@ -79,7 +79,7 @@ if (!empty($_POST)) {
 
 
 	if (!empty($_POST)) {
-		$sql = 'INSERT INTO `users` SET `nick_name` =?,`email` =?, `password` =?, `nationality` =?, `gender` =? , `self_intro` =?, `pic_path` =?, `created` =NOW()';
+		$sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
 		$data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute($data);
