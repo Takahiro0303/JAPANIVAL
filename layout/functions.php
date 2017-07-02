@@ -16,18 +16,22 @@
 /* =====================================================
     実機能関数
 ====================================================- */
-    function $login_get_user($hoge) {
-        $sql = 'SELECT * FROM hogehoge WHERE fugafuga=?';
-        $data = [$_SESSION['id']];
-        $stmt = $hoge->prepare($sql);
-        $stmt->execute($data);
-        $login_user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $login_user;
-    }
+    // function $login_get_user($hoge) {
+    //     $sql = 'SELECT * FROM hogehoge WHERE fugafuga=?';
+    //     $data = [$_SESSION['id']];
+    //     $stmt = $hoge->prepare($sql);
+    //     $stmt->execute($data);
+    //     $login_user = $stmt->fetch(PDO::FETCH_ASSOC);
+    //     return $login_user;
+    // }
 
     function hs($var) {
         return htmlspecialchars($var);
     }
+
+    // function eh($var){
+    //     return echo htmlspecialchars($var);
+    // }
 
     function uri() {
         $uri = $_SERVER['REQUEST_URI'];
