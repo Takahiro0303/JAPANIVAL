@@ -377,7 +377,7 @@ header.sticky #logo .logo_sticky{ display:block; }
 /*	width:160px;//TODO!:
 	height:34px;//TODO!:*/
 	display:block;
-	background-image:url(../img/japanival_logo_red_black.png); /*//TODO!: 元々は(../img/logo.png)*/
+	background-image:url(../img/logo.png); /*//TODO!: 元々は(../img/logo.png)ここを変えてもヘッダーのロゴは変わらない*/
 	background-repeat:no-repeat;
 	background-position:left top;
 	background-size: 160px 34px;
@@ -388,25 +388,25 @@ header.sticky #logo_home h1{
 	padding:0;
 }
 header.sticky #logo_home h1 a{
-	background-image:url(../img/logo_sticky.png);
+	background-image:url(../img/logo_sticky.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
 }
 header#plain #logo_home h1 a{
-	background-image:url(../img/logo_sticky.png);
+	background-image:url(../img/logo_sticky.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
 }
 header.sticky#colored #logo_home h1 a{
-	background-image:url(../img/logo_sticky_colored.png);
+	background-image:url(../img/logo_sticky_colored.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
 }
 @media only screen and (min--moz-device-pixel-ratio: 2),
 only screen and (-o-min-device-pixel-ratio: 2/1),
 only screen and (-webkit-min-device-pixel-ratio: 2),
 only screen and (min-device-pixel-ratio: 2) {
 #logo_home h1 a, header#colored #logo_home h1 a{
-    background-image: url(../img/logo_2x.png);/*//TODO!: 元々は(../img/logo_2x.png)*/
-	background-size: 160px 34px; /*//TODO!:変更前:160px 34px*/
+    background-image: url(../img/japanival_logo.png);/*//TODO!: 元々は(../img/logo_2x.png)*/
+	background-size: 160px 40px; /*//TODO!:変更前:160px 34px*/
 }
 header.sticky #logo_home h1 a, header#plain #logo_home h1 a{
-    background-image: url(../img/logo.png);/*//TODO!: 元々は(../img/logo.png)*/
-	background-size: 160px 34px; /*//TODO!:変更前:160px 34px*/
+    background-image: url(../img/japanival_logo.png);/*//TODO!: 元々は(../img/logo.png)*/
+	background-size: 160px 40px; /*//TODO!:変更前:160px 34px*/
 }
 header.sticky#colored #logo_home h1 a{
     background-image: url(../img/logo_sticky_colored_2x.png);
