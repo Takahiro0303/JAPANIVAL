@@ -50,11 +50,11 @@ if (!empty($_POST)) {
     }
     
 //パスワードの暗号化
-    $count = strlen($password);
-    if ($password == '') {
-        $errors['password'] = 'blank';
+    $count = strlen($o_password);
+    if ($o_password == '') {
+        $errors['o_password'] = 'blank';
         }elseif ($count < 6) {
-        $errors['password'] = 'length';
+        $errors['o_password'] = 'length';
         }
 
     if (!isset($_REQUEST['action'])) {
@@ -62,7 +62,7 @@ if (!empty($_POST)) {
 
         }
 
-    if ($password !== $o_confirm_password) {
+    if ($o_password !== $o_confirm_password) {
         $errors['o_password'] = 'wrong';
     }
 
@@ -97,8 +97,6 @@ if (!empty($_POST)) {
         $_SESSION['o_join'] = $_POST;
         $_SESSION['o_join']['o_pic'] = $submit_file_name;
     }
-
-        echo $submit_file_name;
 
 
     if (!empty($_POST)) {
@@ -194,8 +192,7 @@ if (!empty($_POST)) {
                                 </div>
                                 <div class="form-group">
                                     <label>代表者名</label>
-                                    <input type="text" name="" class=" form-control" placeholder="">
-                                    <input type="text" name="o_f_name" value="<?php echo htmlspecialchars($o_f_name); ?>">
+                                    <input type="text" name="o_f_name" class=" form-control" placeholder="">
                                     <?php if (isset($errors['o_f_name']) && $errors['o_f_name'] == 'blank') { ?>
                                     <p class="error">代表者名を記入してください</p>
                                     <?php } ?>
@@ -207,30 +204,57 @@ if (!empty($_POST)) {
                                 <div class="form-group">
                                     <label>郵便番号</label>
                                     <input type="text" name="o_postal" class="form-control"  maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','o_pref','o_address');">
+                                    <?php if (isset($errors['o_postal']) && $errors['o_postal'] == 'blank') { ?>
+                                    <p class="error">郵便番号を記入してください</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>都道府県</label>
                                     <input type="text" name="o_pref" class="form-control">
+                                    <?php if (isset($errors['o_pref']) && $errors['o_pref'] == 'blank') { ?>
+                                    <p class="error">都道府県をを記入してください</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>市区町村・番地・建物名・号室</label>
                                     <input type="text" name="o_address" class="form-control" size="60">
+                                    <?php if (isset($errors['o_address']) && $errors['o_address'] == 'blank') { ?>
+                                    <p class="error">市町村を記入してください</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>電話番号</label>
                                     <input type="text" name="o_tel" class="form-control">
+                                    <?php if (isset($errors['o_tel']) && $errors['o_tel'] == 'blank') { ?>
+                                    <p class="error">電話番号を記入してください</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>メールアドレス</label>
                                     <input type="email" name="o_email" class=" form-control" placeholder="">
+                                    <?php if (isset($errors['o_email']) && $errors['o_email'] == 'blank') { ?>
+                                    <p class="error">メールアドレスを記入してください</p>
+                                    <?php } ?>
+                                    <?php if (isset($errors['o_email']) && $errors['o_email'] == 'duplicate') { ?>
+                                    <p class="error">そのメールアドレスは既に登録されています</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>パスワード</label>
                                     <input type="password" name="o_password" class=" form-control" id="password1">
+                                    <?php if (isset($errors['o_password']) && $errors['o_password'] == 'blank') { ?>
+                                    <p class="error">パスワードを記入してください</p>
+                                    <?php } ?>
+                                    <?php if (isset($errors['o_password']) && $errors['o_password'] == 'length') { ?>
+                                    <p class="error">パスワードは6文字以上で入力してください</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>もう一度パスワードを入力してください</label>
-                                    <input type="password" class=" form-control" id="password2">
+                                    <input type="password" name="o_confirm_password" class=" form-control" id="password2">
+                                    <?php if (isset($errors['o_password']) && $errors['o_password'] == 'wrong') { ?>
+                                    <p class="alert-danger">パスワードが一致しません</p>
+                                    <?php } ?>
                                 </div>
                                 <div class="form-group">
                                     <label>自己紹介コメント</label><br>
@@ -240,6 +264,12 @@ if (!empty($_POST)) {
                                     <label>Photo</label>
                                     <div class="form-group">
                                         <input type="file" name="o_pic" id="js-upload-files">
+                                        <?php if (isset($errors['o_pic']) && $errors['o_pic'] == 'type') { ?>
+                                        <p class="error">画像はjpg,png,gifの画像を選択してください</p>
+                                        <?php } ?>
+                                        <?php if (!empty($errors)) { ?>
+                                        <p class="error">画像を選択してください</p>
+                                        <?php } ?>
                                     </div> 
                                 </div>
                                 <div>
