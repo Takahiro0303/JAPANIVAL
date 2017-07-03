@@ -9,6 +9,9 @@ if (!empty($_POST)) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
+    echo $email;
+    echo $password;
+
     if ($email != '' && $password != '') {
         $sql = 'SELECT * FROM users WHERE email=? AND password=?';
         $data = [$email, sha1($password)];
@@ -16,6 +19,9 @@ if (!empty($_POST)) {
         $stmt->execute($data);
 
         $record = $stmt->fetch(PDO::FETCH_ASSOC);
+          echo '<pre>';
+          var_dump($record);
+          echo '</pre>';
         if ($record != false) {
             $_SESSION['id'] = $record['user_id'];
 
@@ -399,12 +405,14 @@ if (!empty($_POST)) {
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input type="password" class="form-control" placeholder="Password">
+                                    <input type="password" name="password" class="form-control" placeholder="Password">
                                 </div>
                                 <p class="small">
                                     <a href="#">Forgot Password?</a>
                                 </p>
-                                <a href="#" class="btn_full">Sign in</a>
+                                <input type="submit" class="form-control btn-primary" value="SIGN IN">
+                                <br>
+                                <!-- <a href="#" class="btn_full">Sign in</a> -->
                                 <a href="register_user.html " class="btn_full_outline">Register</a>
                             </form>
                         </div>
