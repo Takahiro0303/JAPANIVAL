@@ -49,11 +49,11 @@ if (!empty($_POST)) {
 	}
 	
 //パスワードの暗号化
-	$count = strlen($password);
-	if ($password == '') {
-		$errors['password'] = 'blank';
+	$count = strlen($o_password);
+	if ($o_password == '') {
+		$errors['o_password'] = 'blank';
 		}elseif ($count < 6) {
-		$errors['password'] = 'length';
+		$errors['o_password'] = 'length';
 		}
 
 	if (!isset($_REQUEST['action'])) {
@@ -61,7 +61,7 @@ if (!empty($_POST)) {
 
 		}
 
-	if ($password !== $o_confirm_password) {
+	if ($o_password !== $o_confirm_password) {
 		$errors['o_password'] = 'wrong';
 	}
 
@@ -93,22 +93,20 @@ if (!empty($_POST)) {
 		$date_str = date('YmdHis');
 		$submit_file_name = $date_str . $_FILES['o_pic']['name'];
 		move_uploaded_file($_FILES['o_pic']['tmp_name'], 'o_pic/' . $submit_file_name);
-		$_SESSION['o_join'] = $_POST;
-		$_SESSION['o_join']['o_pic'] = $submit_file_name;
+		$_SESSION['join'] = $_POST;
+		$_SESSION['join']['o_pic'] = $submit_file_name;
 	}
-
-		echo $submit_file_name;
 
 
 	if (!empty($_POST)) {
 		$sql = 'INSERT INTO `organizers` SET `o_name` =?, `o_f_name` =?, `o_postal` =?, `o_pref` =?, `o_address` =?, `o_tel` =?, `o_email` =?, `o_password` =?, `o_intro` =?, `o_pic` =?, `created` =NOW()';
-		$data = array($o_name,$o_f_name,$o_postal,$o_pref,$o_address,$o_tel,$o_email,sha1($o_password),$o_intro,$_SESSION['o_join']['o_pic']);
+		$data = array($o_name,$o_f_name,$o_postal,$o_pref,$o_address,$o_tel,$o_email,sha1($o_password),$o_intro,$_SESSION['join']['o_pic']);
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute($data);
 
 
-		header('Location:index.php');
-		exit();
+		// header('Location:index.php');
+		// exit();
 	}
 }
 
@@ -163,7 +161,7 @@ if (!empty($_POST)) {
 	 <div>
 	 	電話番号<br>
 	 	<input type="text" name="o_tel">
-	 	<?php if (isset($errors['o_tel']) && $errors['o_address'] == 'blank') { ?>
+	 	<?php if (isset($errors['o_tel']) && $errors['o_tel'] == 'blank') { ?>
 	 	 <p class="error">電話番号を記入してください</p>
 	 	 <?php } ?>
 	 </div>
@@ -175,7 +173,7 @@ if (!empty($_POST)) {
 	 	<?php } ?>
 	 	<?php if (isset($errors['o_email']) && $errors['o_email'] == 'duplicate') { ?>
 	 	<p class="error">そのメールアドレスは既に登録されています</p>
-	 	 <?php } ?>
+	 	<?php } ?>
 	 </div>
 	 <div>
 	 	パスワード<br>
