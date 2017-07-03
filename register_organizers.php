@@ -95,18 +95,17 @@ if (!empty($_POST)) {
 		move_uploaded_file($_FILES['o_pic']['tmp_name'], 'o_pic/' . $submit_file_name);
 		$_SESSION['join'] = $_POST;
 		$_SESSION['join']['o_pic'] = $submit_file_name;
-	}
 
-
-	if (!empty($_POST)) {
 		$sql = 'INSERT INTO `organizers` SET `o_name` =?, `o_f_name` =?, `o_postal` =?, `o_pref` =?, `o_address` =?, `o_tel` =?, `o_email` =?, `o_password` =?, `o_intro` =?, `o_pic` =?, `created` =NOW()';
 		$data = array($o_name,$o_f_name,$o_postal,$o_pref,$o_address,$o_tel,$o_email,sha1($o_password),$o_intro,$_SESSION['join']['o_pic']);
 		$stmt = $dbh->prepare($sql);
 		$stmt->execute($data);
 
 
-		// header('Location:index.php');
-		// exit();
+		header('Location:index.php');
+		exit();
+
+		// うめたに
 	}
 }
 

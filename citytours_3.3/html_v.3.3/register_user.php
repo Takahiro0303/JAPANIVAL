@@ -75,18 +75,18 @@ if (!empty($_POST)) {
         $_SESSION['join']['pic_path'] = $submit_file_name;
 
 
-    if (!empty($_POST)) {
-        $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
-        $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute($data);
+        if (!empty($_POST)) {
+            $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
+            $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
 
 
-        header('Location:index.php');
-        exit();
+            header('Location:index.php');
+            exit();
+        }
+        // ウメタニ
     }
-
-}
 }
 
 ?>
