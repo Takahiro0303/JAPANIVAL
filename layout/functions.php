@@ -44,4 +44,6 @@
         header('Location:' . $var);
         exit();
     }
+
+    echo 'functions.php';
 ?>

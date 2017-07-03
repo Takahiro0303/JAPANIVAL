@@ -7,7 +7,7 @@
 	  	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	  	$dbh->query('SET NAMES utf8');
 
-
+      echo 'dbconnect.php';
 	  
 
  ?>
