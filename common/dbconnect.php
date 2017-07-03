@@ -1,4 +1,5 @@
 <?php  
+  
   //データベースに接続する
   $dsn = 'mysql:dbname=japanival;host=localhost';
   $user = 'root';
@@ -6,5 +7,5 @@
   $dbh = new PDO($dsn, $user, $password);
   $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   $dbh->query('SET NAMES utf8');
-  echo 'dbconnect.phpのrequireチェック';
+
 ?>
