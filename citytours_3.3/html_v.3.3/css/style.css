@@ -692,8 +692,8 @@ footer {
 }
 
 footer h3 {
-	font-size: 16px;
-	font-weight: 700;
+	font-size: 12px;/*//TODO!:*/
+/*	font-weight: 700;*//*//TODO!:*/
 	color: #fff;
 }
 
@@ -994,7 +994,7 @@ video {
 	height: 45px;
 	line-height: 35px;
 	margin: 5px 65px 0 15px;
-	text-indent: 1px;
+	text-indent: 25px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	width: 60px;
@@ -1005,7 +1005,7 @@ video {
 	display: inline-block;
 	right: 15px;
 	top: 20px;
-	background: url(../img/arrow_down_2.png);
+/*	background: url(../img/arrow_down_2.png);*///TODO!:
 	height: 6px;
 	width: 10px;
 	position: absolute;
