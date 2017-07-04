@@ -1,8 +1,7 @@
 <?php 
-    session_start();
-    require('../../dbconnect.php');
-    require('../../layout/functions.php');
-
+session_start();
+require('../../dbconnect.php');
+require('../../layout/functions.php');
 
 
 // 登録時バリデーション
@@ -76,6 +75,7 @@ if (!empty($_POST)) {
         $errors['o_pic'] = 'blank';
         }
 
+        var_dump($errors['o_pic']);
 
     if (empty($errors)) {
         $sql = 'SELECT COUNT(*) FROM `organizers` WHERE `o_email` = ?';
@@ -94,14 +94,11 @@ if (!empty($_POST)) {
         $date_str = date('YmdHis');
         $submit_file_name = $date_str . $_FILES['o_pic']['name'];
         move_uploaded_file($_FILES['o_pic']['tmp_name'], 'o_pic/' . $submit_file_name);
-        $_SESSION['o_join'] = $_POST;
-        $_SESSION['o_join']['o_pic'] = $submit_file_name;
-    }
+        $_SESSION['join'] = $_POST;
+        $_SESSION['join']['o_pic'] = $submit_file_name;
 
-
-    if (!empty($_POST)) {
         $sql = 'INSERT INTO `organizers` SET `o_name` =?, `o_f_name` =?, `o_postal` =?, `o_pref` =?, `o_address` =?, `o_tel` =?, `o_email` =?, `o_password` =?, `o_intro` =?, `o_pic` =?, `created` =NOW()';
-        $data = array($o_name,$o_f_name,$o_postal,$o_pref,$o_address,$o_tel,$o_email,sha1($o_password),$o_intro,$_SESSION['o_join']['o_pic']);
+        $data = array($o_name,$o_f_name,$o_postal,$o_pref,$o_address,$o_tel,$o_email,sha1($o_password),$o_intro,$_SESSION['join']['o_pic']);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
@@ -110,8 +107,8 @@ if (!empty($_POST)) {
         exit();
     }
 }
+?>
 
-     ?>
 <!DOCTYPE html>
 <!--[if IE 8]><html class="ie ie8"> <![endif]-->
 <!--[if IE 9]><html class="ie ie9"> <![endif]-->
@@ -149,7 +146,7 @@ if (!empty($_POST)) {
         
 </head>
 <body>
-<form method="POST" action="register_organizers.php" enctype="multipart/form-data">
+
 <!--[if lte IE 8]>
     <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a>.</p>
 <![endif]-->
@@ -168,7 +165,8 @@ if (!empty($_POST)) {
     <div class="layer"></div>
     <!-- Mobile menu overlay mask -->
 
-     <!-- main================================================== -->   
+     <!-- main================================================== -->
+    <form method="POST" action="register_organizers.php" enctype="multipart/form-data">   
 	<main>
     <section id="hero" class="login">
         <div class="container">
