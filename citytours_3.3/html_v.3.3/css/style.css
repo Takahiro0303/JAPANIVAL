@@ -686,7 +686,8 @@ a#forgot_pw{
 
 /* Footer */
 footer {
-	background: #333 url(../img/pattern.png) repeat 0 0;
+	background: #ff0303 repeat 0 0; 
+	/*background: #333 repeat 0 0; デザイン修正*/
 	color: #fff;
 	padding: 30px 0 10px 0;
 }
@@ -1483,6 +1484,11 @@ a#filters_col_bt .icon_set_1_icon-65 {
 #price_single small {
 	font-size: 12px;
 }
+
+#favorites {
+	font-size: 40px;
+}
+/*大澤 <追加>イベント詳細ページ デザイン編集のため*/
 
 #single_tour_feat ul {
 	list-style: none;
