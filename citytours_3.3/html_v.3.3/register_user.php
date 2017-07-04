@@ -4,6 +4,7 @@
     require('../../layout/functions.php');
 
 
+
 // 登録時バリデーション
 
     $nick_name = '';
@@ -52,7 +53,9 @@ if (!empty($_POST)) {
         if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
             $errors['pic_path'] = 'type';
             }
+
         }
+
 
     if (empty($errors)) {
         $sql = 'SELECT COUNT(*) FROM `users` WHERE `email` = ?';
@@ -70,9 +73,12 @@ if (!empty($_POST)) {
     if (empty($errors)) {
         $date_str = date('YmdHis');
         $submit_file_name = $date_str . $_FILES['pic_path']['name'];
+
         move_uploaded_file($_FILES['pic_path']['tmp_name'], '../../users_pic/' . $submit_file_name);
+
         $_SESSION['join'] = $_POST;
         $_SESSION['join']['pic_path'] = $submit_file_name;
+
 
 
         if (!empty($_POST)) {
@@ -87,6 +93,7 @@ if (!empty($_POST)) {
         }
         // ウメタニ
     }
+
 }
 
 ?>
@@ -113,6 +120,7 @@ if (!empty($_POST)) {
     <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
 	
 	<!-- Google web fonts -->
+
     <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lato:300,400|Montserrat:400,400i,700,700i" rel="stylesheet">
 
     <!-- CSS -->
@@ -129,6 +137,7 @@ if (!empty($_POST)) {
 </head>
 <body>
 <form method="POST" action="register_user.php" enctype="multipart/form-data">
+
 <!--[if lte IE 8]>
     <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a>.</p>
 <![endif]-->
@@ -148,7 +157,9 @@ if (!empty($_POST)) {
     <!-- Mobile menu overlay mask -->
 
      <!-- main================================================== -->   
+
 	<main>
+
         <section id="hero" class="login">
         <div class="container">
             <div class="row">
@@ -160,6 +171,7 @@ if (!empty($_POST)) {
                             <div class="form-group">
                                 <label>Username</label>
                                 <input type="text" name="nick_name" class="form-control"  placeholder="Username">
+
                                 <?php if (isset($errors['nick_name']) && $errors['nick_name'] == 'blank') { ?>
                                   <p class="error">ユーザー名を記入してください</p>
                                 <?php } ?>
@@ -182,6 +194,7 @@ if (!empty($_POST)) {
                                 <?php } ?>
                                 <?php if (isset($errors['password']) && $errors['password'] == 'length') { ?>
                                 <p class="error">パスワードは6文字以上で入力してください</p>
+
                                 <?php } ?>
                             </div>
                             <div class="form-group">
@@ -473,6 +486,7 @@ if (!empty($_POST)) {
                                       <p class="error">画像はjpg,png,gifの画像を選択してください</p>
                                     <?php } ?>
 
+
                                 </div> 
                             </div>
                             <div>
@@ -498,6 +512,7 @@ if (!empty($_POST)) {
 			</button>
 		</form>
 	</div><!-- End Search Menu -->
+
 
  <!-- Common scripts -->
 <script src="js/jquery-2.2.4.min.js"></script>

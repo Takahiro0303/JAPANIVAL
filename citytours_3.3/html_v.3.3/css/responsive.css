@@ -41,18 +41,18 @@ only screen and (min-device-pixel-ratio: 2) and (max-width: 991px) {
 	
 	#logo_home h1 a,
 	header#colored #logo_home h1 a {
-		background-image: url(../img/logo_2x.png);
+		background-image: url(../img/logo_2x.png);/*ここを変更しても、ヘッダーのロゴは変わらない。*/
 		background-size: auto 30px;
 	}
 	
 	header.sticky #logo_home h1 a,
 	header#plain #logo_home h1 a {
-		background-image: url(../img/logo_sticky_2x.png);
+		background-image: url(../img/logo_sticky_2x.png);/*ここを変更しても、ヘッダーのロゴは変わらない。*/
 		background-size: auto 30px;
 	}
 	
 	header.sticky#colored #logo_home h1 a {
-		background-image: url(../img/logo_sticky_colored_2x.png);
+		background-image: url(../img/logo_sticky_colored_2x.png);/*ここを変更しても、ヘッダーのロゴは変わらない。*/
 		background-size: auto 30px;
 	}
 }
@@ -704,7 +704,7 @@ only screen and (min-device-pixel-ratio: 2) and (max-width: 991px) {
 		width: 80%;
 		left: 10%;
 		height: 50px;
-		margin: -25px auto 0;
+		margin: -25px auto 0;/*//TODO!:元はmargin: -25px auto 0;*/
 	}
 	.search-overlay-menu input[type="search"] {
 		font-size: 26px;
