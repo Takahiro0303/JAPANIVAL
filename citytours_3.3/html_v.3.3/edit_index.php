@@ -181,8 +181,6 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     <!-- Header================================================== -->
     <header>
-
-        
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">
@@ -199,6 +197,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul>
                             <li class="submenu">
+
                                 <a href="javascript:void(0);" class="show-submenu">About us<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
@@ -209,6 +208,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             </li>
                             <li class="submenu">
                                 <a href="javascript:void(0);" class="show-submenu">Sing in<i class="icon-down-open-mini"></i></a>
+
                             </li>
                         </ul>
                     </div><!-- End main-menu -->
@@ -1560,6 +1560,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	<footer >
         <div class="container">
             <div class="row">
+
                 <div class="col-md-3 col-sm-3">
                     <h3>About</h3>
                     <ul>
@@ -1612,6 +1613,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             <li><a href="#"><i class="icon-youtube-play"></i></a></li>
                             <li><a href="#"><i class="icon-linkedin"></i></a></li>
                         </ul>
+
                         <p>© Japanival 2017</p>
                     </div>
                 </div>

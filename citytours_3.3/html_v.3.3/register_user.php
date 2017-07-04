@@ -1,7 +1,8 @@
 <?php 
     session_start();
     require('../../dbconnect.php');
-    require('../functions.php');
+    require('../../layout/functions.php');
+
 
 
 // 登録時バリデーション
@@ -52,8 +53,7 @@ if (!empty($_POST)) {
         if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
             $errors['pic_path'] = 'type';
             }
-        }else{
-        $errors['pic_path'] = 'blank';
+
         }
 
 
@@ -73,23 +73,27 @@ if (!empty($_POST)) {
     if (empty($errors)) {
         $date_str = date('YmdHis');
         $submit_file_name = $date_str . $_FILES['pic_path']['name'];
-        move_uploaded_file($_FILES['pic_path']['tmp_name'], 'users_pic/' . $submit_file_name);
+
+        move_uploaded_file($_FILES['pic_path']['tmp_name'], '../../users_pic/' . $submit_file_name);
+
         $_SESSION['join'] = $_POST;
         $_SESSION['join']['pic_path'] = $submit_file_name;
 
 
-    if (!empty($_POST)) {
-        $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
-        $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute($data);
+
+        if (!empty($_POST)) {
+            $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
+            $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
 
 
-        header('Location:index.php');
-        exit();
+            header('Location:index.php');
+            exit();
+        }
+        // ウメタニ
     }
 
-}
 }
 
 ?>
@@ -114,8 +118,9 @@ if (!empty($_POST)) {
     <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
-  
-  <!-- Google web fonts -->
+	
+	<!-- Google web fonts -->
+
     <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lato:300,400|Montserrat:400,400i,700,700i" rel="stylesheet">
 
     <!-- CSS -->
@@ -131,7 +136,8 @@ if (!empty($_POST)) {
         
 </head>
 <body>
-<form method="POST" action="register_user.html" enctype="multipart/form-data">
+<form method="POST" action="register_user.php" enctype="multipart/form-data">
+
 <!--[if lte IE 8]>
     <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a>.</p>
 <![endif]-->
@@ -151,7 +157,9 @@ if (!empty($_POST)) {
     <!-- Mobile menu overlay mask -->
 
      <!-- main================================================== -->   
-  <main>
+
+	<main>
+
         <section id="hero" class="login">
         <div class="container">
             <div class="row">
@@ -162,7 +170,8 @@ if (!empty($_POST)) {
                         <form>
                             <div class="form-group">
                                 <label>Username</label>
-                                <input type="text" name="nic_kname" class="form-control"  placeholder="Username">
+                                <input type="text" name="nick_name" class="form-control"  placeholder="Username">
+
                                 <?php if (isset($errors['nick_name']) && $errors['nick_name'] == 'blank') { ?>
                                   <p class="error">ユーザー名を記入してください</p>
                                 <?php } ?>
@@ -184,7 +193,8 @@ if (!empty($_POST)) {
                                   <p class="error">パスワードを記入してください</p>
                                 <?php } ?>
                                 <?php if (isset($errors['password']) && $errors['password'] == 'length') { ?>
-                                <p class="error">パスワードは4文字以上で入力してください</p>
+                                <p class="error">パスワードは6文字以上で入力してください</p>
+
                                 <?php } ?>
                             </div>
                             <div class="form-group">
@@ -475,9 +485,7 @@ if (!empty($_POST)) {
                                     <?php if (isset($errors['pic_path']) && $errors['pic_path'] == 'type') { ?>
                                       <p class="error">画像はjpg,png,gifの画像を選択してください</p>
                                     <?php } ?>
-                                    <?php if (!empty($errors)) { ?>
-                                      <p class="error">画像を選択してください</p>
-                                    <?php } ?>
+
 
                                 </div> 
                             </div>
@@ -490,20 +498,21 @@ if (!empty($_POST)) {
             </div>
         </div>
     </section>
-  </main><!-- End main -->
+	</main><!-- End main -->
 </form>
-     
-  <div id="toTop"></div><!-- Back to top button -->
-  
-  <!-- Search Menu -->
-  <div class="search-overlay-menu">
-    <span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
-    <form role="search" id="searchform" method="get">
-      <input value="" name="q" type="search" placeholder="Search..." />
-      <button type="submit"><i class="icon_set_1_icon-78"></i>
-      </button>
-    </form>
-  </div><!-- End Search Menu -->
+	   
+	<div id="toTop"></div><!-- Back to top button -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+		<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="search" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+
 
  <!-- Common scripts -->
 <script src="js/jquery-2.2.4.min.js"></script>
