@@ -75,7 +75,7 @@ if (!empty($_POST)) {
         $errors['o_pic'] = 'blank';
         }
 
-        var_dump($errors['o_pic']);
+        // var_dump($errors['o_pic']);
 
     if (empty($errors)) {
         $sql = 'SELECT COUNT(*) FROM `organizers` WHERE `o_email` = ?';
@@ -93,7 +93,7 @@ if (!empty($_POST)) {
     if (empty($errors)) {
         $date_str = date('YmdHis');
         $submit_file_name = $date_str . $_FILES['o_pic']['name'];
-        move_uploaded_file($_FILES['o_pic']['tmp_name'], 'o_pic/' . $submit_file_name);
+        move_uploaded_file($_FILES['o_pic']['tmp_name'], '../../o_pic/' . $submit_file_name);
         $_SESSION['join'] = $_POST;
         $_SESSION['join']['o_pic'] = $submit_file_name;
 
@@ -103,8 +103,8 @@ if (!empty($_POST)) {
         $stmt->execute($data);
 
 
-        header('Location:index.php');
-        exit();
+        // header('Location:index.php');
+        // exit();
     }
 }
 ?>
@@ -166,7 +166,7 @@ if (!empty($_POST)) {
     <!-- Mobile menu overlay mask -->
 
      <!-- main================================================== -->
-    <form method="POST" action="register_organizers.php" enctype="multipart/form-data">   
+    <form method="POST" action="register_organizer.php" enctype="multipart/form-data">   
 	<main>
     <section id="hero" class="login">
         <div class="container">
@@ -184,10 +184,7 @@ if (!empty($_POST)) {
                                     <p class="error">団体名を記入してください</p>
                                     <?php } ?>
                                 </div>
-                                <div class="form-group">
-                                    <label>フリガナ</label>
-                                    <input type="text" name="" class=" form-control"  placeholder="">
-                                </div>
+
                                 <div class="form-group">
                                     <label>代表者名</label>
                                     <input type="text" name="o_f_name" class=" form-control" placeholder="">
@@ -195,10 +192,7 @@ if (!empty($_POST)) {
                                     <p class="error">代表者名を記入してください</p>
                                     <?php } ?>
                                 </div>
-                                <div class="form-group">
-                                    <label>フリガナ</label>
-                                    <input type="text" name="" class=" form-control"  placeholder="">
-                                </div>
+
                                 <div class="form-group">
                                     <label>郵便番号</label>
                                     <input type="text" name="o_postal" class="form-control"  maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','o_pref','o_address');">
