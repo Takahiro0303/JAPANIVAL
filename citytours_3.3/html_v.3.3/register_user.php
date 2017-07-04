@@ -1,7 +1,8 @@
 <?php 
     session_start();
     require('../../dbconnect.php');
-    require('../functions.php');
+    require('../../layout/functions.php');
+
 
 
 // 登録時バリデーション
@@ -53,9 +54,8 @@ if (!empty($_POST)) {
             $errors['pic_path'] = 'type';
             }
 
-        }else{
-        $errors['pic_path'] = 'blank';
         }
+
 
     if (empty($errors)) {
         $sql = 'SELECT COUNT(*) FROM `users` WHERE `email` = ?';
@@ -74,24 +74,26 @@ if (!empty($_POST)) {
         $date_str = date('YmdHis');
         $submit_file_name = $date_str . $_FILES['pic_path']['name'];
 
-        move_uploaded_file($_FILES['pic_path']['tmp_name'], 'users_pic/' . $submit_file_name);
+        move_uploaded_file($_FILES['pic_path']['tmp_name'], '../../users_pic/' . $submit_file_name);
+
         $_SESSION['join'] = $_POST;
         $_SESSION['join']['pic_path'] = $submit_file_name;
 
 
 
-    if (!empty($_POST)) {
-        $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
-        $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute($data);
+        if (!empty($_POST)) {
+            $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
+            $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
 
 
-        header('Location:index.php');
-        exit();
+            header('Location:index.php');
+            exit();
+        }
+        // ウメタニ
     }
 
-}
 }
 
 ?>
@@ -116,9 +118,8 @@ if (!empty($_POST)) {
     <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
     <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
-
-  
-  <!-- Google web fonts -->
+	
+	<!-- Google web fonts -->
 
     <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lato:300,400|Montserrat:400,400i,700,700i" rel="stylesheet">
 
@@ -169,7 +170,6 @@ if (!empty($_POST)) {
                         <form>
                             <div class="form-group">
                                 <label>Username</label>
-
                                 <input type="text" name="nick_name" class="form-control"  placeholder="Username">
 
                                 <?php if (isset($errors['nick_name']) && $errors['nick_name'] == 'blank') { ?>
@@ -193,7 +193,6 @@ if (!empty($_POST)) {
                                   <p class="error">パスワードを記入してください</p>
                                 <?php } ?>
                                 <?php if (isset($errors['password']) && $errors['password'] == 'length') { ?>
-
                                 <p class="error">パスワードは6文字以上で入力してください</p>
 
                                 <?php } ?>
