@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017 年 6 月 30 日 09:19
+-- Generation Time: 2017 年 7 月 01 日 16:43
 -- サーバのバージョン： 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -55,19 +55,27 @@ CREATE TABLE `events` (
   `e_o_tel` varchar(255) CHARACTER SET utf8 NOT NULL,
   `e_o_email` varchar(255) CHARACTER SET utf8 NOT NULL,
   `explanation` text CHARACTER SET utf8 NOT NULL,
-  `priority` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `priority` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `start_year` int(11) NOT NULL,
-  `year_p` int(11) NOT NULL,
-  `year_pp` int(11) NOT NULL,
-  `year_ppp` int(11) NOT NULL,
-  `attendance_p` int(11) NOT NULL,
-  `attendance_pp` int(11) NOT NULL,
-  `attendance_ppp` int(11) NOT NULL,
-  `official_url` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `related_url` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `year_p` int(11) DEFAULT NULL,
+  `year_pp` int(11) DEFAULT NULL,
+  `year_ppp` int(11) DEFAULT NULL,
+  `attendance_p` int(11) DEFAULT NULL,
+  `attendance_pp` int(11) DEFAULT NULL,
+  `attendance_ppp` int(11) DEFAULT NULL,
+  `official_url` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `related_url` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `created` datetime NOT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- テーブルのデータのダンプ `events`
+--
+
+INSERT INTO `events` (`event_id`, `o_id`, `e_name`, `e_start_date`, `e_end_date`, `e_prefecture`, `e_postal`, `e_address`, `e_venue`, `e_o_name`, `e_o_tel`, `e_o_email`, `explanation`, `priority`, `start_year`, `year_p`, `year_pp`, `year_ppp`, `attendance_p`, `attendance_pp`, `attendance_ppp`, `official_url`, `related_url`, `created`, `modified`) VALUES
+(0, 0, 0, '0000-00-00', '0000-00-00', '東京都', '1700002', '豊島区', 'ラーメン', 'うめ', '000', 'uuu', '説明文です', NULL, 2001, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:16:39', '2017-07-01 14:16:39'),
+(0, 0, 0, '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:41:55', '2017-07-01 14:41:55');
 
 -- --------------------------------------------------------
 
@@ -112,8 +120,17 @@ CREATE TABLE `event_movies` (
 CREATE TABLE `event_pics` (
   `e_pic_id` int(11) NOT NULL,
   `event_id` int(11) NOT NULL,
-  `e_pic_path` varchar(255) CHARACTER SET utf8 NOT NULL
+  `e_pic_path` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- テーブルのデータのダンプ `event_pics`
+--
+
+INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `created`) VALUES
+(1, 0, '20170701154558スクリーンショット 2017-07-01 20.46.45.png', '2017-07-01 22:16:39'),
+(2, 0, '20170701164151スクリーンショット 2017-07-01 22.41.39.png', '2017-07-01 22:41:55');
 
 -- --------------------------------------------------------
 
@@ -355,7 +372,7 @@ ALTER TABLE `event_movies`
 -- AUTO_INCREMENT for table `event_pics`
 --
 ALTER TABLE `event_pics`
-  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `messages`
 --
