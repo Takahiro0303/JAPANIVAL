@@ -77,6 +77,11 @@ h3{ font-size:22px;}
 
 h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 
+/*大澤　追加　インフォメーション機能のデザイン*/
+.box_style_1{
+	height: 300px";
+}
+
 .box_style_1 h3.inner{ 
 	margin:-30px -30px 20px -30px; 
 	background-color:#565a5c; 
@@ -90,6 +95,15 @@ h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 	-moz-border-radius-topright: 3px;
 	border-top-left-radius: 3px;
 	border-top-right-radius: 3px;
+}
+
+/*大澤　【追加】イベトモ機能のデザイン追加*/
+.eve_tomo{
+	padding: 20px;
+}
+
+.purpose{
+	padding: 20px;
 }
 
 /*General links color*/
@@ -4890,6 +4904,14 @@ main{
 .search-overlay-menu .search-overlay-close:hover {
 	color: #e04f67;
 	cursor: pointer;
+}
+
+/*大澤　マッチング機能のスクロール機能*/
+.scr {
+  overflow: scroll;   /* スクロール表示 */ 
+  width: 100px;
+  height: 100px;
+  background-color: red;
 }
 
 /*-------- 6.4 Header 7 --------*/
