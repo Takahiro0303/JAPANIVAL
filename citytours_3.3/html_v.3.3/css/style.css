@@ -99,11 +99,13 @@ h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 
 /*大澤　【追加】イベトモ機能のデザイン追加*/
 .eve_tomo{
+	margin: auto;
 	padding: 20px;
 }
 
 .purpose{
-	padding: 20px;
+	font-size: 20px;
+	padding: 10px;
 }
 
 /*General links color*/
@@ -4906,12 +4908,29 @@ main{
 	cursor: pointer;
 }
 
-/*大澤　マッチング機能のスクロール機能*/
-.scr {
+/* 大澤 【追加】　informtion機能のデザイン*/
+
+/*information機能のスクロール機能*/
+#scroll{
+	 overflow: scroll;   /* スクロール表示 */ 
+}
+
+.info {
+  width: 330px;
+  height: 250px;
+  
+}
+
+.scr_eve_tomo {
   overflow: scroll;   /* スクロール表示 */ 
-  width: 100px;
-  height: 100px;
+  width: px;
+  height: 200px;
   background-color: red;
+}
+
+/*大澤　追加 センターよせ用のクラス*/
+.center {
+    text-align: center;
 }
 
 /*-------- 6.4 Header 7 --------*/

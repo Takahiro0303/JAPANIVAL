@@ -492,9 +492,9 @@
 							<h3>Reviews </h3>
 						</div>
 						<div class="col-md-9">
-							<div id="general_rating" class="rating">3 Reviews						
+							<div id="general_rating" class="rating">3 Reviews					
 									<i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>
-                                    <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview" align="right">Leave a review</a>
+                                    <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
 							</div>
 							<!-- End general_rating -->
 							<hr>
@@ -549,76 +549,75 @@
 
 				<aside class="col-md-4">
                     <div class="row">
-                        <div class="box_style_1 expose" style="height: 300px">
+                        <div id="eve_info" class="box_style_1 expose">
                             <h3 class="inner">Information</h3>
+                            <div id="scroll" class="info">
+                                <div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div>
+                            </div>
                         </div>
 
-    					<div class="box_style_1 expose">
+    					<div id="eve_tomo" class="box_style_1 expose">
     						<h3 class="inner">Eve tomo</h3>
-    						<div class="row">
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									<label><i class="icon-globe"></i>Nationality</label>
-    									<div class="styled-select">
-                                            <select class="form-control" name="currency" id="currency">
-                                                <option value="not specified" selected>not specified</option>
-                                                <option value="Japan">Japan</option>
-                                                <option value="Philippine">Philippine</option>
-                                                <option value="Afghanistan">Afghanistan</option>
-                                                <option value="Albanie">Albanie</option>
-                                            </select>
-                                        </div>
-    								</div>
-    							</div>
-    							<div class="col-md-6 col-sm-6">
-    								<div class="form-group">
-    									<label><i class=" icon-language"></i>Language</label>
-    									<div class="styled-select">
-                                            <select class="form-control" name="currency" id="currency">
-                                                <option value="not specified" selected>not specified</option>
-                                                <option value="Japanese">Japanese</option>
-                                                <option value="Tagalog">Tagalog</option>
-                                                <option value="English">English</option>
-                                                <option value="Tagalog">Tagalog</option>
-                                            </select>
-                                        </div>
+        						<div class="eve_tomo">
+        							<div class="col-md-6 col-sm-6">
+        								<div class="form-group">
+        									<label><i class="icon-globe"></i>Nationality</label>
+        									<div class="styled-select">
+                                                <select class="form-control" name="currency" id="currency">
+                                                    <option value="not specified" selected>not specified</option>
+                                                    <option value="Japan">Japan</option>
+                                                    <option value="Philippine">Philippine</option>
+                                                    <option value="Afghanistan">Afghanistan</option>
+                                                    <option value="Albanie">Albanie</option>
+                                                </select>
+                                            </div>
+        								</div>
+        							</div>
+        							<div class="col-md-6 col-sm-6">
+        								<div class="form-group">
+        									<label><i class=" icon-language"></i>Language</label>
+        									<div class="styled-select">
+                                                <select class="form-control" name="currency" id="currency">
+                                                    <option value="not specified" selected>not specified</option>
+                                                    <option value="Japanese">Japanese</option>
+                                                    <option value="Tagalog">Tagalog</option>
+                                                    <option value="English">English</option>
+                                                    <option value="Tagalog">Tagalog</option>
+                                                </select>
+                                            </div>
 
-    								</div>
-    							</div>
-    						</div>
-                            <hr>       
-                            <br>
+        								</div>
+        							</div>
+        						</div><hr>
 
-                            <div class="eve_tomo" align="center" class="scr">
-                                <div id="profile">
-                                    <div class="profile 1">
-                                        <div class="col-md-6 col-sm-6">
-                                            <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="70px" height="70px">
+                                <div class="eve_tomo" class="scr">
+                                    <div id="profile">
+                                        
+                                        <div class="profile 1">
+                                            <div class="col-md-5 col-sm-5">
+                                                <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="80px" height="80px">
+                                            </div>
+                                            <div class="col-md-7 col-sm-7" align="center">
+                                                <h3>Sponge Bob</h3> 
+                                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                <p>JP/EN</p> <!-- 対応可能言語表示 -->
+                                            </div>
                                         </div>
-                                        <div class="col-md-6 col-sm-6" align="center">
-                                            <h4>Sponge Bob</h4> 
-                                            <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                                            <p>JP/EN</p> <!-- 対応可能言語表示 -->
+                                        <div class="purpose">
+                                            <div class="purpose title">Purpose:</div>
+                                            <div class="purpose content">この祭りのガイドをしてもらいたいです！</div>
+                                        </div>
+                                        <div class="button">
+                                             <!-- 個人詳細ページに戦遷移 -->
+                                            <div class="col-md-6 col-sm-6">
+                                                <a class="btn_full" href="profile.html"><i class=" icon-user"></i>Profile</a>
+                                             </div>
+                                              <!-- チャットページに遷移 -->
+                                            <div class="col-md-6 col-sm-6">
+                                                <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
+                                             </div>
                                         </div>
                                     </div>
-                                    <div class="purpose">
-                                        <p>Purpose</p>
-                                        この祭りのガイドをしてもらいたいです！
-                                    </div>
-                                    <div class="button">
-                                        <div class="col-md-6 col-sm-6">
-                                            <a class="btn_full" href="profile.html">Profile</a>
-                                            <!-- 個人詳細ページに戦遷移 -->
-                                         </div>
-                                        <div class="col-md-6 col-sm-6">
-                                            <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
-                                            <!-- チャットページに遷移 -->
-                                         </div>
-                                    </div>
-
-
-
-                                </div>
 
                                 <hr>
 
