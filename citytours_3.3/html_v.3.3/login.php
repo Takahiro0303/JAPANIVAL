@@ -9,28 +9,58 @@ if (!empty($_POST)) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    echo $email;
-    echo $password;
-
     if ($email != '' && $password != '') {
+
+        //emailとpasswordがorganizersテーブルに入っているかの確認
+        $o_sql = 'SELECT * FROM organizers WHERE o_email=? AND o_password=?';
+        $o_data = [$email, sha1($password)];
+        $stmt = $dbh->prepare($o_sql);
+        $stmt->execute($o_data);
+
+        $o_record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($o_record != false) {
+            $_SESSION['id'] = $o_record['o_id'];
+            $_SESSION['flag'] = '';//オーガナイザーの場合にはユーザーフラグは空
+
+            // echo '<br>';
+            // echo 'オーガナイザー';
+            // echo '<br>';
+            // echo $_SESSION['id'];
+            // echo '<br>';
+            // echo $_SESSION['flag'];
+            header('Location:edit_index.php');
+            exit();
+        }
+
+        //emailとpasswordがusersテーブルに入っているかの確認
         $sql = 'SELECT * FROM users WHERE email=? AND password=?';
         $data = [$email, sha1($password)];
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
         $record = $stmt->fetch(PDO::FETCH_ASSOC);
-          echo '<pre>';
-          var_dump($record);
-          echo '</pre>';
+
         if ($record != false) {
             $_SESSION['id'] = $record['user_id'];
+            $_SESSION['flag'] = $record['user_flag'];//ユーザーフラグ0番が管理者、1番がユーザー、空がオーガナイザー
 
-            header('Location:index.php');
+            $record = '';
+
+            echo '<br>';
+            echo 'ユーザー';
+            echo '<br>';
+            echo $_SESSION['id'];
+            echo '<br>';
+            echo $_SESSION['flag'];
+
+            header('Location:edit_index.php');
             exit();
-        } else {
-            $errors['login'] = 'failed';
         }
-    } else {
+
+        $errors['login'] = 'failed';
+
+    }else{
         $errors['login'] = 'blank';
     }
 }
