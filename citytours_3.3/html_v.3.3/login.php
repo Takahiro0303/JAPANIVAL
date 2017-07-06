@@ -23,14 +23,14 @@ if (!empty($_POST)) {
             $_SESSION['id'] = $o_record['o_id'];
             $_SESSION['flag'] = '';//オーガナイザーの場合にはユーザーフラグは空
 
-            echo '<br>';
-            echo 'オーガナイザー';
-            echo '<br>';
-            echo $_SESSION['id'];
-            echo '<br>';
-            echo $_SESSION['flag'];
-            // header('Location:index.php');
-            // exit();
+            // echo '<br>';
+            // echo 'オーガナイザー';
+            // echo '<br>';
+            // echo $_SESSION['id'];
+            // echo '<br>';
+            // echo $_SESSION['flag'];
+            header('Location:edit_index.php');
+            exit();
         }
 
         //emailとpasswordがusersテーブルに入っているかの確認
@@ -54,8 +54,8 @@ if (!empty($_POST)) {
             echo '<br>';
             echo $_SESSION['flag'];
 
-            // header('Location:index.php');
-            // exit();
+            header('Location:edit_index.php');
+            exit();
         }
 
         $errors['login'] = 'failed';

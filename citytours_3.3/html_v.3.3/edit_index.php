@@ -1,8 +1,14 @@
 <?php 
 session_start();
 require('../../common/dbconnect.php');
-// require('functions.php');
-// require('auth.php');
+require('../../common/functions.php');
+// require('../../common/auth.php');
+
+$login_user = get_login_user($dbh);
+
+  // echo '<pre>';
+  // var_dump($login_user);
+  // echo '</pre>';
 
 $sql = 'SELECT * FROM events WHERE 1';
 // $data = [$login_user['member_id'], $record['tweet_id']];
@@ -14,10 +20,29 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $events[] = $record;
 }
 
-//   echo '<pre>';
-//   var_dump($events);
-//   echo '</pre>';
+// if ($_SESSION['id'] == null && $_SESSION['flag'] == null) {
+//     $_SESSION['id'] = '';
+//     $_SESSION['flag'] = '';
+//     echo '確認';
+// }
+//     echo '確認2';
+
+  // echo '<pre>';
+  // var_dump($_SESSION);
+  // echo '</pre>';
+
+
+
+  // echo '<pre>';
+  // var_dump($login_user);
+  // echo '</pre>';
 // echo ($_POST['field-keywords']);
+  // echo '<pre>';
+  // echo $_SESSION['id'];
+  // echo '<br>';
+  // echo $_SESSION['flag'];
+  // echo '</pre>';
+
 
 ?>
 
@@ -179,43 +204,8 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <div class="layer"></div>
     <!-- Mobile menu overlay mask -->
 
-    <!-- Header================================================== -->
-    <header>
-
-        
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-3">
-                    <div id="logo_home">
-                    	<h1><a href="index.html" title="City tours travel template">City Tours travel template</a></h1>
-                    </div>
-                </div>
-                <nav class="col-md-offset-4 col-md-5 col-sm-offset-4 col-sm-5 col-xs-offset-4 col-xs-5">
-                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
-                    <div class="main-menu">
-                        <div id="header_menu">
-                            <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
-                        </div>
-                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
-                        <ul>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">About us<i class="icon-down-open-mini"></i></a>
-                            </li>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Sign Up<i class="icon-down-open-mini"></i></a>
-                            </li>
-                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
-                            </li>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Sing in<i class="icon-down-open-mini"></i></a>
-                            </li>
-                        </ul>
-                    </div><!-- End main-menu -->
-                </nav>
-            </div>
-        </div><!-- container -->
-    </header><!-- End Header -->
+    <!-- header.phpのrequire -->
+    <?php require('header.php');  ?>
 
 	<section id="hero">
         <!-- Slider -->
@@ -1607,6 +1597,9 @@ $("#searchDropdownBox").change(function(){
   });
 });
 </script>
+
+    <!-- 自作のJS -->
+    <script src="js/custom.js"></script>
 
     <!-- tabs側のJS -->
     <!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
