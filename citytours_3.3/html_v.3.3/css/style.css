@@ -390,10 +390,10 @@ header.sticky #logo .logo_sticky{ display:block; }
 	padding:0;
 }
 #logo_home h1 a, header.sticky #logo_home h1 a, header#plain #logo_home h1 a, header#colored #logo_home h1 a{
-	width:160px;
-	height:34px;
+/*	width:160px;//TODO!:
+	height:34px;//TODO!:*/
 	display:block;
-	background-image:url(../img/logo.png);
+	background-image:url(../img/logo.png); /*//TODO!: 元々は(../img/logo.png)ここを変えてもヘッダーのロゴは変わらない*/
 	background-repeat:no-repeat;
 	background-position:left top;
 	background-size: 160px 34px;
@@ -404,29 +404,29 @@ header.sticky #logo_home h1{
 	padding:0;
 }
 header.sticky #logo_home h1 a{
-	background-image:url(../img/logo_sticky.png);
+	background-image:url(../img/logo_sticky.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
 }
 header#plain #logo_home h1 a{
-	background-image:url(../img/logo_sticky.png);
+	background-image:url(../img/logo_sticky.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
 }
 header.sticky#colored #logo_home h1 a{
-	background-image:url(../img/logo_sticky_colored.png);
+	background-image:url(../img/logo_sticky_colored.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
 }
 @media only screen and (min--moz-device-pixel-ratio: 2),
 only screen and (-o-min-device-pixel-ratio: 2/1),
 only screen and (-webkit-min-device-pixel-ratio: 2),
 only screen and (min-device-pixel-ratio: 2) {
 #logo_home h1 a, header#colored #logo_home h1 a{
-    background-image: url(../img/logo_2x.png);
-	background-size: 160px 34px;
+    background-image: url(../img/japanival_logo.png);/*//TODO!: 元々は(../img/logo_2x.png)*/
+	background-size: 160px 40px; /*//TODO!:変更前:160px 34px*/
 }
 header.sticky #logo_home h1 a, header#plain #logo_home h1 a{
-    background-image: url(../img/logo_sticky_2x.png);
-	background-size: 160px 34px;
+    background-image: url(../img/japanival_logo.png);/*//TODO!: 元々は(../img/logo.png)*/
+	background-size: 160px 40px; /*//TODO!:変更前:160px 34px*/
 }
 header.sticky#colored #logo_home h1 a{
     background-image: url(../img/logo_sticky_colored_2x.png);
-	background-size: 160px 34px;
+		background-size: 160px 34px;
 }
 }
 
@@ -709,8 +709,8 @@ footer {
 }
 
 footer h3 {
-	font-size: 16px;
-	font-weight: 700;
+	font-size: 12px;/*//TODO!:*/
+/*	font-weight: 700;*//*//TODO!:*/
 	color: #fff;
 }
 
@@ -980,7 +980,7 @@ video {
 	background: #333;
 	background-color: rgba(0, 0, 0, 0.4);
 	padding: 15px 0;
-	position: absolute;
+	/*position: absolute;*/ /*//TODO!:*/
 	left: 0;
 	bottom: 0;
 	width: 100%;
@@ -1011,7 +1011,7 @@ video {
 	height: 45px;
 	line-height: 35px;
 	margin: 5px 65px 0 15px;
-	text-indent: 1px;
+	text-indent: 25px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	width: 60px;
@@ -1022,7 +1022,7 @@ video {
 	display: inline-block;
 	right: 15px;
 	top: 20px;
-	background: url(../img/arrow_down_2.png);
+/*	background: url(../img/arrow_down_2.png);*///TODO!:
 	height: 6px;
 	width: 10px;
 	position: absolute;
@@ -2487,7 +2487,7 @@ ul.list_icons li i {
 	height: 100%;
 	min-height: 100%;
 	overflow-y: scroll;
-	padding-top: 115px;
+/*	padding-top: 115px;*//*all_tours_map_listing.htmlの微調整の為に修正*/ /*//TODO!:*/
 }
 
 .view_on_map {

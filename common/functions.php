@@ -16,8 +16,22 @@
 /* =====================================================
     実機能関数
 ====================================================- */
-    function login_get_user($dbh) {
-        $sql = 'SELECT * FROM users WHERE user_id=?';
+    function get_login_user($dbh) {
+        // ユーザーフラグに値が有る場合は、ユーザーあるいは管理者として認識。usersテーブルからユーザー情報を取得
+
+        if ($_SESSION == null) {
+            $_SESSION['id'] = '';
+            $_SESSION['flag'] = '';
+        }
+
+
+        if ($_SESSION['flag'] == '1' || $_SESSION['flag'] == '0') {
+            $sql = 'SELECT * FROM users WHERE user_id=?';
+
+        // ユーザーフラグに値が無い場合は、主催者として認識。organizersテーブルから主催者情報を取得
+        }else{
+            $sql = 'SELECT * FROM organizers WHERE o_id=?';
+        }
         $data = [$_SESSION['id']];
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
@@ -45,5 +59,4 @@
         exit();
     }
 
-    echo 'functions.php';
 ?>
