@@ -58,10 +58,12 @@
                                 <div class="dropdown dropdown-access">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="access_link"><?php echo htmlspecialchars($login_user['o_name']); ?></a>
                                     <div class="dropdown-menu" id="log_out">
-                                        <img src="img/avatar1.jpg" alt="" class="img-circle">
+                                        <img src="img/avatar1.jpg" alt="" class="img-circle">   
                                         <h4><?php echo htmlspecialchars($login_user['o_name']); ?></h4>
                                         <p>Last access 15th November 2016 08.45pm</p>
-                                        <input type="submit" name="Profile" value="Profile" id="Profile" class="button_drop outline">
+                                        <input type="submit" name="Profile"  value="Profile" id="Profile" class="button_drop outline" 
+                                        onclick="location.href='admin_org.php?o_id=<?php echo htmlspecialchars($login_user['o_id']); ?>'">
+
                                         <input type="submit" name="Sign_up" value="Log out" id="Sign_up" class="button_drop outline" onclick="logout()">
                                     </div>
                                 </div>
