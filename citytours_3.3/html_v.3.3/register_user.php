@@ -82,8 +82,23 @@ if (!empty($_POST)) {
 
 
         if (!empty($_POST)) {
-            $sql = 'INSERT INTO `users` SET `nickname` =?,`email` =?, `password` =?, `nationality` =?, `gender` =?, `self_intro` =?, `pic_path` =?, `created` =NOW()';
-            $data = array($nick_name,$email,sha1($password),$nationality,$gender,$comment,$_SESSION['join']['pic_path']);
+            $sql = 'INSERT INTO `users` SET `user_flag`=?,
+                                            `nickname` =?,
+                                            `email` =?, 
+                                            `password` =?, 
+                                            `nationality` =?, 
+                                            `gender` =?, 
+                                            `self_intro` =?,
+                                            `pic_path` =?, 
+                                            `created` =NOW()';
+            $data = array(                  '1',
+                                            $nick_name,
+                                            $email,
+                                            sha1($password),
+                                            $nationality,
+                                            $gender,
+                                            $comment,
+                                            $_SESSION['join']['pic_path']);
             $stmt = $dbh->prepare($sql);
             $stmt->execute($data);
 
