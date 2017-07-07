@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017 年 7 月 01 日 16:43
+-- Generation Time: 2017 年 7 月 07 日 14:25
 -- サーバのバージョン： 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -51,6 +51,7 @@ CREATE TABLE `events` (
   `e_postal` varchar(255) CHARACTER SET utf8 NOT NULL,
   `e_address` varchar(255) CHARACTER SET utf8 NOT NULL,
   `e_venue` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `e_access` text CHARACTER SET utf8 NOT NULL,
   `e_o_name` varchar(255) CHARACTER SET utf8 NOT NULL,
   `e_o_tel` varchar(255) CHARACTER SET utf8 NOT NULL,
   `e_o_email` varchar(255) CHARACTER SET utf8 NOT NULL,
@@ -73,9 +74,10 @@ CREATE TABLE `events` (
 -- テーブルのデータのダンプ `events`
 --
 
-INSERT INTO `events` (`event_id`, `o_id`, `e_name`, `e_start_date`, `e_end_date`, `e_prefecture`, `e_postal`, `e_address`, `e_venue`, `e_o_name`, `e_o_tel`, `e_o_email`, `explanation`, `priority`, `start_year`, `year_p`, `year_pp`, `year_ppp`, `attendance_p`, `attendance_pp`, `attendance_ppp`, `official_url`, `related_url`, `created`, `modified`) VALUES
-(0, 0, 0, '0000-00-00', '0000-00-00', '東京都', '1700002', '豊島区', 'ラーメン', 'うめ', '000', 'uuu', '説明文です', NULL, 2001, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:16:39', '2017-07-01 14:16:39'),
-(0, 0, 0, '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:41:55', '2017-07-01 14:41:55');
+INSERT INTO `events` (`event_id`, `o_id`, `e_name`, `e_start_date`, `e_end_date`, `e_prefecture`, `e_postal`, `e_address`, `e_venue`, `e_access`, `e_o_name`, `e_o_tel`, `e_o_email`, `explanation`, `priority`, `start_year`, `year_p`, `year_pp`, `year_ppp`, `attendance_p`, `attendance_pp`, `attendance_ppp`, `official_url`, `related_url`, `created`, `modified`) VALUES
+(0, 0, 0, '0000-00-00', '0000-00-00', '東京都', '1700002', '豊島区', 'ラーメン', '', 'うめ', '000', 'uuu', '説明文です', NULL, 2001, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:16:39', '2017-07-01 14:16:39'),
+(0, 0, 0, '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', '', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:41:55', '2017-07-01 14:41:55'),
+(0, 0, 0, '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', '', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-02 12:10:51', '2017-07-02 04:10:51');
 
 -- --------------------------------------------------------
 
@@ -87,6 +89,23 @@ CREATE TABLE `event_categories` (
   `e_category_Id` int(11) NOT NULL,
   `e_category` varchar(255) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- テーブルのデータのダンプ `event_categories`
+--
+
+INSERT INTO `event_categories` (`e_category_Id`, `e_category`) VALUES
+(1, 'spring'),
+(2, 'summer'),
+(3, 'fall'),
+(4, 'winter'),
+(5, 'flower'),
+(6, 'sakura'),
+(7, 'food_drink'),
+(8, 'alcohol'),
+(9, 'strange_festival'),
+(10, '50years_lasting'),
+(11, '100years_lasting');
 
 -- --------------------------------------------------------
 
@@ -130,7 +149,20 @@ CREATE TABLE `event_pics` (
 
 INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `created`) VALUES
 (1, 0, '20170701154558スクリーンショット 2017-07-01 20.46.45.png', '2017-07-01 22:16:39'),
-(2, 0, '20170701164151スクリーンショット 2017-07-01 22.41.39.png', '2017-07-01 22:41:55');
+(2, 0, '20170701164151スクリーンショット 2017-07-01 22.41.39.png', '2017-07-01 22:41:55'),
+(3, 0, '20170702061044スクリーンショット 2017-07-01 22.41.39.png', '2017-07-02 12:10:51');
+
+-- --------------------------------------------------------
+
+--
+-- テーブルの構造 `joins`
+--
+
+CREATE TABLE `joins` (
+  `user_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `created` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -162,6 +194,21 @@ CREATE TABLE `messages` (
 -- --------------------------------------------------------
 
 --
+-- テーブルの構造 `news`
+--
+
+CREATE TABLE `news` (
+  `news_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `news_title` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `news_comment` text CHARACTER SET utf8 NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- テーブルの構造 `notifications`
 --
 
@@ -184,6 +231,15 @@ CREATE TABLE `notification_categories` (
   `notification_category_id` int(11) NOT NULL,
   `notification_category` varchar(255) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- テーブルのデータのダンプ `notification_categories`
+--
+
+INSERT INTO `notification_categories` (`notification_category_id`, `notification_category`) VALUES
+(1, 'message'),
+(2, 'like'),
+(3, 'review');
 
 -- --------------------------------------------------------
 
@@ -208,6 +264,14 @@ CREATE TABLE `organizers` (
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- テーブルのデータのダンプ `organizers`
+--
+
+INSERT INTO `organizers` (`o_id`, `o_name`, `o_f_name`, `o_l_name`, `o_email`, `o_pref`, `o_postal`, `o_address`, `o_tel`, `o_password`, `o_intro`, `o_pic`, `created`, `modified`) VALUES
+(1, 'umetani', 'umetani', '', 'umetani@gmail.com', '東京都', '1700002', '豊島区巣鴨', '09050896307', '56ca78f2319ab20ed3c881bb89f02d608111bb69', '', '20170704145241japanival_logo_red_black_cropped (1).png', '2017-07-04 20:52:41', '2017-07-04 12:52:41'),
+(2, 'yumetani', 'yumetani', '', 'yumetani@gmail.com', '東京都', '1700002', '豊島区巣鴨', '09050896307', 'ff594fca1a4bc1ad86f227c2bf9df5210c5a8a1e', '', '20170704145834スクリーンショット 2017-07-01 20.46.45.png', '2017-07-04 20:58:34', '2017-07-04 12:58:34');
+
 -- --------------------------------------------------------
 
 --
@@ -231,8 +295,17 @@ CREATE TABLE `requests` (
 
 CREATE TABLE `request_categories` (
   `request_category_id` int(11) NOT NULL,
-  `request_category` int(11) NOT NULL
+  `request_category` varchar(255) CHARACTER SET utf8 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+--
+-- テーブルのデータのダンプ `request_categories`
+--
+
+INSERT INTO `request_categories` (`request_category_id`, `request_category`) VALUES
+(1, 'inquiry'),
+(2, 'navigation'),
+(3, 'accompany');
 
 -- --------------------------------------------------------
 
@@ -280,9 +353,18 @@ CREATE TABLE `users` (
   `password` varchar(255) CHARACTER SET utf8 NOT NULL,
   `self_intro` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `pic_path` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` timestamp NULL DEFAULT NULL
+  `created` datetime NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- テーブルのデータのダンプ `users`
+--
+
+INSERT INTO `users` (`user_id`, `user_flag`, `f_name`, `l_name`, `nickname`, `email`, `nationality`, `gender`, `password`, `self_intro`, `pic_path`, `created`, `modified`) VALUES
+(1, 0, '', '', 'manager', 'manager@gmail.com', 'Afganistan', 'male', '1a8565a9dc72048ba03b4156be3e569f22771f23', '管理者です。', '20170705130810japanival_icon.png', '2017-07-05 19:08:10', '2017-07-05 11:08:39'),
+(2, 1, '', '', 'umetani', 'umetani@gmail.com', 'Albania', 'female', '56ca78f2319ab20ed3c881bb89f02d608111bb69', 'umetani', '20170705130941スクリーンショット 2017-07-03 18.41.01.png', '2017-07-05 19:09:41', '2017-07-05 11:09:41'),
+(3, 1, '', '', 'uumetani', 'uumetani@gmail.com', 'Afganistan', 'male', '4a9318160a56a36c151476167f282968c8de6b74', 'ユーザーです', '20170705140040japanival_icon.png', '2017-07-05 20:00:40', '2017-07-05 12:00:40');
 
 --
 -- Indexes for dumped tables
@@ -311,6 +393,12 @@ ALTER TABLE `event_pics`
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`message_id`);
+
+--
+-- Indexes for table `news`
+--
+ALTER TABLE `news`
+  ADD PRIMARY KEY (`news_id`);
 
 --
 -- Indexes for table `notifications`
@@ -372,12 +460,17 @@ ALTER TABLE `event_movies`
 -- AUTO_INCREMENT for table `event_pics`
 --
 ALTER TABLE `event_pics`
-  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `news`
+--
+ALTER TABLE `news`
+  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `notifications`
 --
@@ -387,12 +480,12 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `notification_categories`
 --
 ALTER TABLE `notification_categories`
-  MODIFY `notification_category_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `organizers`
 --
 ALTER TABLE `organizers`
-  MODIFY `o_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `o_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `requests`
 --
@@ -412,7 +505,7 @@ ALTER TABLE `review_photos`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
