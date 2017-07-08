@@ -2,15 +2,17 @@
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
+// require('reques.php'); // パラメータがなければedit_index.php 
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み ⇦　他でも使うようなら復活させる
 
-function get_event_data($dbh){
-$sql = 'SELECT * FROM events WHERE e_postal=1700002';
+$event_id = $_REQUEST['event_id'];
+
+$sql = 'SELECT * FROM events WHERE event_id=?';
+$data = array($event_id);
 $stmt = $dbh->prepare($sql);
-$stmt->execute();
+$stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-return $event_data;
-}
+
 
 $event_data = get_event_data($dbh);
 
