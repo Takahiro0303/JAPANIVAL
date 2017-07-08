@@ -4,7 +4,7 @@ require('dbconnect.php');
 require('header.php');
 require('edit')
 
-require('edit_php.php');
+// require('edit_php.php');
 
 
 if (!isset($_GET['event_id'])) {

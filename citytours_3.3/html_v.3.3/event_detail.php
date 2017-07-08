@@ -1,12 +1,8 @@
 <?php  
 session_start();
 require('../../common/dbconnect.php');
-// require('edit_index.php');
-require('header.php');
 require('../../common/functions.php');
-// require('../../common/auth.php');
-
-$login_user = get_login_user($dbh);
+require('header.php');
 
 // if (!isset($_GET['event_id'])) {
 //     h('main_portal.php');
@@ -36,14 +32,15 @@ $login_user = get_login_user($dbh);
 <!--[if IE 9]><html class="ie ie9"> <![endif]-->
 <html lang="en">
 
-<head>
+<header>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
     <meta name="author" content="Ansonika">
-    <title>JAPANIVAL-EventDetail</title>
+    <title>Matshumoto Bonbon</title><!-- イベントタイトル挿入 -->
+
 
     <!-- Favicons-->
     <link rel="shortcut icon" href="img/japanival_icon.jpg" type="image/x-icon">
@@ -67,37 +64,25 @@ $login_user = get_login_user($dbh);
       <script src="js/respond.min.js"></script>
     <![endif]-->
 
-</head>
+</header>
 
 <body>
-
-    <!-- 大澤：なんの機能かよくわからないが消しても問題なし。消すのは怖いので、コメントアウト -->
-    <!-- <div id="preloader">
-        <div class="sk-spinner sk-spinner-wave">
-            <div class="sk-rect1"></div>
-            <div class="sk-rect2"></div>
-            <div class="sk-rect3"></div>
-            <div class="sk-rect4"></div>
-            <div class="sk-rect5"></div>
-        </div>
-    </div> -->
-    <!-- End Preload -->
-
-    <div class="layer"></div>
-    <!-- Mobile menu overlay mask -->
-
-    <section class="parallax-window" data-parallax="scroll" data-image-src="e_pic_path/松ぼん1.jpg" data-natural-width="1000" data-natural-height="470">
+    <!-- 【トップ】画像表示-->
+    <section class="parallax-window" data-parallax="scroll" data-image-src="e_pic_path/松ぼん6.jpg" data-natural-width="1000" data-natural-height="470">
+    <!-- ＊画像データINSERT -->
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
                     <div class="col-md-7 col-sm-7">
-                        <h1>Matsumoto Bonbon</h1> <!-- イベント名表示 -->
-                        <span>Matsumoto city,Nagano,Hokushinetsu</span> <!-- 開催地名表示 -->
+                        <h1>Matsumoto Bonbon</h1> <!-- ＊イベント名INSERT -->
+                        <span>Matsumoto city,Nagano,Hokushinetsu</span> <!-- ＊開催都市INSERT -->
                     </div>
-                    <div class="col-md-5 col-sm-5" style="font-size: 60px;">
-                        <span><sup style="font-size: 20px;">Sat</sup><b>5/8</b></span> <!-- 曜日・開催日時を表示 -->
-                        <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
-                        <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a>
+                    <div class="col-md-4 col-sm-4" style="font-size: 60px;">
+                        <span><sup style="font-size: 20px;">Sat</sup><b>5/8</b></span> <!-- ＊曜日・開催日時INSERT -->
+                        <span class="favorites"><i class="icon-heart" style="color: red;" value="125"></i></span> <!-- ＊お気に入り数 INSERT -->
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a>
                     </div>
                 </div>
             </div>
@@ -105,12 +90,7 @@ $login_user = get_login_user($dbh);
     </section>
     <!-- End section -->
 
-    <main>
-        
-        <div class="collapse" id="collapseMap">
-            <div id="map" class="map"></div>
-        </div>
-        <!-- End Map -->
+    <main style="margin-bottom: 1000px;"> <!--  -->
 
         <div class="container margin_60">
             <div class="row">
@@ -221,7 +201,7 @@ $login_user = get_login_user($dbh);
                                                 Event Name 
                                             </td>
                                             <td>
-                                                Matsumoto Bonbon
+                                                <!--   -->
                                             </td>
                                         </tr>
                                         <tr>
