@@ -72,6 +72,16 @@ require('../../common/dbconnect.php');
     $events_stmt->execute();
     $event_id = $events_stmt->fetch(PDO::FETCH_ASSOC);
 
+    // newsテーブルへの登録
+    $sql = 'INSERT INTO news
+                    SET event_id= ?,
+                        news_comment = ?,
+                        created = NOW()';
+
+    $data = [ $event_id,$_SESSION['event']['news_comment']];
+    $news_comment_stmt = $dbh->prepare($sql);
+    $news_comment_stmt->execute($data);
+
 
     // event_picsテーブルへの登録
     $sql = 'INSERT INTO event_pics
@@ -342,7 +352,7 @@ require('../../common/dbconnect.php');
 	</header>
 	<!-- End Header -->
 
-	<section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-natural-width="1000" data-natural-height="470">
+	<section class="parallax-window" data-parallax="scroll" data-image-src=<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?> data-natural-width="1000" data-natural-height="470">
 		<div class="parallax-content-2">
 			<div class="container">
 				<div class="row">
@@ -378,61 +388,61 @@ require('../../common/dbconnect.php');
 						<div class="sp-slides">
 
 							<div class="sp-slide">
-                <img src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                <img src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
 							</div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 
               <div class="sp-slide">
-                  <img alt="Image" class="sp-image" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+                  <img alt="Image" class="sp-image" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-small="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-medium="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-large="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-retina="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
               </div>
 						</div>
 
 						<div class="sp-thumbnails">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-							<img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
-              <img alt="Image" class="sp-thumbnail" src="../../event_pictures/<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+							<img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
+              <img alt="Image" class="sp-thumbnail" src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>">
 						</div>
 					</div>
 
