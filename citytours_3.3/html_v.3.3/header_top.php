@@ -24,7 +24,7 @@
                                         <img src="img/avatar1.jpg" alt="" class="img-circle">
                                         <h4><?php echo htmlspecialchars($login_user['nickname']); ?></h4>
                                         <p>Last access 15th November 2016 08.45pm</p>
-                                        <input type="submit" name="Profile" value="Profile" id="Profile" class="button_drop outline">
+                                        <input type="submit" name="Profile" value="Profile" id="Profile" class="button_drop outline" onclick="location.href='admin_user.php?user_id=<?php echo htmlspecialchars($login_user['user_id']); ?>'">
                                         <input type="submit" name="Sign_up" value="Log out" id="Sign_up" class="button_drop outline" onclick="logout()">
                                     </div>
                                 </div>
@@ -61,8 +61,7 @@
                                         <img src="img/avatar1.jpg" alt="" class="img-circle">   
                                         <h4><?php echo htmlspecialchars($login_user['o_name']); ?></h4>
                                         <p>Last access 15th November 2016 08.45pm</p>
-                                        <input type="submit" name="Profile"  value="Profile" id="Profile" class="button_drop outline" 
-                                        onclick="location.href='admin_org.php?o_id=<?php echo htmlspecialchars($login_user['o_id']); ?>'">
+                                        <input type="submit" name="Profile"  value="Profile" id="Profile" class="button_drop outline" onclick="location.href='admin_organizer.php?o_id=<?php echo htmlspecialchars($login_user['o_id']); ?>'">
 
                                         <input type="submit" name="Sign_up" value="Log out" id="Sign_up" class="button_drop outline" onclick="logout()">
                                     </div>
