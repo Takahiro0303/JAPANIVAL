@@ -612,7 +612,7 @@ require('../../common/dbconnect.php');
 							<h3>Reviews </h3>
 						</div>
 						<div class="col-md-9">
-							<div id="general_rating" class="rating">3 Reviews
+							<div id="general_rating" class="rating">3 review_strip_single
 									<i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>
                                     <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
 							</div>

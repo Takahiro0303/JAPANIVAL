@@ -268,6 +268,7 @@ if (!empty($_POST)) {
     echo '</pre>';
 }
 ?>
+
 <!DOCTYPE html>
 <!--[if IE 8]><html class="ie ie8"> <![endif]-->
 <!--[if IE 9]><html class="ie ie9"> <![endif]-->
@@ -305,7 +306,6 @@ if (!empty($_POST)) {
     <![endif]-->
 
 </head>
-
 <body>
 
     <!-- 大澤：なんの機能かよくわからないが消しても問題なし。消すのは怖いので、コメントアウト -->
@@ -452,7 +452,7 @@ if (!empty($_POST)) {
                                             <li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
                                             <li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
                                             <li><a href="admin.html"><i class="icon-cog-1"></i>  Admin area</a></li>
-                                            <li><a href="general_page.html"><i class="icon-light-up"></i>  Weather Forecast</a></li>                                             
+                                            <li><a href="general_page.html"><i class="icon-light-up"></i>  Weather Forecast</a></li>
                                         </ul>
                                     </div>
                                 </div><!-- End menu-wrapper -->
@@ -743,7 +743,8 @@ if (!empty($_POST)) {
 											<td>
 												<input type="text" name="e_access" placeholder = "アクセスの入力"　value= "<?php echo htmlspecialchars($e_access); ?>">
                         <?php if(isset($errors['e_access']) && $errors['e_access'] == 'blank') { ?>
-                          <p class="error">アクセスを入力してください</p>
+                          <p class="error">アクセスを入力してください</p> -->
+                        <?php } ?>
 											</td>
 										</tr>
 
@@ -885,7 +886,7 @@ if (!empty($_POST)) {
                             <h3 class="inner">Information</h3>
                             <div id="scroll" class="info">
                               <div>
-                                <textarea name="news_comment" col = "30" row = "5" style="width:300px;height:150px" placeholder = "こちらにイベント情報（ニュース）を入力してください"><?php echo htmlspecialchars($news_comment); ?></textarea>
+                                <textarea name="news_comment" col = "30" row = "5" style="width:330px;height:50px" placeholder = "こちらにイベント情報（ニュース）を入力してください"><?php echo htmlspecialchars($news_comment); ?></textarea>
                               </div>
                             </div>
                         </div>
