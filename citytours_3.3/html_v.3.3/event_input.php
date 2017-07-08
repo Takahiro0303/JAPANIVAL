@@ -258,7 +258,7 @@ if (!empty($_POST)) {
     echo $fileName;
 
     //次のページへ遷移
-    // header('Location: single_tour_with_gallery_check.php');
+    // header('Location: event_check.php');
     // exit();//ここでこのファイルの読み込みを強制終了
   // }
 
@@ -332,18 +332,18 @@ if (!empty($_POST)) {
 
 	<!-- End Header -->
 
-	<section class="parallax-window" data-parallax="scroll" data-image-src="e_pic_path/松ぼん1.jpg" data-natural-width="1000" data-natural-height="470">
+	<section class="parallax-window" data-parallax="scroll" data-image-src="img/single_tour_bg_1.jpg" data-natural-width="1000" data-natural-height="470">
 		<div class="parallax-content-2">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-7 col-sm-7">
-						<h1>Matsumoto Bonbon</h1> <!-- イベント名表示 -->
-						<span>Matsumoto city,Nagano,Hokushinetsu</span> <!-- 開催地名表示 -->
+						<h1>イベント名</h1> <!-- イベント名表示 -->
+						<span>都道府県</span> <!-- 開催地名表示 -->
 					</div>
 					<div class="col-md-5 col-sm-5" style="font-size: 60px;">
-					    <span><sup style="font-size: 20px;">Sat</sup><b>5/8</b></span> <!-- 曜日・開催日時を表示 -->
-                        <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
-                        <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a>
+					    <span><h1>期間</h1></span> <!-- 曜日・開催日時を表示 -->
+                        <!-- <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
+<!--                         <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a> -->
 					</div>
 				</div>
 			</div>
@@ -352,7 +352,7 @@ if (!empty($_POST)) {
 	<!-- End section -->
 
 	<main>
-<form method="POST" action="single_tour_with_gallery.php" enctype="multipart/form-data">
+<form method="POST" action="event_input.php" enctype="multipart/form-data">
 		<div class="collapse" id="collapseMap">
 			<div id="map" class="map"></div>
 		</div>

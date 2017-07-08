@@ -27,7 +27,7 @@
     if ($this.outerHeight() <= $win.outerHeight()) {
       $this.css({
         'z-index' : defaults.zIndex,
-        position : 'fixed',
+        // position : 'fixed',//TODO!:position : 'fixed'コメントアウト
         bottom : 0
       });
 
