@@ -1,9 +1,37 @@
 <?php  
 session_start();
-require('../../common/dbconnect.php');
-require('../../common/functions.php');
-require('../../common/evemt.data.php');
-require('header.php');
+require('../../common/dbconnect.php'); //データベースへ接続
+require('../../common/functions.php'); //関数ファイル読み込み
+// require('../../common/event_data.php'); //イベント詳細情報データの読み込み ⇦　他でも使うようなら復活させる
+
+function get_event_data($dbh){
+$sql = 'SELECT * FROM events WHERE e_postal=1700002';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$event_data = $stmt->fetch(PDO::FETCH_ASSOC);
+return $event_data;
+}
+
+$event_data = get_event_data($dbh);
+
+// v($event_data);
+
+function get_notification($dbh){
+$sql = 'SELECT * FROM notifications WHERE notification_id=1';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$notification = $stmt->fetch(PDO::FETCH_ASSOC);
+return $notification;
+}
+
+$notification = get_notification($dbh);
+
+$sql = 'SELECT * FROM event_pics WHERE e_pic_path = 1';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$event_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// v($notification);
 
 
 
@@ -59,11 +87,11 @@ require('header.php');
             <div class="container">
                 <div class="row">
                     <div class="col-md-7 col-sm-7">
-                        <h1>Matsumoto Bonbon</h1> <!-- ＊イベント名INSERT -->
-                        <span>Matsumoto city,Nagano,Hokushinetsu</span> <!-- ＊開催都市INSERT -->
+                        <h1><?php e($event_data['e_name']) ?></h1>
+                        <span><?php e($event_data['e_prefecture']) ?></span>
                     </div>
                     <div class="col-md-4 col-sm-4" style="font-size: 60px;">
-                        <span><sup style="font-size: 20px;">Sat</sup><b>5/8</b></span> <!-- ＊曜日・開催日時INSERT -->
+                        <span><sup style="font-size: 20px;">Sat</sup><?php e($event_data['e_start_date']) ?> ~ <?php e($event_data['e_end_date']) ?></span> <!-- ＊曜日・開催日時INSERT -->
                         <span class="favorites"><i class="icon-heart" style="color: red;" value="125"></i></span> <!-- ＊お気に入り数 INSERT -->
                     </div>
                     <div class="col-md-1 col-sm-1">
@@ -84,65 +112,31 @@ require('header.php');
                     </p>
                     <!-- Map button for tablets/mobiles -->
 
+
+
                     <div id="Img_carousel" class="slider-pro">
                         <div class="sp-slides">
 
                             <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん1.jpg" data-src="e_pic_path/松ぼん1.jpg" data-small="e_pic_path/松ぼん1.jpg" data-medium="e_pic_path/松ぼん1.jpg" data-large="e_pic_path/松ぼん1.jpg" data-retina="e_pic_path/松ぼん1.jpg">
+                                <img class="sp-image" src="../../event_pictures/<?php e($event_data['e_pic_path']) ?>"
+                                >
                             </div>
 
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん2.jpg" data-src="e_pic_path/松ぼん2.jpg" data-small="e_pic_path/松ぼん2.jpg" data-medium="e_pic_path/松ぼん2.jpg" data-large="e_pic_path/松ぼん2.jpg" data-retina="e_pic_path/松ぼん2.jpg">
-                            </div>
 
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん3.jpg" data-src="e_pic_path/松ぼん3.jpg" data-small="e_pic_path/松ぼん3.jpg" data-medium="e_pic_path/松ぼん3.jpg" data-large="e_pic_path/松ぼん3.jpg" data-retina="e_pic_path/松ぼん3.jpg">
-                            </div>
 
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん4.jpg" data-src="e_pic_path/松ぼん4.jpg" data-small="e_pic_path/松ぼん4.jpg" data-medium="e_pic_path/松ぼん4.jpg" data-large="e_pic_path/松ぼん4.jpg" data-retina="e_pic_path/松ぼん4.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん5.jpg" data-src="e_pic_path/松ぼん5.jpg" data-small="e_pic_path/松ぼん5.jpg" data-medium="e_pic_path/松ぼん5.jpg" data-large="e_pic_path/松ぼん5.jpg" data-retina="e_pic_path/松ぼん5.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん6.jpg" data-src="e_pic_path/松ぼん6.jpg" data-small="e_pic_path/松ぼん6.jpg" data-medium="e_pic_path/松ぼん6.jpg" data-large="e_pic_path/松ぼん6.jpg" data-retina="e_pic_path/松ぼん6.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん7.jpg" data-src="e_pic_path/松ぼん7.jpg" data-small="e_pic_path/松ぼん7.jpg" data-medium="e_pic_path/松ぼん7.jpg" data-large="e_pic_path/松ぼん7.jpg" data-retina="e_pic_path/松ぼん7.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん8.jpg" data-src="e_pic_path/松ぼん8.jpg" data-small="e_pic_path/松ぼん8.jpg" data-medium="e_pic_path/松ぼん8.jpg" data-large="e_pic_path/松ぼん8.jpg" data-retina="e_pic_path/松ぼん8.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん9.jpg" data-src="e_pic_path/松ぼん9.jpg" data-small="e_pic_path/松ぼん9.jpg" data-medium="e_pic_path/松ぼん9.jpg" data-large="e_pic_path/松ぼん9.jpg" data-retina="e_pic_path/松ぼん9.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん9.jpg" data-src="e_pic_path/松ぼん9.jpg" data-small="e_pic_path/松ぼん9.jpg" data-medium="e_pic_path/松ぼん9.jpg" data-large="e_pic_path/松ぼん9.jpg" data-retina="e_pic_path/松ぼん9.jpg">
-                            </div>
-
-                            <div class="sp-slide">
-                                <img alt="Image" class="sp-image" src="e_pic_path/松ぼん10.jpg" data-src="e_pic_path/松ぼん10.jpg" data-small="e_pic_path/松ぼん10.jpg" data-medium="e_pic_path/松ぼん10.jpg" data-large="e_pic_path/松ぼん10.jpg" data-retina="e_pic_path/松ぼん10.jpg">
-                            </div>
                         </div>
 
                         <div class="sp-thumbnails">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん1.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん2.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん3.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん4.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん5.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん6.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん7.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん8.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん9.jpg">
-                            <img alt="Image" class="sp-thumbnail" src="e_pic_path/松ぼん10.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん1.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん2.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん3.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん4.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん5.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん6.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん7.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん8.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん9.jpg">
+                            <img class="sp-thumbnail" src="e_pic_path/松ぼん10.jpg">
                         </div>
                     </div>
 
@@ -154,11 +148,8 @@ require('header.php');
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <h4>松本ぼんぼんとは？</h4>
                             <p>
-                                「...ぼんぼん松本ぼんぼんぼん♪」という耳に残るオリジナル曲に合わせて、会社や小学校のクラスなどいろいろな200以上のグループが「連」と呼ばれる単位で参加して踊り手となり、市街地を練り歩きます。素晴らしい踊りを披露したグループには賞が与えられます。松本近辺のどこにこんなに人がいたのかというぐらい大勢の人（松本市の人口より多い！）が出て、普段おとなしい松本人のどこにこんなパワーがあったのかと思う活発な踊りに驚かされます。地元ケーブルテレビ「テレビ松本」では、生中継を少しでも見る人の視聴率が80％以上で、同時期の甲子園予選よりも人気があります。 
-                                昭和50年に「アルプスの里・歴史を偲ぶ城下町に、響かせよう松本ぼんぼんの歌と踊りを!」をテーマに始まり、2010年で36年になりました。年々盛り上がりを見せ、踊り手の数が増え、コースも拡大されています。最近は省略して「松ぼん」とも呼ばれます。
-                                松本ぼんぼんでは、踊りは「見せるもの」として、振付けが決まっていて練習が必要で、飲酒しながら踊ってはいけない、などのルールがあり、破るとイエローカード（２枚で退場）が出されることもあります。
+                               <?php e($event_data['explanation']) ?>
                             </p>
                         </div>
                     </div> <!-- End row  -->
@@ -186,7 +177,7 @@ require('header.php');
                                                 Event Name 
                                             </td>
                                             <td>
-                                                <!--   -->
+                                                <?php e($event_data['e_name']) ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -194,15 +185,15 @@ require('header.php');
                                                 Category
                                             </td>
                                             <td>
-                                                Matsuri,Fire work,Yukata
+                                                <!-- カテゴリ表示 -->
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                Date and time
+                                                Date
                                             </td>
                                             <td>
-                                                2017/8/5(Sat) 17:00 ~ 22:00
+                                                <?php e($event_data['e_start_date']) ?> ~ <?php e($event_data['e_end_date']) ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -210,7 +201,7 @@ require('header.php');
                                                 city
                                             </td>
                                             <td>
-                                                Matsumoto city,Nagano
+                                                <?php e($event_data['e_prefecture']) ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -218,7 +209,7 @@ require('header.php');
                                                 the place (follow on map)
                                             </td>
                                             <td>
-                                                around Matsumoto castle 
+                                                <?php e($event_data['e_venue']) ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -226,7 +217,7 @@ require('header.php');
                                                 Web page
                                             </td>
                                             <td>
-                                                http://getakozo.com/modules/event/index.php?cat_id=5
+                                                <?php e($event_data['official_url']) ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -234,7 +225,7 @@ require('header.php');
                                                 Acces
                                             </td>
                                             <td>
-                                                10 minutes from Matsumoto station by walk 
+                                                <!-- アクセス方法表示 -->
                                             </td>
                                         </tr>
 
@@ -254,26 +245,26 @@ require('header.php');
                                     <tbody>
                                         <tr>
                                             <td>
-                                                2014
+                                                <?php e($event_data['year_p']) ?>
                                             </td>
                                             <td>
-                                                18000 (200000)
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                2015
-                                            </td>
-                                            <td>
-                                                17000 (190000)
+                                                <?php e($event_data['attendance_p']) ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                2016
+                                                <?php e($event_data['year_pp']) ?>
                                             </td>
                                             <td>
-                                                20000 (220000)
+                                                <?php e($event_data['attendance_p']) ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <?php e($event_data['year_ppp']) ?>
+                                            </td>
+                                            <td>
+                                                <?php e($event_data['attendance_p']) ?>
                                             </td>
                                         </tr>                                   
                                     </tbody>
@@ -289,7 +280,7 @@ require('header.php');
                             <h3>Map</h3>
                         </div>
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+                            <!--　地図表示 -->
                         </div>
                     </div>
 
@@ -359,7 +350,7 @@ require('header.php');
                         <div id="eve_info" class="box_style_1 expose">
                             <h3 class="inner">Information</h3>
                             <div id="scroll" class="info">
-                                <div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div><div>a</div>
+                                <?php e($notification['comment']) ?>
                             </div>
                         </div>
 
@@ -531,29 +522,10 @@ require('header.php');
                     <div id="message-review">
                     </div>
                     <form method="post" action="assets/review_tour.php" name="review_tour" id="review_tour">
-                        <input name="tour_name" id="tour_name" type="hidden" value="Paris Arch de Triomphe Tour">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input name="name_review" id="name_review" type="text" placeholder="Your name" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input name="lastname_review" id="lastname_review" type="text" placeholder="Your last name" class="form-control">
-                                </div>
-                            </div>
-                        </div>
+                        
+                    <!-- End row -->
+                    
                         <!-- End row -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <input name="email_review" id="email_review" type="email" placeholder="Your email" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End row -->
-                        <hr>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -569,59 +541,17 @@ require('header.php');
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Tourist guide</label>
-                                    <select class="form-control" name="guide_review" id="guide_review">
-                                        <option value="">Please review</option>
-                                        <option value="Low">Low</option>
-                                        <option value="Sufficient">Sufficient</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Superb">Super</option>
-                                        <option value="Not rated">I don't know</option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                         <!-- End row -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Price</label>
-                                    <select class="form-control" name="price_review" id="price_review">
-                                        <option value="">Please review</option>
-                                        <option value="Low">Low</option>
-                                        <option value="Sufficient">Sufficient</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Superb">Super</option>
-                                        <option value="Not rated">I don't know</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Quality</label>
-                                    <select class="form-control" name="quality_review" id="quality_review">
-                                        <option value="">Please review</option>
-                                        <option value="Low">Low</option>
-                                        <option value="Sufficient">Sufficient</option>
-                                        <option value="Good">Good</option>
-                                        <option value="Excellent">Excellent</option>
-                                        <option value="Superb">Super</option>
-                                        <option value="Not rated">I don't know</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <!-- End row -->
                         <div class="form-group">
                             <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"></textarea>
                         </div>
                         <div class="form-group">
-                            <input type="text" id="verify_review" class=" form-control" placeholder="Are you human? 3 + 1 =">
+                            <input type="button" name="picture" value=写真の選択>
                         </div>
+
                         <input type="submit" value="Submit" class="btn_1" id="submit-review">
                     </form>
                 </div>
