@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017 年 7 月 07 日 14:25
+-- Generation Time: 2017 年 7 月 08 日 10:34
 -- サーバのバージョン： 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -44,7 +44,7 @@ CREATE TABLE `caht_rooms` (
 CREATE TABLE `events` (
   `event_id` int(11) NOT NULL,
   `o_id` int(11) NOT NULL,
-  `e_name` int(255) NOT NULL,
+  `e_name` varchar(255) CHARACTER SET utf8 NOT NULL,
   `e_start_date` date NOT NULL,
   `e_end_date` date NOT NULL,
   `e_prefecture` varchar(255) CHARACTER SET utf8 NOT NULL,
@@ -75,9 +75,9 @@ CREATE TABLE `events` (
 --
 
 INSERT INTO `events` (`event_id`, `o_id`, `e_name`, `e_start_date`, `e_end_date`, `e_prefecture`, `e_postal`, `e_address`, `e_venue`, `e_access`, `e_o_name`, `e_o_tel`, `e_o_email`, `explanation`, `priority`, `start_year`, `year_p`, `year_pp`, `year_ppp`, `attendance_p`, `attendance_pp`, `attendance_ppp`, `official_url`, `related_url`, `created`, `modified`) VALUES
-(0, 0, 0, '0000-00-00', '0000-00-00', '東京都', '1700002', '豊島区', 'ラーメン', '', 'うめ', '000', 'uuu', '説明文です', NULL, 2001, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:16:39', '2017-07-01 14:16:39'),
-(0, 0, 0, '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', '', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:41:55', '2017-07-01 14:41:55'),
-(0, 0, 0, '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', '', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-02 12:10:51', '2017-07-02 04:10:51');
+(1, 0, '梅谷フェスティバル', '0000-00-00', '0000-00-00', '東京都', '1700002', '豊島区', 'ラーメン', '', 'うめ', '000', 'uuu', '説明文です', NULL, 2001, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:16:39', '2017-07-08 07:00:34'),
+(2, 0, 'Legend of Ohsawa', '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', '', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-01 22:41:55', '2017-07-08 07:02:08'),
+(3, 0, 'Shoji Festival', '2017-06-12', '2017-06-13', '千葉', '111-1111', '千葉市', '千葉', '', 'いいい', '0000-999', 'kjkjlj', '説明文です', NULL, 1999, 0, 0, 0, 0, 0, 0, '', '', '2017-07-02 12:10:51', '2017-07-08 07:02:38');
 
 -- --------------------------------------------------------
 
@@ -148,9 +148,9 @@ CREATE TABLE `event_pics` (
 --
 
 INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `created`) VALUES
-(1, 0, '20170701154558スクリーンショット 2017-07-01 20.46.45.png', '2017-07-01 22:16:39'),
-(2, 0, '20170701164151スクリーンショット 2017-07-01 22.41.39.png', '2017-07-01 22:41:55'),
-(3, 0, '20170702061044スクリーンショット 2017-07-01 22.41.39.png', '2017-07-02 12:10:51');
+(4, 1, '20170701154558スクリーンショット 2017-07-01 20.46.45.png', '2017-07-01 22:16:39'),
+(5, 2, '20170701164151スクリーンショット 2017-07-01 22.41.39.png', '2017-07-01 22:41:55'),
+(6, 3, '20170702061044スクリーンショット 2017-07-01 22.41.39.png', '2017-07-02 12:10:51');
 
 -- --------------------------------------------------------
 
@@ -377,6 +377,12 @@ ALTER TABLE `caht_rooms`
   ADD PRIMARY KEY (`chat_room_id`);
 
 --
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`event_id`);
+
+--
 -- Indexes for table `event_movies`
 --
 ALTER TABLE `event_movies`
@@ -452,6 +458,11 @@ ALTER TABLE `users`
 ALTER TABLE `caht_rooms`
   MODIFY `chat_room_id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
 -- AUTO_INCREMENT for table `event_movies`
 --
 ALTER TABLE `event_movies`
@@ -460,7 +471,7 @@ ALTER TABLE `event_movies`
 -- AUTO_INCREMENT for table `event_pics`
 --
 ALTER TABLE `event_pics`
-  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `messages`
 --

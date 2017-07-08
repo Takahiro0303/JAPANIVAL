@@ -1053,6 +1053,7 @@ if (!isset($_POST)) {
             <hr>
           </form>
           <button id="review-modal-c" class="form-control btn-primary" onclick="confirm()">CONFIRM</button>
+          <br>
           <button id="review-modal-b" class="form-control btn-default">BACK</button>
         </div>
       </div>

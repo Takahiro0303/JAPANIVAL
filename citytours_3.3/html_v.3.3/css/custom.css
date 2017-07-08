@@ -20,3 +20,24 @@
 .c-rating{
   display: none;
 }
+
+#revies-modal-c{
+  margin: 10px;
+}
+
+
+
+.short_info .join_count {
+  float: right;
+  font-size: 18px;
+  font-weight: bold;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.short_info .like_count {
+  float: right;
+  font-size: 18px;
+  font-weight: bold;
+  display: inline-block;
+}

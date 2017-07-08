@@ -25,7 +25,9 @@ $(document).on('change', ':file', function() {
 function confirm(){
     $(function(){
         $(".modal-title").text("Confirmation");
-        return false;
+        var rating = document.review_event.rating.value;
+        var comment = document.review_event.review_text.value;
+        alert(rating + comment);
 
 
     });
