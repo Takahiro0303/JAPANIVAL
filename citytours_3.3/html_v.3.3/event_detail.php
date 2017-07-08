@@ -5,14 +5,13 @@ require('../../common/functions.php'); //関数ファイル読み込み
 // require('reques.php'); // パラメータがなければedit_index.php 
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み ⇦　他でも使うようなら復活させる
 
-$event_id = $_REQUEST['event_id'];
-
-$sql = 'SELECT * FROM events WHERE event_id=?';
-$data = array($event_id);
+// $event_id = $_GET['event_id'];
+$event_id = 1;
+$sql = 'SELECT * FROM events WHERE event_id=1';
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
 
 $event_data = get_event_data($dbh);
 
