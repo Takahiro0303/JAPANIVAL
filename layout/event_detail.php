@@ -1,21 +1,21 @@
 <?php  
 session_start();
-require('dbconnect.php');
-require('header.php');
-require('.php');
+require('../dbconnect.php');
+// require('header.php');
+// require('.php');
 
 
-if (!isset($_GET['event_id'])) {
-	h('main_portal.php');
-}else {
+// if (!isset($_GET['event_id'])) {
+	// h('main_portal.php');
+// }else {
 
-$event_id = $_GET['event_id'];
+$event_id = 1;
 $sql = 'SELECT * FROM events WHERE event_id = ?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event = $stmt->fetch(PDO::FETCH_ASSOC);
-}
+// }
 
 
 $reviews=array();
