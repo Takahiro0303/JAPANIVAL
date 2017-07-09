@@ -72,6 +72,7 @@ require('../../common/dbconnect.php');
     $events_stmt->execute();
     $event_id = $events_stmt->fetch(PDO::FETCH_ASSOC);
 
+
     // newsテーブルへの登録
     $sql = 'INSERT INTO news
                     SET event_id= ?,
