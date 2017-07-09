@@ -18,7 +18,6 @@ if (!empty($_POST)) {
     $o_current_password = sha1($_POST['o_current_password']);
     if ($o_current_password == $login_user['o_password']) {
         //現在のパスワードが一致する場合
-        e('パスワードチェッククリア');
         
         $o_name = $_POST['o_name'];
         $o_f_name = $_POST['o_f_name'];
@@ -78,22 +77,20 @@ if (!empty($_POST)) {
             }
         }
     } else {
-        e('パスワードミス');
         $errors['o_current_password'] = 'failed';
     }
 
     if (empty($errors)) {
-        e('更新処理');
         //もし画像がセットされていればUP処理
         if (!empty($file_name)) {
             $data_str = date('YmdHis');
             $submit_file_name = $date_str . $_FILES['o_pic']['o_name'];
-            move_uploaded_file($_FILES['o_pic']['tmp_name'], '../../organizer_pic/' . $submit_file_name);
+            move_uploaded_file($_FILES['o_pic']['tmp_name'], '../../o_pic/' . $submit_file_name);
         }
 
         //データベース更新
         if (empty($o_new_password)) {
-            $o_new_password = $o_current_password;
+            $o_password = $o_current_password;
         } else {
             $o_password = sha1($o_new_password);
         }
@@ -102,7 +99,7 @@ if (!empty($_POST)) {
             $submit_file_name = $login_user['o_pic'];
         }
 
-        $sql = 'UPDATE organisers SET o_name=?,
+        $sql = 'UPDATE organizers SET o_name=?,
                                       o_f_name=?,
                                       o_postal=?,
                                       o_pref=?,
@@ -117,7 +114,7 @@ if (!empty($_POST)) {
         $data = [$o_name,
                  $o_f_name,
                  $o_postal,
-                 $p_pref,
+                 $o_pref,
                  $o_address,
                  $o_tel,
                  $o_email,
@@ -156,7 +153,7 @@ if (!empty($_POST)) {
   <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
   
   <!-- Google web fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lato:300,400|Montserrat:400,400i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lato:300,400|Montserrat:400,400i,700,700i" rel="stylesheet">
 
   <!-- CSS -->
   <link href="css/base.css" rel="stylesheet">
@@ -198,261 +195,257 @@ if (!empty($_POST)) {
     <div id="top_line">
       <div class="container">
         <div class="row">
-          <div class="col-md-6 col-sm-6 col-xs-6"><i class="icon-phone"></i><strong>0045 043204434</strong>
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <i class="icon-phone"></i><strong>0045 043204434</strong>
           </div>
-
           <div class="col-md-6 col-sm-6 col-xs-6">
             <ul id="top_links">
               <li>
                 <div class="dropdown dropdown-access">
                   <a href="#" id="access_link">Sign Out</a>
-                                    </div>
+                </div>
               </li>
             </ul>
-            </div>
           </div>
-          <!-- End row -->
         </div>
-        <!-- End container-->
+          <!-- End row -->
       </div>
+        <!-- End container-->
+    </div>
       <!-- End top line-->
 
-      <div class="container">
-        <div class="row">
-          <div class="col-md-3 col-sm-3 col-xs-3">
-            <div id="logo">
-              <a href="index.html"><img src="img/logo.png" width="160" height="34" alt="City tours" data-retina="true" class="logo_normal">
-              </a>
-              <a href="index.html"><img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true" class="logo_sticky">
-              </a>
-            </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-3">
+          <div id="logo">
+            <a href="index.html"><img src="img/logo.png" width="160" height="34" alt="City tours" data-retina="true" class="logo_normal"></a>
+            <a href="index.html"><img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true" class="logo_sticky"></a>
           </div>
-          <nav class="col-md-9 col-sm-9 col-xs-9">
-                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
-                    <div class="main-menu">
-                        <div id="header_menu">
-                            <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
-                        </div>
-                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+        </div>
+        <nav class="col-md-9 col-sm-9 col-xs-9">
+          <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+            <div class="main-menu">
+                <div id="header_menu">
+                  <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
+                </div>
+                <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                <ul>
+                  <li class="submenu">
+                    <a href="javascript:void(0);" class="show-submenu">Home <i class="icon-down-open-mini"></i></a>
+                      <ul>
+                        <li><a href="javascript:void(0);">Revolution slider</a>
+                          <ul>
+                            <li><a href="index.html">Default slider</a></li>
+                            <li><a href="index_20.html">Advanced slider</a></li>
+                            <li><a href="index_14.html">Youtube Hero</a></li>
+                            <li><a href="index_15.html">Vimeo Hero</a></li>
+                            <li><a href="index_17.html">Youtube 4K</a></li>
+                            <li><a href="index_16.html">Carousel</a></li>
+                            <li><a href="index_19.html">Mailchimp Newsletter</a></li>
+                            <li><a href="index_18.html">Fixed Caption</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="index_12.html">Layer slider</a></li>
+                        <li><a href="index_2.html">With Only tours</a></li>
+                        <li><a href="index_3.html">Single image</a></li>
+                        <li><a href="index_4.html">Header video</a></li>
+                        <li><a href="index_7.html">With search panel</a></li>
+                        <li><a href="index_13.html">With tabs</a></li>
+                        <li><a href="index_5.html">With map</a></li>
+                        <li><a href="index_6.html">With search bar</a></li>
+                        <li><a href="index_8.html">Search bar + Video</a></li>
+                        <li><a href="index_9.html">With Text Rotator</a></li>
+                        <li><a href="index_10.html">With Cookie Bar (EU law)</a></li>
+                        <li><a href="index_11.html">Popup Advertising</a></li>
+                      </ul>
+                  </li>
+                  <li class="submenu">
+                    <a href="javascript:void(0);" class="show-submenu">Tours <i class="icon-down-open-mini"></i></a>
+                    <ul>
+                      <li><a href="all_tours_list.html">All tours list</a></li>
+                      <li><a href="all_tours_grid.html">All tours grid</a></li>
+                      <li><a href="all_tours_map_listing.html">All tours map listing</a></li>
+                      <li><a href="single_tour.html">Single tour page</a></li>
+                      <li><a href="single_tour_with_gallery.html">Single tour with gallery</a></li>
+                      <li><a href="javascript:void(0);">Single tour fixed sidebar</a>
                         <ul>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Home <i class="icon-down-open-mini"></i></a>
-                                <ul>
-                                    <li><a href="javascript:void(0);">Revolution slider</a>
-                                        <ul>
-                                            <li><a href="index.html">Default slider</a></li>
-                                            <li><a href="index_20.html">Advanced slider</a></li>
-                                            <li><a href="index_14.html">Youtube Hero</a></li>
-                                            <li><a href="index_15.html">Vimeo Hero</a></li>
-                                            <li><a href="index_17.html">Youtube 4K</a></li>
-                                            <li><a href="index_16.html">Carousel</a></li>
-                                            <li><a href="index_19.html">Mailchimp Newsletter</a></li>
-                                            <li><a href="index_18.html">Fixed Caption</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="index_12.html">Layer slider</a></li>
-                                    <li><a href="index_2.html">With Only tours</a></li>
-                                    <li><a href="index_3.html">Single image</a></li>
-                                    <li><a href="index_4.html">Header video</a></li>
-                                    <li><a href="index_7.html">With search panel</a></li>
-                                    <li><a href="index_13.html">With tabs</a></li>
-                                    <li><a href="index_5.html">With map</a></li>
-                                    <li><a href="index_6.html">With search bar</a></li>
-                                    <li><a href="index_8.html">Search bar + Video</a></li>
-                                    <li><a href="index_9.html">With Text Rotator</a></li>
-                                    <li><a href="index_10.html">With Cookie Bar (EU law)</a></li>
-                                    <li><a href="index_11.html">Popup Advertising</a></li>
-                                </ul>
-                            </li>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Tours <i class="icon-down-open-mini"></i></a>
-                                <ul>
-                                    <li><a href="all_tours_list.html">All tours list</a></li>
-                                    <li><a href="all_tours_grid.html">All tours grid</a></li>
-                                    <li><a href="all_tours_map_listing.html">All tours map listing</a></li>
-                                    <li><a href="single_tour.html">Single tour page</a></li>
-                                    <li><a href="single_tour_with_gallery.html">Single tour with gallery</a></li>
-                                    <li><a href="javascript:void(0);">Single tour fixed sidebar</a>
-                                        <ul>
-                                            <li><a href="single_tour_fixed_sidebar.html">Single tour fixed sidebar</a></li>
-                                            <li><a href="single_tour_with_gallery_fixed_sidebar.html">Single tour 2 Fixed Sidebar</a></li>
-                                            <li><a href="cart_fixed_sidebar.html">Cart Fixed Sidebar</a></li>
-                                            <li><a href="payment_fixed_sidebar.html">Payment Fixed Sidebar</a></li>
-                                            <li><a href="confirmation_fixed_sidebar.html">Confirmation Fixed Sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="single_tour_working_booking.php">Single tour working booking</a></li>
-                                    <li><a href="cart.html">Single tour cart</a></li>
-                                    <li><a href="payment.html">Single tour booking</a></li>
-                                </ul>
-                            </li>
-                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Hotels <i class="icon-down-open-mini"></i></a><ul>
-                                    <li><a href="all_hotels_list.html">All hotels list</a></li>
-                                    <li><a href="all_hotels_grid.html">All hotels grid</a></li>
-                                    <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
-                                    <li><a href="single_hotel.html">Single hotel page</a></li>
-                                    <li><a href="single_hotel_datepicker_adv.html">Single hotel datepicker adv</a></li>
-                                    <li><a href="single_hotel_working_booking.php">Single hotel working booking</a></li>
-                                    <li><a href="single_hotel_contact.php">Single hotel contact working</a></li>
-                                    <li><a href="cart_hotel.html">Cart hotel</a></li>
-                                    <li><a href="payment_hotel.html">Booking hotel</a></li>
-                                    <li><a href="confirmation_hotel.html">Confirmation hotel</a></li>
-                                </ul>
-                            </li>
-                            <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Transfers <i class="icon-down-open-mini"></i></a>
-                                <ul>
-                                    <li><a href="all_transfer_list.html">All transfers list</a></li>
-                                    <li><a href="all_transfer_grid.html">All transfers grid</a></li>
-                                    <li><a href="single_transfer.html">Single transfer page</a></li>
-                                    <li><a href="cart_transfer.html">Cart transfers</a></li>
-                                    <li><a href="payment_transfer.html">Booking transfers</a></li>
-                                    <li><a href="confirmation_transfer.html">Confirmation transfers</a></li>
-                                </ul>
-                            </li>
-                              <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Restaurants <i class="icon-down-open-mini"></i></a>
-                                <ul>
-                                    <li><a href="all_restaurants_list.html">All restaurants list</a></li>
-                                    <li><a href="all_restaurants_grid.html">All restaurants grid</a></li>
-                                    <li><a href="all_restaurants_map_listing.html">All restaurants map listing</a></li>
-                                    <li><a href="single_restaurant.html">Single restaurant page</a></li>
-                                    <li><a href="payment_restaurant.html">Booking restaurant</a></li>
-                                    <li><a href="confirmation_restaurant.html">Confirmation transfers</a></li>
-                                </ul>
-                            </li>
-                             <li class="megamenu submenu">
-                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
-                                <div class="menu-wrapper">
-                                    <div class="col-md-4">
-                                        <h3>Header styles</h3>
-                                        <ul>
-                                            <li><a href="index.html">Default transparent</a></li>
-                                            <li><a href="header_2.html">Plain color</a></li>
-                                            <li><a href="header_3.html">Plain color on scroll</a></li>
-                                            <li><a href="header_4.html">With socials on top</a></li>
-                                            <li><a href="header_5.html">With language selection</a></li>
-                                            <li><a href="header_6.html">With lang and conversion</a></li>
-                                            <li><a href="header_7.html">With full horizontal menu</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h3>Footer styles</h3>
-                                        <ul>
-                                            <li><a href="index.html">Footer default</a></li>
-                                            <li><a href="footer_2.html">Footer style 2</a></li>
-                                            <li><a href="footer_3.html">Footer style 3</a></li>
-                                            <li><a href="footer_4.html">Footer style 4</a></li>
-                                            <li><a href="footer_5.html">Footer style 5</a></li>
-                                            <li><a href="footer_6.html">Footer style 6</a></li>
-                                            <li><a href="footer_7.html">Footer style 7</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h3>Shop</h3>
-                                        <ul>
-                                            <li><a href="shop.html">Shop</a></li>
-                                            <li><a href="shop-single.html">Shop single</a></li>
-                                            <li><a href="shopping-cart.html">Shop cart</a></li>
-                                            <li><a href="checkout.html">Shop Checkout</a></li>
-                                        </ul>
-                                    </div>
-                                </div><!-- End menu-wrapper -->
-                            </li>
-                            <li class="megamenu submenu">
-                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
-                                <div class="menu-wrapper">
-                                    <div class="col-md-4">
-                                        <h3>Pages</h3>
-                                        <ul>
-                                            <li><a href="about.html">About us</a></li>
-                                           <li><a href="general_page.html">General page</a></li>
-                                            <li><a href="tourist_guide.html">Tourist guide</a></li>
-                                             <li><a href="wishlist.html">Wishlist page</a></li>
-                                             <li><a href="faq.html">Faq</a></li>
-                                             <li><a href="faq_2.html">Faq smooth scroll</a></li>
-                                             <li><a href="pricing_tables.html">Pricing tables</a></li>
-                                             <li><a href="gallery_3_columns.html">Gallery 3 columns</a></li>
-                                            <li><a href="gallery_4_columns.html">Gallery 4 columns</a></li>
-                                            <li><a href="grid_gallery_1.html">Grid gallery</a></li>
-                                            <li><a href="grid_gallery_2.html">Grid gallery with filters</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h3>Pages</h3>
-                                        <ul>
-                                            <li><a href="contact_us_1.html">Contact us 1</a></li>
-                                            <li><a href="contact_us_2.html">Contact us 2</a></li>
-                                             <li><a href="blog_right_sidebar.html">Blog</a></li>
-                                            <li><a href="blog.html">Blog left sidebar</a></li>
-                                            <li><a href="login.html">Login</a></li>
-                                            <li><a href="register.html">Register</a></li>
-                                            <li><a href="invoice.html" target="_blank">Invoice</a></li>
-                                            <li><a href="404.html">404 Error page</a></li>
-                                            <li><a href="site_launch/index.html">Site launch / Coming soon</a></li>
-                                            <li><a href="timeline.html">Tour timeline</a></li>
-                                            <li><a href="page_with_map.html"><i class="icon-map"></i>  Full screen map</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h3>Elements</h3>
-                                         <ul>
-                                            <li><a href="footer_2.html"><i class="icon-columns"></i> Footer with working newsletter</a></li>
-                                            <li><a href="footer_5.html"><i class="icon-columns"></i> Footer with Twitter feed</a></li>
-                                            <li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Icon pack 1 (1900)</a></li>
-                                            <li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Icon pack 2 (100)</a></li>
-                                            <li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Icon pack 3 (30)</a></li>
-                                            <li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Icon pack 4 (200)</a></li>
-                                            <li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Icon pack 5 (360)</a></li>
-                                            <li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
-                                            <li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
-                                            <li><a href="admin.html"><i class="icon-cog-1"></i>  Admin area</a></li>
-                                            <li><a href="general_page.html"><i class="icon-light-up"></i>  Weather Forecast</a></li>                                             
-                                        </ul>
-                                    </div>
-                                </div><!-- End menu-wrapper -->
-                            </li>
+                          <li><a href="single_tour_fixed_sidebar.html">Single tour fixed sidebar</a></li>
+                          <li><a href="single_tour_with_gallery_fixed_sidebar.html">Single tour 2 Fixed Sidebar</a></li>
+                          <li><a href="cart_fixed_sidebar.html">Cart Fixed Sidebar</a></li>
+                          <li><a href="payment_fixed_sidebar.html">Payment Fixed Sidebar</a></li>
+                          <li><a href="confirmation_fixed_sidebar.html">Confirmation Fixed Sidebar</a></li>
                         </ul>
-                    </div><!-- End main-menu -->
-                    <ul id="top_tools">
-                        <li>
-                            <div class="dropdown dropdown-search">
-                                <a href="#" class="search-overlay-menu-btn" data-toggle="dropdown"><i class="icon-search"></i></a>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown dropdown-cart">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class=" icon-basket-1"></i>Cart (0) </a>
-                                <ul class="dropdown-menu" id="cart_items">
-                                    <li>
-                                        <div class="image"><img src="img/thumb_cart_1.jpg" alt="image"></div>
-                                        <strong>
-                    <a href="#">Louvre museum</a>1x $36.00 </strong>
-                                        <a href="#" class="action"><i class="icon-trash"></i></a>
-                                    </li>
-                                    <li>
-                                        <div class="image"><img src="img/thumb_cart_2.jpg" alt="image"></div>
-                                        <strong>
-                    <a href="#">Versailles tour</a>2x $36.00 </strong>
-                                        <a href="#" class="action"><i class="icon-trash"></i></a>
-                                    </li>
-                                    <li>
-                                        <div class="image"><img src="img/thumb_cart_3.jpg" alt="image"></div>
-                                        <strong>
-                    <a href="#">Versailles tour</a>1x $36.00 </strong>
-                                        <a href="#" class="action"><i class="icon-trash"></i></a>
-                                    </li>
-                                    <li>
-                                        <div>Total: <span>$120.00</span></div>
-                                        <a href="cart.html" class="button_drop">Go to cart</a>
-                                        <a href="payment.html" class="button_drop outline">Check out</a>
-                                    </li>
-                                </ul>
-                            </div><!-- End dropdown-cart-->
-                        </li>
+                      </li>
+                      <li><a href="single_tour_working_booking.php">Single tour working booking</a></li>
+                      <li><a href="cart.html">Single tour cart</a></li>
+                      <li><a href="payment.html">Single tour booking</a></li>
                     </ul>
-                </nav>
+                  </li>
+                  <li class="submenu">
+                    <a href="javascript:void(0);" class="show-submenu">Hotels <i class="icon-down-open-mini"></i></a>
+                    <ul>
+                      <li><a href="all_hotels_list.html">All hotels list</a></li>
+                      <li><a href="all_hotels_grid.html">All hotels grid</a></li>
+                      <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
+                      <li><a href="single_hotel.html">Single hotel page</a></li>
+                      <li><a href="single_hotel_datepicker_adv.html">Single hotel datepicker adv</a></li>
+                      <li><a href="single_hotel_working_booking.php">Single hotel working booking</a></li>
+                      <li><a href="single_hotel_contact.php">Single hotel contact working</a></li>
+                      <li><a href="cart_hotel.html">Cart hotel</a></li>
+                      <li><a href="payment_hotel.html">Booking hotel</a></li>
+                      <li><a href="confirmation_hotel.html">Confirmation hotel</a></li>
+                    </ul>
+                  </li>
+                  <li class="submenu">
+                    <a href="javascript:void(0);" class="show-submenu">Transfers <i class="icon-down-open-mini"></i></a>
+                    <ul>
+                      <li><a href="all_transfer_list.html">All transfers list</a></li>
+                      <li><a href="all_transfer_grid.html">All transfers grid</a></li>
+                      <li><a href="single_transfer.html">Single transfer page</a></li>
+                      <li><a href="cart_transfer.html">Cart transfers</a></li>
+                      <li><a href="payment_transfer.html">Booking transfers</a></li>
+                      <li><a href="confirmation_transfer.html">Confirmation transfers</a></li>
+                    </ul>
+                  </li>
+                  <li class="submenu">
+                    <a href="javascript:void(0);" class="show-submenu">Restaurants <i class="icon-down-open-mini"></i></a>
+                    <ul>
+                      <li><a href="all_restaurants_list.html">All restaurants list</a></li>
+                      <li><a href="all_restaurants_grid.html">All restaurants grid</a></li>
+                      <li><a href="all_restaurants_map_listing.html">All restaurants map listing</a></li>
+                      <li><a href="single_restaurant.html">Single restaurant page</a></li>
+                      <li><a href="payment_restaurant.html">Booking restaurant</a></li>
+                      <li><a href="confirmation_restaurant.html">Confirmation transfers</a></li>
+                    </ul>
+                  </li>
+                  <li class="megamenu submenu">
+                    <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                      <div class="menu-wrapper">
+                          <div class="col-md-4">
+                            <h3>Header styles</h3>
+                            <ul>
+                              <li><a href="index.html">Default transparent</a></li>
+                              <li><a href="header_2.html">Plain color</a></li>
+                              <li><a href="header_3.html">Plain color on scroll</a></li>
+                              <li><a href="header_4.html">With socials on top</a></li>
+                              <li><a href="header_5.html">With language selection</a></li>
+                              <li><a href="header_6.html">With lang and conversion</a></li>
+                              <li><a href="header_7.html">With full horizontal menu</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-md-4">
+                            <h3>Footer styles</h3>
+                            <ul>
+                              <li><a href="index.html">Footer default</a></li>
+                              <li><a href="footer_2.html">Footer style 2</a></li>
+                              <li><a href="footer_3.html">Footer style 3</a></li>
+                              <li><a href="footer_4.html">Footer style 4</a></li>
+                              <li><a href="footer_5.html">Footer style 5</a></li>
+                              <li><a href="footer_6.html">Footer style 6</a></li>
+                              <li><a href="footer_7.html">Footer style 7</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-md-4">
+                            <h3>Shop</h3>
+                            <ul>
+                              <li><a href="shop.html">Shop</a></li>
+                              <li><a href="shop-single.html">Shop single</a></li>
+                              <li><a href="shopping-cart.html">Shop cart</a></li>
+                              <li><a href="checkout.html">Shop Checkout</a></li>
+                            </ul>
+                          </div>
+                      </div><!-- End menu-wrapper -->
+                  </li>
+                  <li class="megamenu submenu">
+                    <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                      <div class="menu-wrapper">
+                          <div class="col-md-4">
+                            <h3>Pages</h3>
+                            <ul>
+                              <li><a href="about.html">About us</a></li>
+                              <li><a href="general_page.html">General page</a></li>
+                              <li><a href="tourist_guide.html">Tourist guide</a></li>
+                              <li><a href="wishlist.html">Wishlist page</a></li>
+                              <li><a href="faq.html">Faq</a></li>
+                              <li><a href="faq_2.html">Faq smooth scroll</a></li>
+                              <li><a href="pricing_tables.html">Pricing tables</a></li>
+                              <li><a href="gallery_3_columns.html">Gallery 3 columns</a></li>
+                              <li><a href="gallery_4_columns.html">Gallery 4 columns</a></li>
+                              <li><a href="grid_gallery_1.html">Grid gallery</a></li>
+                              <li><a href="grid_gallery_2.html">Grid gallery with filters</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-md-4">
+                            <h3>Pages</h3>
+                            <ul>
+                              <li><a href="contact_us_1.html">Contact us 1</a></li>
+                              <li><a href="contact_us_2.html">Contact us 2</a></li>
+                              <li><a href="blog_right_sidebar.html">Blog</a></li>
+                              <li><a href="blog.html">Blog left sidebar</a></li>
+                              <li><a href="login.html">Login</a></li>
+                              <li><a href="register.html">Register</a></li>
+                              <li><a href="invoice.html" target="_blank">Invoice</a></li>
+                              <li><a href="404.html">404 Error page</a></li>
+                              <li><a href="site_launch/index.html">Site launch / Coming soon</a></li>
+                              <li><a href="timeline.html">Tour timeline</a></li>
+                              <li><a href="page_with_map.html"><i class="icon-map"></i>  Full screen map</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-md-4">
+                            <h3>Elements</h3>
+                             <ul>
+                                <li><a href="footer_2.html"><i class="icon-columns"></i> Footer with working newsletter</a></li>
+                                <li><a href="footer_5.html"><i class="icon-columns"></i> Footer with Twitter feed</a></li>
+                                <li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Icon pack 1 (1900)</a></li>
+                                <li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Icon pack 2 (100)</a></li>
+                                <li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Icon pack 3 (30)</a></li>
+                                <li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Icon pack 4 (200)</a></li>
+                                <li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Icon pack 5 (360)</a></li>
+                                <li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
+                                <li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
+                                <li><a href="admin.html"><i class="icon-cog-1"></i>  Admin area</a></li>
+                                <li><a href="general_page.html"><i class="icon-light-up"></i>  Weather Forecast</a></li>                                             
+                            </ul>
+                          </div>
+                        </div><!-- End menu-wrapper -->
+                  </li>
+                </ul>
+            </div><!-- End main-menu -->
+            <ul id="top_tools">
+              <li>
+                <div class="dropdown dropdown-search">
+                  <a href="#" class="search-overlay-menu-btn" data-toggle="dropdown"><i class="icon-search"></i></a>
+                </div>
+              </li>
+              <li>
+                <div class="dropdown dropdown-cart">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class=" icon-basket-1"></i>Cart (0) </a>
+                  <ul class="dropdown-menu" id="cart_items">
+                    <li>
+                      <div class="image"><img src="img/thumb_cart_1.jpg" alt="image"></div>
+                      <strong><a href="#">Louvre museum</a>1x $36.00 </strong>
+                      <a href="#" class="action"><i class="icon-trash"></i></a>
+                    </li>
+                    <li>
+                      <div class="image"><img src="img/thumb_cart_2.jpg" alt="image"></div>
+                      <strong><a href="#">Versailles tour</a>2x $36.00 </strong>
+                      <a href="#" class="action"><i class="icon-trash"></i></a>
+                    </li>
+                    <li>
+                      <div class="image"><img src="img/thumb_cart_3.jpg" alt="image"></div>
+                      <strong><a href="#">Versailles tour</a>1x $36.00 </strong>
+                      <a href="#" class="action"><i class="icon-trash"></i></a>
+                    </li>
+                    <li>
+                      <div>Total: <span>$120.00</span></div>
+                      <a href="cart.html" class="button_drop">Go to cart</a>
+                      <a href="payment.html" class="button_drop outline">Check out</a>
+                    </li>
+                  </ul>
+                </div><!-- End dropdown-cart-->
+              </li>
+            </ul>
+        </nav>
         </div>
       </div>
       <!-- container -->
@@ -474,10 +467,8 @@ if (!empty($_POST)) {
     <div id="position">
       <div class="container">
         <ul>
-          <li><a href="#">Home</a>
-          </li>
-          <li><a href="#">Category</a>
-          </li>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Category</a></li>
           <li>Page active</li>
         </ul>
       </div>
@@ -1079,25 +1070,24 @@ if (!empty($_POST)) {
                   </li>
                   <li>代表者 <span><?php echo htmlspecialchars($o_f_name);?></span>
                   </li>
+                  <li>メールアドレス<span><?php echo htmlspecialchars($o_email);?></span>
+                  </li>
                   <li>郵便番号 <span><?php echo htmlspecialchars($o_postal);?></span>
                   </li>
                   <li>住所 <span><?php echo htmlspecialchars($o_pref);?> <?php echo htmlspecialchars($o_address);?></span>
                   </li>
                   <li>電話番号<span><?php echo htmlspecialchars($o_tel);?></span>
-                  </li>
-                  <li>メールアドレス<span><?php echo htmlspecialchars($o_email);?></span>
-                  </li>
+                  </li>                  
                   <li>自己紹介<span><?php echo htmlspecialchars($o_intro);?></span>
                   </li>
                 </ul>
               </div>
               <div class="col-md-5 col-sm-5">
-                <img src="img/tourist_guide_pic.jpg" alt="Image" class="img-responsive styled profile_pic">  <!-- フォルダ名/データ名 -->
-                </p>
+                <img src="../../o_pic/<?php echo htmlspecialchars($login_user['o_pic']); ?>" width="300" alt="Image" class="img-responsive styled profile_pic"><!-- フォルダ名/データ名 -->
               </div>
             </div>
             <!-- End row -->
-
+<form method="POST" action="" enctype="multipart/form-data">
             <div class="divider"></div>
             <div class="row">
               <div class="col-md-12">
@@ -1107,81 +1097,101 @@ if (!empty($_POST)) {
                 <table class="table table-bordered">
                   <thead>
                     <tbody>
-                     <form method="POST" action="" enctype="multipart/form-data">
-                      <tr>
-                        <th class="col-md-3 col-sm-3">団体名</th>
-                        <td><input class="form-control" name="o_name" id="nickname" type="text" value="<?php echo htmlspecialchars($o_name);?>">
-                        <?php if (isset($errors['o_name']) && $errors['o_name'] == 'blank') { ?>
-                        <p class="alert-danger">団体名を入力してください</p>
-                        <?php } ?>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>代表者名</th>
-                        <td><input class="form-control" name="o_f_name" id="o_f_name" type="text" value="<?php echo htmlspecialchars($o_f_name); ?>">
-                        <?php if (isset($errors['o_f_name']) && $errors['o_f_name'] == 'blank') { ?>
-                        <p class="alert-danger">代表者名を入力してください</p>
-                        <?php } ?>
-                        </td>
-                      </tr>
+                      
                         <tr>
-                        <th>郵便番号</th>
-                        <td><input type="text" name="o_postal" class="form-control" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','o_pref','o_address');" value="<?php echo htmlspecialchars($o_postal); ?>">
-                        <?php if (isset($errors['o_postal']) && $errors['o_postal'] == 'blank') { ?>
-                        <p class="alert-danger">郵便番号を入力してください</p>
-                        <?php } ?>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>都道府県</th>
-                        <td><input class="form-control" name="o_pref" id="o_pref" type="text" value="<?php echo htmlspecialchars($o_pref); ?>"></td>
-                      </tr>
-                      <tr>
-                        <th>市区町村・番地・建物名・号室</th>
-                        <td><input class="form-control" name="o_address" id="o_address" type="text" value="<?php echo htmlspecialchars($o_address); ?>"></td>
-                      </tr>
-                      <tr>
-                        <th>電話番号</th>
-                        <td><input class="form-control" name="o_tel" id="o_tel" type="text" value="<?php echo htmlspecialchars($o_tel); ?>"></td>
-                      </tr>
-                      <tr>
-                        <th>メールアドレス</th>
-                        <td><input class="form-control" name="o_email" id="o_email" type="text" value="<?php echo htmlspecialchars($o_email); ?>">
-                        <?php if(isset($errors['o_email']) && $errors['o_email'] == 'blank') { ?>
-                        <p class="alert-danger">メールアドレスを入力してください</p>
-                        <?php } ?>
-                        <?php if(isset($errors['o_email']) && $errors['o_email'] == 'duplicate') { ?>
-                        <p class="error">そのメールアドレスは既に登録されています</p>
-                        <?php } ?>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>現在のパスワード</th>
-                        <td><input type="password" class="form-control" name="o_current_password" id="o_password" type="text"></td>
-                        <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
-                        <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
-                        <?php } ?>
-                      </tr>
-                      <tr>
-                        <th>新しいパスワード</th>
-                        <td><input class="form-control" name="o_new_password" id="o_password" type="password"><?php if(isset($errors['o_new_password']) && $errors['o_new_password'] == 'length') { ?>
-          <p class="alert-danger">パスワードは6文字以上で入力してください</p>
-        <?php } ?></td>
-                      </tr>
-                      <tr>
-                        <th>確認パスワード</th>
-                        <td><input class="form-control" name="o_confirm_password" id="o_confirm_password" type="password"><?php if(isset($errors['o_confirm_password']) && $errors['o_confirm_password'] == 'wrong') { ?>
-          <p class="alert-danger">パスワードが一致しません</p>
-        <?php } ?></td>
-                      </tr>
-                      <tr>
-                        <th>自己紹介コメント</th>
-                        <td><textarea class="form-control" name="o_intro" value="<?php echo htmlspecialchars($o_intro); ?>"></textarea>
-                        <?php if(isset($errors['o_intro']) && $errors['o_intro'] == 'wrong') { ?>
-          <p class="alert-danger"></p>
-        <?php } ?>
-        </td>
-                      </tr> 
+                          <th class="col-md-3 col-sm-3">団体名</th>
+                          <td>
+                            <input class="form-control" name="o_name" id="nickname" type="text" value="<?php echo htmlspecialchars($o_name);?>">
+                            <?php if (isset($errors['o_name']) && $errors['o_name'] == 'blank') { ?>
+                              <p class="alert-danger">団体名を入力してください</p>
+                            <?php } ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>代表者名</th>
+                          <td>
+                            <input class="form-control" name="o_f_name" id="o_f_name" type="text" value="<?php echo htmlspecialchars($o_f_name); ?>">
+                            <?php if (isset($errors['o_f_name']) && $errors['o_f_name'] == 'blank') { ?>
+                              <p class="alert-danger">代表者名を入力してください</p>
+                            <?php } ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>メールアドレス</th>
+                          <td>
+                            <input class="form-control" name="o_email" id="o_email" type="text" value="<?php echo htmlspecialchars($o_email); ?>">
+                            <?php if(isset($errors['o_email']) && $errors['o_email'] == 'blank') { ?>
+                              <p class="alert-danger">メールアドレスを入力してください</p>
+                            <?php } ?>
+                            <?php if(isset($errors['o_email']) && $errors['o_email'] == 'duplicate') { ?>
+                              <p class="error">そのメールアドレスは既に登録されています</p>
+                            <?php } ?>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>現在のパスワード</th>
+                            <td>
+                              <input type="password" class="form-control" name="o_current_password" id="o_current_password" type="password">
+                            </td>
+                            <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
+                              <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
+                            <?php } ?>
+                        </tr>
+                        <tr>
+                          <th>新しいパスワード</th>
+                            <td>
+                              <input class="form-control" name="o_new_password" id="o_new_password" type="password">
+                              <?php if(isset($errors['o_new_password']) && $errors['o_new_password'] == 'length') { ?>
+                                <p class="alert-danger">パスワードは6文字以上で入力してください</p>
+                              <?php } ?>
+                            </td>
+                        </tr>
+                        <tr>
+                          <th>確認パスワード</th>
+                            <td>
+                              <input class="form-control" name="o_confirm_password" id="o_confirm_password" type="password">
+                              <?php if(isset($errors['o_confirm_password']) && $errors['o_confirm_password'] == 'wrong') { ?>
+                                <p class="alert-danger">パスワードが一致しません</p>
+                              <?php } ?>
+                            </td>
+                        </tr>
+                        <tr>
+                          <th>郵便番号</th>
+                            <td>
+                              <input type="text" name="o_postal" class="form-control" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','o_pref','o_address');" value="<?php echo htmlspecialchars($o_postal); ?>">
+                              <?php if (isset($errors['o_postal']) && $errors['o_postal'] == 'blank') { ?>
+                                <p class="alert-danger">郵便番号を入力してください</p>
+                              <?php } ?>
+                            </td>
+                        </tr>
+                        <tr>
+                          <th>都道府県</th>
+                            <td>
+                              <input class="form-control" name="o_pref" id="o_pref" type="text" value="<?php echo htmlspecialchars($o_pref); ?>">
+                            </td>
+                        </tr>
+                        <tr>
+                          <th>市区町村・番地・建物名・号室</th>
+                          <td>
+                            <input class="form-control" name="o_address" id="o_address" type="text" value="<?php echo htmlspecialchars($o_address); ?>">
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>電話番号</th>
+                            <td>
+                              <input class="form-control" name="o_tel" id="o_tel" type="text" value="<?php echo htmlspecialchars($o_tel); ?>">
+                            </td>
+                        </tr>                        
+                        <tr>
+                          <th>自己紹介コメント</th>
+                            <td>
+                              <textarea class="form-control" name="o_intro" value="<?php echo htmlspecialchars($o_intro); ?>"></textarea>
+                              <?php if(isset($errors['o_intro']) && $errors['o_intro'] == 'wrong') { ?>
+                                <p class="alert-danger"></p>
+                              <?php } ?>
+                            </td>
+                        </tr>
+                      <!-- </form> --> 
                     </tbody>
                   </thead>
                 </table>
@@ -1192,16 +1202,16 @@ if (!empty($_POST)) {
             <h4>Upload profile photo</h4>
             <div class="form-inline upload_1">
               <div class="form-group">
-                <input type="file" name="o_pic" id="js-upload-files" multiple>
+                <input type="file" name="o_pic" id="js-upload-files" enctype="multiple/form-data">
                 <?php if(isset($errors['o_pic']) && $errors['o_pic'] == 'type') { ?>
-                <p class="alert-danger">画像は「jpg」「png」「gif」の画像を選択してください</p>
+                  <p class="alert-danger">画像は「jpg」「png」「gif」の画像を選択してください</p>
                 <?php } ?>
               </div>
-              <button type="submit" class="btn_1 green" id="js-upload-submit">Upload file</button>
             </div>
-              <hr>
-              <button type="submit" class="btn_1 green">Update Profile</button>
-              </form>
+
+            <hr>
+            <a href="#a1"><button type="submit" class="btn_1 green">Update Profile</button></a>
+<!-- ★</form>   -->          
           </section>
           <!-- End section 5 -->
 
@@ -1209,7 +1219,7 @@ if (!empty($_POST)) {
           <!-- End content -->
         </div>
         <!-- End tabs -->
-      </div>
+      </div> 
       <!-- end container -->
   </main>
   <!-- End main -->
