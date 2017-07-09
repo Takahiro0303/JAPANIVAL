@@ -932,125 +932,43 @@ if (!empty($_POST)) {
 
           <section id="section-4">
             <div class="row">
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your password</h4>
-                <div class="form-group">
-                  <label>Old password</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
+              <div class="col-md-4 col-sm-6">
+                <div class="hotel_container">
+                  <div class="img_container">
+                    <a href="single_hotel.html">
+                      <img src="img/hotel_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
+                      <div class="ribbon top_rated">
+                      </div>
+                      <div class="score">
+                        <span>7.5</span>Good
+                      </div>
+                      <div class="short_info hotel">
+                        From/Per night<span class="price"><sup>$</sup>59</span>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="hotel_title">
+                    <h3><strong>Park Hyatt</strong> Hotel</h3>
+                    <div class="rating">
+                      <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
+                    </div>
+                    <!-- end rating -->
+                    <div class="wishlist_close_admin">
+                      -
+                    </div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label>New password</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new password</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Password</button>
+                <!-- End box tour -->
               </div>
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your email</h4>
-                <div class="form-group">
-                  <label>Old email</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New email</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new email</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Email</button>
-              </div>
+              <!-- End col-md-6 -->
+
             </div>
             <!-- End row -->
-
-            <hr>
-            <br>
-            <div class="row">
-              <div class="col-md-6 col-sm-6">
-                <h4>Notification settings</h4>
-                <table class="table table-striped options_cart">
-                  <tbody>
-                    <tr>
-                      <td style="width:10%">
-                        <i class="icon_set_1_icon-33"></i>
-                      </td>
-                      <td style="width:60%">
-                        New Citytours Tours
-                      </td>
-                      <td style="width:35%">
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_1" id="option_1" checked value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-6"></i>
-                      </td>
-                      <td>
-                        New Citytours Hotels
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_2" id="option_2" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-26"></i>
-                      </td>
-                      <td>
-                        New Citytours Transfers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_3" id="option_3" value="" checked>
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-81"></i>
-                      </td>
-                      <td>
-                        New Citytours special offers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_4" id="option_4" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button type="submit" class="btn_1 green">Update notifications settings</button>
-              </div>
+            <div class="col-md-12 col-sm-12">
+              <textarea class="form-control"></textarea><br> 
+              <button type="submit" class="btn_1 green">Review</button>  
             </div>
+            
           </section>
           <!-- End section 4 -->
 
@@ -1162,7 +1080,7 @@ if (!empty($_POST)) {
                         <tr>
                           <th>Country</th>
                             <td>
-                              <select class="form-control" name="nationality" id="nationality" value="<?php echo htmlspecialchars($nationality); ?>">
+                              <select class="form-control" name="nationality" id="nationality" selected="<?php echo htmlspecialchars($nationality); ?>">
                                 <option value="nationality">Nationality</option>
                                 <option value="Afganistan">Afghanistan</option>
                                 <option value="Albania">Albania</option>
@@ -1417,7 +1335,7 @@ if (!empty($_POST)) {
                         <tr>
                           <th>Gender</th>
                           <td>
-                            <select class="form-control" name="gender" id="gender" value="<?php echo htmlspecialchars($gender);?>">
+                            <select class="form-control" name="gender" id="gender" selected="<?php echo htmlspecialchars($gender);?>">
                               <option value="male" selected>male</option>
                               <option value="female" selected>female</option>
                               <option value="other" selected>other</option>
@@ -1427,7 +1345,7 @@ if (!empty($_POST)) {
                         <tr>
                           <th>Level of JApanese</th>
                           <td>
-                            <select class="form-control" name="level" id="level" value="<?php echo htmlspecialchars($level);?>">
+                            <select class="form-control" name="level" id="level" selected="<?php echo htmlspecialchars($level);?>">
                               <option value="male" selected>male</option>
                               <option value="female" selected>female</option>
                               <option value="other" selected>other</option>
