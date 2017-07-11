@@ -1,29 +1,33 @@
 <?php  
 session_start();
-require('dbconnect.php');
-require('header.php');
-require('.php');
+require('../dbconnect.php');
+require('functions.php');
 
+$login_user = get_login_user($dbh);
 
-if (!isset($_GET['event_id'])) {
-	h('main_portal.php');
-}else {
-
-$event_id = $_GET['event_id'];
-$sql = 'SELECT * FROM events WHERE event_id = ?';
-$data = [$event_id];
+$sql = 'SELECT * FROM events WHERE event_id=?';
+$data = [$_SESSION['event_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
-$event = $stmt->fetch(PDO::FETCH_ASSOC);
+while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $records[] = $record;
 }
 
 
-$reviews=array();
-$sql = 'SELECT r.*,m.pic_path,m.f_name FROM `reviews` r,`members` m WHERE r.user_id=m.user_id AND event_id = ?';
-$data = [$event_id];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$reviews[] = $stmt->fetch(PDO::FETCH_ASSOC);
+
+ for ($i=0; $i < count($records) ; $i++) {
+ 	$sql = 'SELECT * FROM reviews WHERE event_id=?';
+ 	// echo $sql;
+	$data = [$record['review_id']];
+	// v($data);
+	$review_stmt = $dbh->prepare($sql);
+	$review_stmt->execute($data);
+	while ($review = $review_stmt->fetch(PDO::FETCH_ASSOC)) {
+	    $reviews[] = $review;
+	}
+
+
+}
 
 
 ?>

@@ -1,14 +1,15 @@
 <?php 
     session_start();
-    require('../../dbconnect.php');
-    require('../../layout/functions.php');
-
-
+    require('../../common/dbconnect.php');
+    require('../../common/functions.php');
+    $login_user = get_login_user($dbh);
 
 // 登録時バリデーション
 
-    $nick_name = '';
-    $email ='';
+    $nick_name = $login_user['nickname'];
+    $email = $login_user['email'];
+
+    var_dump($login_user);
 
     $errors = array();
 
@@ -30,7 +31,7 @@ if (!empty($_POST)) {
         $errors['email'] = 'blank';
         }
 
-//パスワードの暗号化
+//パスワードの文字数チェック
     $count = strlen($password);
     if ($password == '') {
         $errors['password'] = 'blank';
@@ -40,7 +41,6 @@ if (!empty($_POST)) {
 
     if (!isset($_REQUEST['action'])) {
             $file_name = $_FILES['pic_path']['name'];
-
         }
 
     if ($password !== $confirm_password) {
@@ -53,7 +53,6 @@ if (!empty($_POST)) {
         if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
             $errors['pic_path'] = 'type';
             }
-
         }
 
 
@@ -78,8 +77,6 @@ if (!empty($_POST)) {
 
         $_SESSION['join'] = $_POST;
         $_SESSION['join']['pic_path'] = $submit_file_name;
-
-
 
         if (!empty($_POST)) {
             $sql = 'INSERT INTO `users` SET `user_flag`=?,
@@ -171,8 +168,8 @@ if (!empty($_POST)) {
     <div class="layer"></div>
     <!-- Mobile menu overlay mask -->
 
-     <!-- main================================================== -->   
-
+     <!-- main================================================== -->
+     <form method="POST" action="register_user.php" enctype="multipart/form-data">
 	<main>
 
         <section id="hero" class="login">
@@ -209,7 +206,6 @@ if (!empty($_POST)) {
                                 <?php } ?>
                                 <?php if (isset($errors['password']) && $errors['password'] == 'length') { ?>
                                 <p class="error">パスワードは6文字以上で入力してください</p>
-
                                 <?php } ?>
                             </div>
                             <div class="form-group">

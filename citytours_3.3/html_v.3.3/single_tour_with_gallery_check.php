@@ -353,7 +353,7 @@ require('../../common/dbconnect.php');
 	</header>
 	<!-- End Header -->
 
-	<section class="parallax-window" data-parallax="scroll" data-image-src=<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?> data-natural-width="1000" data-natural-height="470">
+	<section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path']); ?>" data-natural-width="1000" data-natural-height="470">
 		<div class="parallax-content-2">
 			<div class="container">
 				<div class="row">
