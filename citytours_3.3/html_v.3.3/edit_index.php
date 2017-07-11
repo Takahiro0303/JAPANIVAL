@@ -11,7 +11,6 @@ $login_user = get_login_user($dbh);
   // echo '</pre>';
 
 $sql = 'SELECT * FROM events WHERE 1';
-// $data = [$login_user['member_id'], $record['tweet_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,28 +19,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $events[] = $record;
 }
 
-// if ($_SESSION['id'] == null && $_SESSION['flag'] == null) {
-//     $_SESSION['id'] = '';
-//     $_SESSION['flag'] = '';
-//     echo '確認';
-// }
-//     echo '確認2';
-
-  // echo '<pre>';
-  // var_dump($_SESSION);
-  // echo '</pre>';
-
-
-
-  // echo '<pre>';
-  // var_dump($login_user);
-  // echo '</pre>';
-// echo ($_POST['field-keywords']);
-  // echo '<pre>';
-  // echo $_SESSION['id'];
-  // echo '<br>';
-  // echo $_SESSION['flag'];
-  // echo '</pre>';
+$count = count($events);
 
 
 ?>
@@ -305,9 +283,9 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <div id="tabs" class="tabs">
                         <nav>
                             <ul>
-                                <li><a href="#section-1" class="icon-tours"><span>Pick Up!!</span></a></li>
-                                <li><a href="#section-2" class="icon-hotels"><span>Refine Search</span></a></li>
-                                <li><a href="#section-3" class="icon-restaurants"><span>Map Search</span></a></li>
+                                <li><a href="#section-1" ><span>Pick Up!!</span></a></li>
+                                <li><a href="#section-2" ><span>Refine Search</span></a></li>
+                                <li><a href="#section-3" ><span>Map Search</span></a></li>
                             </ul>
                         </nav>
                     <div class="content">
@@ -337,257 +315,78 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <!-- セクション1 -->
         <section id="section-1">
-            <div class="main_title">
+<!--             <div class="main_title">
                 <h2><span>Pick UP!!!</span></h2>
-            </div>
+            </div> -->
 
             <div class="row">
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.1s">
-                    <div class="tour_container">
-                        <div class="ribbon_3 popular"><span>Popular</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_1.jpg" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>39</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Arc Triomphe</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
+                <?php for($i=0;$i < $count; $i++) { ?>
+                    <?php
+                        // 窓に表示する写真の取得
+                        $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+                        $data = [$events[$i]['event_id']];
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute($data);
+                        $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.2s">
-                    <div class="tour_container">
-                        <div class="ribbon_3 popular"><span>Popular</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_2.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-43"></i>Churches<span class="price"><sup>$</sup>45</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Notredame</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
+                          // echo '<pre>';
+                          // var_dump($e_pic_path);
+                          // echo '</pre>';
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.3s">
-                    <div class="tour_container">
-                        <div class="ribbon_3 popular"><span>Popular</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_3.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="badge_save">Save<strong>30%</strong></div>
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>48</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Versailles</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
+                        //like数カウント
+                        $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+                        $data = [$events[$i]['event_id']];
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute($data);
+                        $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.4s">
-                    <div class="tour_container">
-                        <div class="ribbon_3 popular"><span>Popular</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_4.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-30"></i>Walking tour<span class="price"><sup>$</sup>36</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Pompidue</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
+                        //join数カウント
+                        $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
+                        $data = [$events[$i]['event_id']];
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute($data);
+                        $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                    
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.5s">
-                    <div class="tour_container">
-                        <div class="ribbon_3"><span>Top rated</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_14.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="badge_save">Save<strong>30%</strong></div>
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-28"></i>Skyline tours<span class="price"><sup>$</sup>42</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Tour Eiffel</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
+                        // join数カウント
+                        // $sql = 'SELECT * FROM likes WHERE member_id=? AND tweet_id=?';
+                        // $data = [$login_user['member_id'], $tweets[$i]['tweet_id']];
+                        // $stmt = $dbh->prepare($sql);
+                        // $stmt->execute($data);
+                        // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if ($events[$i]['e_start_date'] == $events[$i]['e_end_date']) {
+                            $duration = $events[$i]['e_start_date'];
+                        } else{
+                            $duration = $events[$i]['e_start_date'] . ' - ' . $events[$i]['e_end_date'];
+                        }
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.6s">
-                    <div class="tour_container">
-                        <div class="ribbon_3"><span>Top rated</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_5.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>40</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Pantheon</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
+                    ?>
 
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.7s">
-                    <div class="tour_container">
-                        <div class="ribbon_3"><span>Top rated</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_8.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-3"></i>City sightseeing<span class="price"><sup>$</sup>35</span>
+                    <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.1s">
+                        <div class="tour_container">
+                            <div class="ribbon_3 popular"><span>New</span></div>
+                            <div class="img_container">
+                                <a href="single_tour.html">
+                                    <img src="../../event_pictures/<?php echo htmlspecialchars($e_pic_path['e_pic_path']); ?>" class="img-responsive" alt="Image">
+                                    <div class="short_info">
+                                        <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="tour_title">
+                                <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
+                                <div><?php echo $duration; ?></div>
+                                <!-- end rating -->
+                                <div class="wishlist">
+                                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                                 </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Open Bus</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
+                                <!-- End wish list-->
                             </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
                         </div>
+                        <!-- End box tour -->
                     </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
-
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.8s">
-                    <div class="tour_container">
-                        <div class="ribbon_3"><span>Top rated</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_9.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-4"></i>Museums<span class="price"><sup>$</sup>38</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Louvre museum</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
-
-                <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.9s">
-                    <div class="tour_container">
-                        <div class="ribbon_3"><span>Top rated</span></div>
-                        <div class="img_container">
-                            <a href="single_tour.html">
-                                <img src="img/tour_box_12.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                <div class="short_info">
-                                    <i class="icon_set_1_icon-14"></i>Eat &amp; drink<span class="price"><sup>$</sup>25</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="tour_title">
-                            <h3><strong>Boulangerie</strong> tour</h3>
-                            <div class="rating">
-                                <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                            </div>
-                            <!-- end rating -->
-                            <div class="wishlist">
-                                <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                            </div>
-                            <!-- End wish list-->
-                        </div>
-                    </div>
-                    <!-- End box tour -->
-                </div>
-                <!-- End col-md-4 -->
-
+                <?php } ?>
             </div>
             <!-- End row -->
 
