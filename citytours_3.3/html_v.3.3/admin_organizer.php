@@ -138,11 +138,13 @@ $events = array();
 
 while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
   $events[] = $e_record;
-  
 }
+
     
 var_dump($events);
-
+echo '<br>';
+echo $events[0]['e_name'];
+echo '<br>';
 $count = count($events);
    
 ?>
@@ -290,8 +292,9 @@ $count = count($events);
                       <div class="tour_list_desc">
                         <div class="rating">
                         </div>
-                          <h3><strong>イベント名</strong></h3>
-                            <p>イベント詳細</p>
+                            <h3><strong><?php echo htmlspecialchars($events[0]['e_name']); ?></strong></h3>
+                            <p><?php echo htmlspecialchars($events[0]['explanation']); ?></p>
+                            <p><?php echo htmlspecialchars($events[0]['e_start_date']); ?></p>
                       </div>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-2">
