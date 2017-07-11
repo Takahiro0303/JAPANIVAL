@@ -5,43 +5,36 @@ require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
 
-$sql = 'SELECT * FROM events WHERE event_id=?';
+// イベントデータ取得
+$sql = 'SELECT * FROM events WHERE event_id=1';
 $data = ['event_id'];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// function get_event_data($dbh){
-// $sql = 'SELECT * FROM events WHERE event_id=1';
-// $data = ['event_id'];
-// $stmt = $dbh->prepare($sql);
-// $stmt->execute($data);
-// $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-// return $event_data;
-// }
-
 v($event_data);
 
-
-// コメント表示機能 - SQL文
-// function get_notification($dbh){
-    $sql = 'SELECT * FROM notifications WHERE notification_id=1';
-    // $data = ['notisfuction_id'];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    $notification = $stmt->fetch(PDO::FETCH_ASSOC);
-//     return $notification;
-// }
+// cnotificationsテーブルからぜ全データ取得
+$sql = 'SELECT * FROM notifications WHERE notification_id=1';
+// $data = ['notisfuction_id'];
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$notification = $stmt->fetch(PDO::FETCH_ASSOC);
 
 v($notification);
 
-// $notification = get_notification($dbh);
-// $sql = 'SELECT * FROM event_pics WHERE e_pic_path=?';
-// $stmt = $dbh->prepare($sql);
-// $stmt->execute();
-// $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
+// reviews&usersテーブルから全データ取得
+$sql ='SELECT r.*, u.*
+        FROM reviews r, users u
+        WHERE r.event_id=1';
+        // -- ORDER BY r.created
+        // -- DESC LIMIT %d, 3
+ $data = ['reviews'];   
+ $stmt = $dbh->prepare($sql);
+ $stmt->execute($data);
+ $reviews = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// v($notification);
+v($reviews);
 
 ?>
 
