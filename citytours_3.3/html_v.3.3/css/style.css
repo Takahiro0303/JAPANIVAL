@@ -2872,7 +2872,7 @@ ul.list_order li span {
 
 /* Margin tools */
 .margin_60 {
-	padding-top: 60px;
+	/*padding-top: 60px; //TODO!:umetani*/
 	padding-bottom: 60px;
 }
 
