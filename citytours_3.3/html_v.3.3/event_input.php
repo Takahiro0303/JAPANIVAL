@@ -6,6 +6,7 @@ require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
+
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'rewrite') {
 //$_REQUEST, $_GET, $_POST, $_FILEの情報全てを持つスーパーグローバル変数
 //$_REQUESTと$_GETの使い分け
@@ -17,6 +18,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'rewrite') {
 //   echo '<pre>';
 //   var_dump($_POST);
 //   echo '</pre>';
+
 
 }
 
@@ -677,6 +679,7 @@ if (!empty($file_name)) { //画像が選択されていれば
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="row">
@@ -720,6 +723,7 @@ if (!empty($file_name)) { //画像が選択されていれば
 <!-- End main -->
 
     <footer><!-- //TODO!:元はclass名revealed -->
+
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-sm-3">
@@ -776,6 +780,7 @@ if (!empty($file_name)) { //画像が選択されていれば
         </div><!-- End container -->
     </footer><!-- End footer -->
 
+<<<<<<< HEAD
 <div id="toTop"></div><!-- Back to top button -->
 
 <!-- Search Menu -->
@@ -955,6 +960,7 @@ if (!empty($file_name)) { //画像が選択されていれば
 
 
 <script src="js/custom.js"></script>
+
 
 
 </body>

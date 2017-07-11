@@ -611,6 +611,8 @@ if(!empty($_POST)){
 
 <script src="js/custom.js"></script>
 
+  <?php var_dump($_SESSION['event']['e_name']); ?>
+
 
 </body>
 </html>
