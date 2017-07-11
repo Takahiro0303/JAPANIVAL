@@ -14,7 +14,7 @@ $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 v($event_data);
 
-// cnotificationsテーブルからぜ全データ取得
+// notificationsテーブルからぜ全データ取得
 $sql = 'SELECT * FROM notifications WHERE notification_id=1';
 // $data = ['notisfuction_id'];
 $stmt = $dbh->prepare($sql);
@@ -38,10 +38,7 @@ v($reviews);
 
 ?>
 
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="ie ie8"> <![endif]-->
-<!--[if IE 9]><html class="ie ie9"> <![endif]-->
 <html lang="en">
 
 <header>
@@ -51,7 +48,7 @@ v($reviews);
 
     <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
     <meta name="author" content="Ansonika">
-    <title>Matshumoto Bonbon</title><!-- イベントタイトル挿入 -->
+    <title><?php echo ($event_data['e_name']) ?>の詳細</title><!-- イベントタイトル + の詳細-->
 
 
     <!-- Favicons-->
