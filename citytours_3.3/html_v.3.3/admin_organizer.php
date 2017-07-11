@@ -130,7 +130,10 @@ if (!empty($_POST)) {
     }    
 }
 
-$e_sql = 'SELECT e.*, e.e_name,e.e_start_date FROM events e,organizers o WHERE e.o_id=o.o_id ORDER BY e.created DESC';
+if (/*イベント実施日が選択されたらe.e_start_date、イベント登録日が選択されたらmodified*/) {
+  # code...
+}
+$e_sql = 'SELECT e.*, e.e_name,e.e_start_date FROM events e,organizers o WHERE e.o_id=o.o_id ORDER BY e.e_start_date ASC'; /*DESCの逆を使う*/
 $e_stmt = $dbh->prepare($e_sql);
 $e_stmt->execute();
 
@@ -139,20 +142,10 @@ $events = array();
 while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
   $events[] = $e_record;
 }
-
     
-/*var_dump($events);
-echo '<br>';
-echo $events[0]['e_name'];
-echo '<br>';*/
+/*var_dump($events);*/
+
 $count = count($events);
-
-for ($i=0; $i <$count ; $i++) { 
-    echo $i . '<br>';
-}
-
-$events[0]['e_name']
-   
 ?>
 
 <!DOCTYPE html>
@@ -242,8 +235,7 @@ $events[0]['e_name']
     <!-- End Position -->
 
     <div class="margin_60 container">      
-      <h1 class="welcom">Welcome!</h1><br>
-      
+      <h1 class="welcom">Welcome!</h1><br>      
       <div id="tabs" class="tabs">
         <nav>
           <ul>
@@ -259,8 +251,8 @@ $events[0]['e_name']
             </li>
           </ul>
         </nav>
-        <div class="content">
 
+        <div class="content">
           <section id="section-1">
             <div id="tools">
               <div class="row">
@@ -277,141 +269,45 @@ $events[0]['e_name']
             <!--/tools -->
 
             <div class="strip_booking">
-              <div class="row">
-                <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-                  <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                      <div class="ribbon_3 popular">
-                        <span>Popular</span>
-                      </div>
-                      <div class="wishlist">
-                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                      </div>
-                      <div class="img_list" >
-                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                        <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="clearfix visible-xs-block"></div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                      <div class="tour_list_desc">
-                        <div class="rating">
+              <?php for ($i=0; $i <$count ; $i++) { ?>
+                <div class="row">
+                  <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="ribbon_3 popular">
+                          <span>Popular</span>
                         </div>
-                            <h3><strong><?php echo htmlspecialchars($events[0]['e_name']); ?></strong></h3>
-                            <p><?php echo htmlspecialchars($events[0]['explanation']); ?></p>
-                            <p><?php echo htmlspecialchars($events[0]['e_start_date']); ?></p>
-                      </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-2">
-                      <div class="price_list">
-                        <div>
-                          <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
-                          <p><a href="event_input.php" class="btn_1">編集</a> <!-- Ume待ち -->
-                          </p>
-                          
+                        <div class="wishlist">
+                          <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                         </div>
-
+                        <div class="img_list" >
+                          <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                          <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="clearfix visible-xs-block"></div>
+                      <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="tour_list_desc">
+                          <div class="rating"></div>
+                            <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
+                            <p><?php echo htmlspecialchars($events[$i]['explanation']); ?></p>
+                            <p><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></p>
+                        </div>
+                      </div>
+                      <div class="col-lg-2 col-md-2 col-sm-2">
+                        <div class="price_list">
+                          <div>
+                            <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
+                            <p><a href="event_input.php" class="btn_1">編集</a></p> <!-- Ume待ち -->
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <!-- End row -->
-
-              <div class="row">
-                <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-                  <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                      <div class="ribbon_3 popular">
-                        <span>Popular</span>
-                      </div>
-                      <div class="wishlist">
-                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                      </div>
-                      <div class="img_list" >
-                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                        <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="clearfix visible-xs-block"></div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                      <div class="tour_list_desc">
-                        <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
-                        </div>
-                          <h3><strong>Arch Triomphe</strong> tour</h3>
-                            <p>Lorem ipsum dolor sit amet, quem convenire interesset ut vix, ad dicat sanctus detracto vis. Eos modus dolorum ex, qui adipisci maiestatis inciderint no, eos in elit dicat.....</p>
-                            <ul class="add_info">
-                              <li>
-                                <div class="tooltip_styled tooltip-effect-4">
-                                  <span class="tooltip-item"><i class="icon_set_1_icon-83"></i></span>
-                                    <div class="tooltip-content">
-                                        <h4>Schedule</h4>
-                                        <strong>Monday to Friday</strong> 09.00 AM - 5.30 PM
-                                        <br>
-                                        <strong>Saturday</strong> 09.00 AM - 5.30 PM
-                                        <br>
-                                        <strong>Sunday</strong> <span class="label label-danger">Closed</span>
-                                    </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div class="tooltip_styled tooltip-effect-4">
-                                  <span class="tooltip-item"><i class="icon_set_1_icon-41"></i></span>
-                                  <div class="tooltip-content">
-                                    <h4>Address</h4> Musée du Louvre, 75058 Paris - France
-                                    <br>
-                                  </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div class="tooltip_styled tooltip-effect-4">
-                                  <span class="tooltip-item"><i class="icon_set_1_icon-97"></i></span>
-                                  <div class="tooltip-content">
-                                    <h4>Languages</h4> English - French - Chinese - Russian - Italian
-                                  </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div class="tooltip_styled tooltip-effect-4">
-                                  <span class="tooltip-item"><i class="icon_set_1_icon-27"></i></span>
-                                  <div class="tooltip-content">
-                                    <h4>Parking</h4> 1-3 Rue Elisée Reclus
-                                    <br> 76 Rue du Général Leclerc
-                                    <br> 8 Rue Caillaux 94923
-                                    <br>
-                                  </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div class="tooltip_styled tooltip-effect-4">
-                                  <span class="tooltip-item"><i class="icon_set_1_icon-25"></i></span>
-                                  <div class="tooltip-content">
-                                    <h4>Transport</h4>
-                                    <strong>Metro: </strong>Musée du Louvre station (line 1)
-                                    <br>
-                                    <strong>Bus:</strong> 21, 24, 27, 39, 48, 68, 69, 72, 81, 95
-                                    <br>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                      </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-2">
-                      <div class="price_list">
-                        <div><sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small>
-                          <p><a href="single_tour.html" class="btn_1">Details</a>
-                          </p>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- End row -->            
+              <?php } ?>
+              <!-- End row -->              
             </div>
             <!-- End strip booking -->
           </section>
