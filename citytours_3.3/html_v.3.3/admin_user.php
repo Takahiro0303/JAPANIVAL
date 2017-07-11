@@ -554,9 +554,9 @@ v($event_likes);
       <div id="tabs" class="tabs">
         <nav>
           <ul>
-            <li><a href="#section-1" class="icon-calendar"><span>Reservations</span></a>
+            <li><a href="#section-1" class="icon-calendar"><span>will join</span></a>
             </li>
-            <li><a href="#section-2" class="icon-wishlist"><span>Favorite</span></a>
+            <li><a href="#section-2" class="icon-wishlist"><span>like</span></a>
             </li>
             <li><a href="#section-3" class="icon-back-in-time"><span>Browsing history</span></a>
             </li>
@@ -613,7 +613,7 @@ v($event_likes);
                 </div>
                 <div class="col-md-2 col-sm-2">
                   <div class="booking_buttons">
-                    <a href="event_detail.php" class="btn_2">Edit</a>
+                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_2">Detail</a>
                   </div>
                 </div>
               </div>
@@ -708,13 +708,15 @@ v($event_likes);
 
           </section> 
                    <!-- End section 1 -->
-        <?php for ($i=0; $i < count($event_likes) ; $i++) { ?>
           <section id="section-2">
-            <div class="row">
+          <div class="row">
+            <?php for ($i=0; $i < count($event_likes) ; $i++) { ?>
+
+            
               <div class="col-md-4 col-sm-6">
                 <div class="hotel_container">
                   <div class="img_container">
-                    <a href="single_hotel.html">
+                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>">
                       <img src="../../event_pictures/<?php echo htmlspecialchars($pics_like[$i]['e_pic_path']); ?>" width="300" height="233" class="img-responsive" alt="Image">
                       <div class="">
                       </div>
@@ -764,7 +766,7 @@ v($event_likes);
                     </div>
                -->      <!-- end rating -->
                     <!-- <div class="wishlist_close_admin"> -->
-                      -
+                      
                     <!-- </div>
                   </div>
                 </div> -->
@@ -880,11 +882,13 @@ v($event_likes);
               <!-- </div> -->
               <!-- End col-md-6 -->
 
-            </div>
+           
             <!-- End row -->
             <!-- <button type="submit" class="btn_1 green">Update wishlist</button> -->
-          </section>
           <?php } ?>
+           </div>
+          </section>
+
           <!-- End section 2 -->
 
           <section id="section-3">
@@ -1036,7 +1040,7 @@ v($event_likes);
                     </div>
                     <!-- end rating -->
                     <div class="wishlist_close_admin">
-                      -
+                
                     </div>
                   </div>
                 </div>

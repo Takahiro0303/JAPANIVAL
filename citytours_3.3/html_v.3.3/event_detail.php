@@ -6,37 +6,48 @@ require('../../common/functions.php'); //関数ファイル読み込み
 // require('header.php');
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
 
-// イベントデータ取得
-$sql = 'SELECT * FROM events WHERE event_id=1';
-$data = ['event_id'];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$event_data = $stmt->fetch(PDO::FETCH_ASSOC);
+if (isset($_REQUEST['event_id'])) {
+    // イベントデータ取得
+    $sql = 'SELECT * FROM events WHERE event_id=?';
+    $data = [$_REQUEST['event_id']];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// v($event_data);
+    // v($event_data);
 
-// newssテーブルからぜ全データ取得
-$sql = 'SELECT * FROM news WHERE event_id=1';
-// $data = ['notisfuction_id'];
-$data = ['news'];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$news = $stmt->fetch(PDO::FETCH_ASSOC);
+    // newssテーブルからぜ全データ取得
+    $sql = 'SELECT * FROM news WHERE event_id=1';
+    // $data = ['notisfuction_id'];
+    $data = [$_REQUEST['event_id']];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $news = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// v($news);
+    // v($news);
 
-// reviews&usersテーブルから全データ取得
-$sql ='SELECT r.*, u.*
-        FROM reviews r, users u
-        WHERE r.event_id=1';
-        // -- ORDER BY r.created
-        // -- DESC LIMIT %d, 3
- $data = ['reviews'];   
- $stmt = $dbh->prepare($sql);
- $stmt->execute($data);
- $reviews = $stmt->fetch(PDO::FETCH_ASSOC);
+    // reviews&usersテーブルから全データ取得
+    $sql ='SELECT r.*, u.*
+            FROM reviews r, users u
+            WHERE r.event_id=1';
+            // -- ORDER BY r.created
+            // -- DESC LIMIT %d, 3
+     $data = [$_REQUEST['event_id']];   
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute($data);
+     $reviews = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// v($reviews);
+    // v($reviews);
+} else{
+    header('Location: edit_index.php');
+    exit();
+}
+
+
+
+
+
+
 
 ?>
 

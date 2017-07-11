@@ -367,7 +367,7 @@ $count = count($events);
                         <div class="tour_container">
                             <div class="ribbon_3 popular"><span>New</span></div>
                             <div class="img_container">
-                                <a href="single_tour.html">
+                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>">
                                     <img src="../../event_pictures/<?php echo htmlspecialchars($e_pic_path['e_pic_path']); ?>" class="img-responsive" alt="Image">
                                     <div class="short_info">
                                         <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>

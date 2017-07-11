@@ -113,13 +113,13 @@
                                 <a href="javascript:void(0);" class="show-submenu">About us GUEST<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Sign Up<i class="icon-down-open-mini"></i></a>
+                                <a href="register_user.php" class="show-submenu">Sign Up<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
+                                <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">Sing in<i class="icon-down-open-mini"></i></a>
+                                <a href="login.php" class="show-submenu">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->

@@ -30,8 +30,6 @@
                                 </div>
                                 <!-- End Dropdown access -->
                             </li>
-                            <li><a href="wishlist.html" id="wishlist_link">Wishlist</a>
-                            </li>
                             <li id="lang_top"><i class="icon-globe-1"></i> <a href="#0">EN</a> - <a href="#0">JA</a> - <a href="#0">CH</a>
                             </li>
                         </ul>
@@ -67,8 +65,6 @@
                                 </div>
                                 <!-- End Dropdown access -->
                             </li>
-                            <li><a href="wishlist.html" id="wishlist_link">Wishlist</a>
-                            </li>
                             <li id="lang_top"><i class="icon-globe-1"></i> <a href="#0">EN</a> - <a href="#0">JA</a> - <a href="#0">CH</a>
                             </li>
                         </ul>
@@ -97,14 +93,10 @@
                                     <div class="dropdown-menu" id="log_out">
                                         <img src="img/avatar1.jpg" alt="" class="img-circle">
                                         <h4>Guest</h4>
-                                        <p>Last access 15th November 2016 08.45pm</p>
-                                        <input type="submit" name="Profile" value="Profile" id="Profile" class="button_drop outline">
-                                        <input type="submit" name="Sign_up" value="Log out" id="Sign_up" class="button_drop outline">
+
                                     </div>
                                 </div>
                                 <!-- End Dropdown access -->
-                            </li>
-                            <li><a href="wishlist.html" id="wishlist_link">Wishlist</a>
                             </li>
                             <li id="lang_top"><i class="icon-globe-1"></i> <a href="#0">EN</a> - <a href="#0">JA</a> - <a href="#0">CH</a>
                             </li>
@@ -141,8 +133,7 @@
                                 </div>
                                 <!-- End Dropdown access -->
                             </li>
-                            <li><a href="wishlist.html" id="wishlist_link">Wishlist</a>
-                            </li>
+
                             <li id="lang_top"><i class="icon-globe-1"></i> <a href="#0">EN</a> - <a href="#0">JA</a> - <a href="#0">CH</a>
                             </li>
                         </ul>
