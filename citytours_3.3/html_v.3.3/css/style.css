@@ -1446,11 +1446,12 @@ a#filters_col_bt .icon_set_1_icon-65 {
 	left: 0;
 	bottom: 0;
 	z-index: 999;
-	padding: 18px 0 20px 0;
+	padding: 18px 0 0px 0;
 	color: #fff;
 	font-size: 13px;
 	background: url(../img/shadow_single.png) repeat-x bottom left;
 	width: 100%;
+
 }
 
 .parallax-content-2 div h1 {
