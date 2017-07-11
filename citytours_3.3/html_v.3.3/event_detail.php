@@ -28,15 +28,21 @@ $news = $stmt->fetch(PDO::FETCH_ASSOC);
 // reviews&usersテーブルから全データ取得
 $sql ='SELECT r.*, u.*
         FROM reviews r, users u
-        WHERE r.event_id=1';
+        WHERE r.user_id=u.user_id AND r.event_id=1';
         // -- ORDER BY r.created
         // -- DESC LIMIT %d, 3
- $data = ['reviews'];   
+ $data = [];   
  $stmt = $dbh->prepare($sql);
  $stmt->execute($data);
- $reviews = $stmt->fetch(PDO::FETCH_ASSOC);
+$reviews = [];
+ while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $reviews[] = $review;
+    // v($reviews);
+ }
+v($reviews);
 
-// v($reviews);
+$count = count($reviews);
+v($count);
 
 ?>
 
@@ -288,45 +294,79 @@ $sql ='SELECT r.*, u.*
                         <h3>Reviews </h3> 
                     </div>
                     <div class="col-md-9">
-                        <div id="general_rating" class="rating">? Reviews <!-- レビュー件数表示 -->                   
+                        <div id="general_rating" class="rating"><?php echo($count); ?>Reviews <!-- レビュー件数表示 -->                   
                             <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>
                             <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
                         </div>
                         <!-- End general_rating -->
                         <hr>
-                        <div class="review_strip_single">
-                            <img src="img/<?php echo($reviews['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
-                            <h4><?php echo($reviews['nickname']); ?></h4>　<!-- ユーザー名表示 -->
-                            
-                            <!-- レビュー評価表示機能 -->
-                            <div class="rating">
-                                <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i>
-                            </div>
 
-                            <!--　レビュー作成日表示 -->
-                            <small><?php  ?></small>
 
-                            <!-- レビュー本文表示 -->
-                            <p>
-                               <?php echo($reviews['comment']) ; ?>
-                            </p>
+                         <?php v($reviews); ?>
 
-                        </div>
-                        <!-- End review strip -->
+                        <?php foreach ($reviews as $review){ ?>
+                            <div class="review_strip_single">
+                                <img src="../../users_pic/<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
+                                
+                                <!-- ユーザー名表示 -->
+                                <h4><?php echo($review['nickname']); ?></h4>　
 
-                        <div class="review_strip_single">
-                            <img src="img/patrick.png" alt="Image" class="img-circle" width="70px" height="70px">
-                            <small> - 10 August 2016 -</small>
-                            <h4>Patrick</h4>
-                            <p>
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a lorem quis neque interdum consequat ut sed sem. Duis quis tempor nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus."
-                            </p>
-                            <div class="rating">
-                                <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i>
-                            </div>
-                        </div>
-                        <!-- End review strip -->
+                                <!-- レビュー評価表示機能 -->
+                                <?php if ($review['rating'] == '1'){ ?>
+                                <?php v($review); ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star"></i>
+                                        <i class="icon-star"></i>
+                                        <i class="icon-star"></i>
+                                        <i class="icon-star"></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '2'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star "></i>
+                                        <i class="icon-star "></i>
+                                        <i class="icon-star "></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '3'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star "></i>
+                                        <i class="icon-star "></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '4'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star "></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '5'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                    </div>
+                                <?php }; ?>
 
+                                <!--　レビュー作成日表示 -->
+                                <small><?php echo($review['created']);?></small>
+
+                                <!-- レビュー本文表示 -->
+                                <p><?php echo($review['comment']) ; ?></p>
+
+                            </div> <!-- End review strip -->
+                
+                        <?php }; ?>
+
+
+                        
                     </div>
                 </div>
             </div>
