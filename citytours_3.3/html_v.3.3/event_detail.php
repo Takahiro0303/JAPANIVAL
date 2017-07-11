@@ -3,6 +3,7 @@ session_start();
 
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
+// require('header.php');
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
 
 // イベントデータ取得
@@ -12,16 +13,17 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-v($event_data);
+// v($event_data);
 
-// notificationsテーブルからぜ全データ取得
-$sql = 'SELECT * FROM notifications WHERE notification_id=1';
+// newssテーブルからぜ全データ取得
+$sql = 'SELECT * FROM news WHERE event_id=1';
 // $data = ['notisfuction_id'];
+$data = ['news'];
 $stmt = $dbh->prepare($sql);
-$stmt->execute();
-$notification = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->execute($data);
+$news = $stmt->fetch(PDO::FETCH_ASSOC);
 
-v($notification);
+// v($news);
 
 // reviews&usersテーブルから全データ取得
 $sql ='SELECT r.*, u.*
@@ -34,7 +36,7 @@ $sql ='SELECT r.*, u.*
  $stmt->execute($data);
  $reviews = $stmt->fetch(PDO::FETCH_ASSOC);
 
-v($reviews);
+// v($reviews);
 
 ?>
 
@@ -78,7 +80,7 @@ v($reviews);
   <body>
     <!-- 【トップ】画像表示-->
     <section class="parallax-window" data-parallax="scroll" data-image-src="e_pic_path/松ぼん6.jpg" data-natural-width="1000" data-natural-height="470">
-        <!-- ＊画像データINSERT -->
+        <!-- ＊画像データ挿入 -->
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
@@ -86,12 +88,12 @@ v($reviews);
                         <h1><?php e($event_data['e_name']) ?></h1>
                         <span><?php e($event_data['e_prefecture']) ?></span>
                     </div>
-                    <div class="col-md-4 col-sm-4" style="font-size: 60px;">
-                        <span><sup style="font-size: 20px;">Sat</sup><?php e($event_data['e_start_date']) ?> ~ <?php e($event_data['e_end_date']) ?></span> <!-- ＊曜日・開催日時INSERT -->
-                        <span class="favorites"><i class="icon-heart" style="color: red;" value="125"></i></span> <!-- ＊お気に入り数 INSERT -->
+                    <div class="col-md-4 col-sm-4" style="font-size: 30px;">
+                        <span><sup style="font-size: 20px;">Sat</sup><?php echo($event_data['e_start_date']) ?> ~ <?php echo($event_data['e_end_date']) ?></span> <!-- ＊曜日・開催日時表示 -->
+                        <!-- <span class="favorites"><i class="icon-heart" style="color: red;" value="125"></i></span> --> <!-- ＊お気に入り数挿入 -->
                     </div>
                     <div class="col-md-1 col-sm-1">
-                        <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a>
+                        <!-- <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a> -->
                     </div>
                 </div>
             </div>
@@ -189,7 +191,7 @@ v($reviews);
                                             Date
                                         </td>
                                         <td>
-                                            <?php e($event_data['e_start_date']) ?> ~ <?php e($event_data['e_end_date']) ?>
+                                            <?php echo($event_data['e_start_date']) ?> ~ <?php echo($event_data['e_end_date']) ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -283,25 +285,30 @@ v($reviews);
                 <hr>
                 <div class="row">
                     <div class="col-md-3">
-                        <h3>Reviews </h3>
+                        <h3>Reviews </h3> 
                     </div>
                     <div class="col-md-9">
-                        <div id="general_rating" class="rating">3 Reviews                   
+                        <div id="general_rating" class="rating">? Reviews <!-- レビュー件数表示 -->                   
                             <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>
                             <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
                         </div>
                         <!-- End general_rating -->
                         <hr>
                         <div class="review_strip_single">
-                            <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="70px" height="70px">
-                            <h4>Sponge Bob</h4>
+                            <img src="img/<?php echo($reviews['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
+                            <h4><?php echo($reviews['nickname']); ?></h4>　<!-- ユーザー名表示 -->
+                            
+                            <!-- レビュー評価表示機能 -->
                             <div class="rating">
                                 <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i>
                             </div>
-                            <small> - 10 August 2016 -</small>
 
+                            <!--　レビュー作成日表示 -->
+                            <small><?php  ?></small>
+
+                            <!-- レビュー本文表示 -->
                             <p>
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a lorem quis neque interdum consequat ut sed sem. Duis quis tempor nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus."
+                               <?php echo($reviews['comment']) ; ?>
                             </p>
 
                         </div>
@@ -320,22 +327,6 @@ v($reviews);
                         </div>
                         <!-- End review strip -->
 
-                        <div class="review_strip_single last">
-                            <img src="img/squidward.jpg" alt="Image" class="img-circle" width="70px" height="70px"> 
-                            <small> - 10 August 2016 -</small>
-                            <h4>Squidward</h4>
-                            <p>
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a lorem quis neque interdum consequat ut sed sem. Duis quis tempor nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus."
-                            </p>
-                            <div class="rating">
-                                <i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i>
-                            </div>
-                        </div>
-                        <div align="center">
-                            <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">See all review</a>
-                        </div>
-
-                        <!-- End review strip -->
                     </div>
                 </div>
             </div>
@@ -344,9 +335,9 @@ v($reviews);
             <aside class="col-md-4">
                 <div class="row">
                     <div id="eve_info" class="box_style_1 expose">
-                        <h3 class="inner">Information</h3>
-                        <div id="scroll" class="info">
-                            <?php e($notification['comment']) ?>
+                        <h3 class="inner">EVENT NEWS</h3>
+                        <div id="scroll" class="news">
+                            <?php e($news['news_comment']) ?>
                         </div>
                     </div>
 
@@ -392,7 +383,7 @@ v($reviews);
                                         <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="80px" height="80px">
                                     </div>
                                     <div class="col-md-7 col-sm-7" align="center">
-                                        <h3>Sponge Bob</h3> 
+                                        <h3>Sponge Bob</h3><!-- ユーザー名表示 -->
                                         <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
                                         <p>JP/EN</p> <!-- 対応可能言語表示 -->
                                     </div>
