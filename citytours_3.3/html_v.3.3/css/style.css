@@ -78,9 +78,15 @@ h3{ font-size:22px;}
 h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 
 /*大澤　追加　インフォメーション機能のデザイン*/
+<<<<<<< HEAD
+/*.box_style_1{
+	height: 300px";
+}*/
+=======
 .box_style_1{
 	height: 300px";
 }
+>>>>>>> shoji_umetani
 
 .box_style_1 h3.inner{ 
 	margin:-30px -30px 20px -30px; 
@@ -1446,11 +1452,12 @@ a#filters_col_bt .icon_set_1_icon-65 {
 	left: 0;
 	bottom: 0;
 	z-index: 999;
-	padding: 18px 0 20px 0;
+	padding: 18px 0 0px 0;
 	color: #fff;
 	font-size: 13px;
 	background: url(../img/shadow_single.png) repeat-x bottom left;
 	width: 100%;
+
 }
 
 .parallax-content-2 div h1 {
@@ -2871,7 +2878,7 @@ ul.list_order li span {
 
 /* Margin tools */
 .margin_60 {
-	padding-top: 60px;
+	/*padding-top: 60px; //TODO!:umetani*/
 	padding-bottom: 60px;
 }
 

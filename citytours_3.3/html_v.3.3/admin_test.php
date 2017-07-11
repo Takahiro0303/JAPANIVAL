@@ -1,5 +1,6 @@
 <?php 
 session_start();
+
 // $_SESSSION['id'] = '1';
 require('../../dbconnect.php');
 require('../../common/functions.php');
@@ -8,10 +9,7 @@ require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
-
-
 // v($login_user);
-
 
 $sql = 'SELECT * FROM joins WHERE user_id=?';
 $data = [$login_user['user_id']];
@@ -22,8 +20,8 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $records[] = $record;
 }
 
-// v($records);
 
+// v($records);
 
 for ($i=0; $i < count($records) ; $i++) {
     $sql = 'SELECT * FROM events WHERE event_id=?';
@@ -33,6 +31,7 @@ for ($i=0; $i < count($records) ; $i++) {
     while ($event = $event_stmt->fetch(PDO::FETCH_ASSOC)) {
         $events[] = $event;
     }
+
 
    // echo $record[$i]['event_id'] . "iあり";
     // echo "<br>";
@@ -52,9 +51,6 @@ for ($i=0; $i < count($records) ; $i++) {
 v($pics);
 
 ?>
-
-
-
 
 <!DOCTYPE html>
  <html>
