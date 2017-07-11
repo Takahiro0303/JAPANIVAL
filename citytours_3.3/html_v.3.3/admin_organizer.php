@@ -141,11 +141,17 @@ while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
     
-var_dump($events);
+/*var_dump($events);
 echo '<br>';
 echo $events[0]['e_name'];
-echo '<br>';
+echo '<br>';*/
 $count = count($events);
+
+for ($i=0; $i <$count ; $i++) { 
+    echo $i . '<br>';
+}
+
+$events[0]['e_name']
    
 ?>
 
