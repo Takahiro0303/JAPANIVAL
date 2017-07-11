@@ -4,6 +4,8 @@ require('../../common/dbconnect.php');
 require('../../common/functions.php');
 $login_user = get_login_user($dbh);
 
+
+
 $nickname = $login_user['nickname'];
 $email = $login_user['email'];
 $nationality = $login_user['nationality'];
@@ -115,6 +117,84 @@ if (!empty($_POST)) {
         exit();
     }
 }
+
+// 参加予定イベントページ
+$sql = 'SELECT * FROM joins WHERE user_id=?';
+$data = [$login_user['user_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+
+while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $records[] = $record;
+}
+
+// v($records);
+
+
+for ($i=0; $i < count($records) ; $i++) {
+    $sql = 'SELECT * FROM events WHERE event_id=?';
+    $event_data =  [$records[$i]['event_id']];
+    $event_stmt = $dbh->prepare($sql);
+    $event_stmt->execute($event_data);
+    while ($event = $event_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $events[] = $event;
+    }
+
+   // echo $record[$i]['event_id'] . "iあり";
+    // echo "<br>";
+    // echo $record['event_id'] . "iなし";
+
+   $sql = 'SELECT * FROM event_pics WHERE event_id=?';
+    $event_data =  [$records[$i]['event_id']];
+    $pic_stmt = $dbh->prepare($sql);
+    $pic_stmt->execute($event_data);
+    while ($pic = $pic_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $pics[] = $pic;
+    }
+
+}
+// v($events);
+// v($pics);
+
+// お気に入りページ
+
+$sql = 'SELECT * FROM likes WHERE user_id=?';
+$like_data = [$login_user['user_id']];
+$like_stmt = $dbh->prepare($sql);
+$like_stmt->execute($like_data);
+
+while ($like = $like_stmt->fetch(PDO::FETCH_ASSOC)) {
+    $likes[] = $like;
+}
+
+// v($likes);
+
+
+for ($i=0; $i < count($likes) ; $i++) {
+    $sql = 'SELECT * FROM events WHERE event_id=?';
+    $event_like_data =  [$likes[$i]['event_id']];
+    $event_like_stmt = $dbh->prepare($sql);
+    $event_like_stmt->execute($event_like_data);
+    while ($event_like = $event_like_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $event_likes[] = $event_like;
+    }
+
+   // echo $record[$i]['event_id'] . "iあり";
+    // echo "<br>";
+    // echo $record['event_id'] . "iなし";
+
+    $sql = 'SELECT * FROM event_pics WHERE event_id=?';
+    $like_data =  [$records[$i]['event_id']];
+    $pic_like_stmt = $dbh->prepare($sql);
+    $pic_like_stmt->execute($like_data);
+    while ($pic_like = $pic_like_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $pics_like[] = $pic_like;
+    }
+
+}
+
+v($event_likes);
+
 ?>
 
 <!DOCTYPE html>
@@ -489,7 +569,7 @@ if (!empty($_POST)) {
         <div class="content">
 
           <section id="section-1">
-            <div id="tools">
+            <!-- <div id="tools">
               <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-6">
                   <div class="styled-select-filters">
@@ -511,38 +591,38 @@ if (!empty($_POST)) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <!--/tools -->
-
+          <?php for ($i=0; $i < count($events) ; $i++) { ?>
             <div class="strip_booking">
               <div class="row">
                 <div class="col-md-2 col-sm-2">
                   <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>23</strong>Sat</span>
+                    <!-- <span class="month">Dec</span> -->
+                    <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($pics[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-5">
-                  <h3 class="hotel_booking">Hotel Mariott Paris<span>2 Adults / 2 Nights</span></h3>
+                  <h3 class="tours_booking"><?php echo htmlspecialchars($events[$i]['e_name']); ?><span><?php echo htmlspecialchars($events[$i]['e_prefecture']); ?></span></h3>
                 </div>
                 <div class="col-md-2 col-sm-3">
                   <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 23 Dec. 2015</li>
+                    <li><strong>Event start</strong><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></li>
+                    <li><strong>Event end</strong><?php echo htmlspecialchars($events[$i]['e_end_date']); ?></li>
                   </ul>
                 </div>
                 <div class="col-md-2 col-sm-2">
                   <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
+                    <a href="event_detail.php" class="btn_2">Edit</a>
                   </div>
                 </div>
               </div>
               <!-- End row -->
             </div>
+          <?php } ?>
             <!-- End strip booking -->
 
-            <div class="strip_booking">
+            <!-- <div class="strip_booking">
               <div class="row">
                 <div class="col-md-2 col-sm-2">
                   <div class="date">
@@ -567,10 +647,10 @@ if (!empty($_POST)) {
                 </div>
               </div>
               <!-- End row -->
-            </div>
-            <!-- End strip booking -->
+            <!-- </div> -->
+             <!-- End strip booking -->
 
-            <div class="strip_booking">
+            <!-- <div class="strip_booking">
               <div class="row">
                 <div class="col-md-2 col-sm-2">
                   <div class="date">
@@ -594,11 +674,11 @@ if (!empty($_POST)) {
                   </div>
                 </div>
               </div>
-              <!-- End row -->
-            </div>
+ -->              <!-- End row -->
+            <!-- </div> -->
             <!-- End strip booking -->
 
-            <div class="strip_booking">
+            <!-- <div class="strip_booking">
               <div class="row">
                 <div class="col-md-2 col-sm-2">
                   <div class="date">
@@ -621,33 +701,33 @@ if (!empty($_POST)) {
                     <a href="#0" class="btn_3">Cancel</a>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- End row -->
-            </div>
+            <!-- </div> -->
             <!-- End strip booking -->
 
-          </section>
-          <!-- End section 1 -->
-
+          </section> 
+                   <!-- End section 1 -->
+        <?php for ($i=0; $i < count($event_likes) ; $i++) { ?>
           <section id="section-2">
             <div class="row">
               <div class="col-md-4 col-sm-6">
                 <div class="hotel_container">
                   <div class="img_container">
                     <a href="single_hotel.html">
-                      <img src="img/hotel_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
+                      <img src="../../event_pictures/<?php echo htmlspecialchars($pics_like[$i]['e_pic_path']); ?>" width="300" height="233" class="img-responsive" alt="Image">
+                      <div class="">
                       </div>
                       <div class="score">
-                        <span>7.5</span>Good
+                        <!-- <span>7.5</span>Good -->
                       </div>
                       <div class="short_info hotel">
-                        From/Per night<span class="price"><sup>$</sup>59</span>
+                        <!-- From/Per night<span class="price"><sup>$</sup>59</span> -->
                       </div>
                     </a>
                   </div>
                   <div class="hotel_title">
-                    <h3><strong>Park Hyatt</strong> Hotel</h3>
+                    <h3><strong><?php echo htmlspecialchars($event_likes[$i]['e_name']); ?></strong></h3>
                     <div class="rating">
                       <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
                     </div>
@@ -659,9 +739,10 @@ if (!empty($_POST)) {
                 </div>
                 <!-- End box tour -->
               </div>
+              
               <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6 ">
+              <!-- <div class="col-md-4 col-sm-6 ">
                 <div class="hotel_container">
                   <div class="img_container">
                     <a href="single_hotel.html">
@@ -681,17 +762,17 @@ if (!empty($_POST)) {
                     <div class="rating">
                       <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
                     </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
+               -->      <!-- end rating -->
+                    <!-- <div class="wishlist_close_admin"> -->
                       -
-                    </div>
+                    <!-- </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- End box -->
-              </div>
+              <!-- </div> -->
               <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6">
+              <!-- <div class="col-md-4 col-sm-6">
                 <div class="tour_container">
                   <div class="img_container">
                     <a href="single_tour.html">
@@ -707,18 +788,18 @@ if (!empty($_POST)) {
                     <h3><strong>Arc Triomphe</strong> tour</h3>
                     <div class="rating">
                       <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
+                    </div> -->
                     <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
+                    <!-- <div class="wishlist_close_admin"> -->
+                    
+                    <!-- </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- End box tour -->
-              </div>
+              <!-- </div> -->
               <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6">
+              <!-- <div class="col-md-4 col-sm-6">
                 <div class="tour_container">
                   <div class="img_container">
                     <a href="single_tour.html">
@@ -735,17 +816,17 @@ if (!empty($_POST)) {
                     <div class="rating">
                       <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
                     </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
+               -->      <!-- end rating -->
+                    <!-- <div class="wishlist_close_admin"> -->
+                      <!-- -
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- End box tour -->
-              </div>
+              <!-- </div> -->
               <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6">
+              <!-- <div class="col-md-4 col-sm-6">
                 <div class="tour_container">
                   <div class="img_container">
                     <a href="single_tour.html">
@@ -762,17 +843,17 @@ if (!empty($_POST)) {
                     <div class="rating">
                       <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
                     </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
+               -->      <!-- end rating -->
+                    <!-- <div class="wishlist_close_admin">
                       -
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- End box tour -->
-              </div>
+              <!-- </div> -->
               <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6">
+              <!-- <div class="col-md-4 col-sm-6">
                 <div class="transfer_container">
                   <div class="img_container">
                     <a href="single_transfer.html">
@@ -789,20 +870,21 @@ if (!empty($_POST)) {
                     <div class="rating">
                       <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
                     </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
+               -->      <!-- end rating -->
+                    <!-- <div class="wishlist_close_admin">
                       -
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- End box tour -->
-              </div>
+              <!-- </div> -->
               <!-- End col-md-6 -->
 
             </div>
             <!-- End row -->
-            <button type="submit" class="btn_1 green">Update wishlist</button>
+            <!-- <button type="submit" class="btn_1 green">Update wishlist</button> -->
           </section>
+          <?php } ?>
           <!-- End section 2 -->
 
           <section id="section-3">
@@ -1361,7 +1443,7 @@ if (!empty($_POST)) {
                               <?php } ?>
                             </td>
                         </tr>
-                      <!-- </form> -->
+                      </form>
                     </tbody>
                   </thead>
                 </table>
@@ -1393,7 +1475,7 @@ if (!empty($_POST)) {
   </main>
   <!-- End main -->
 
-  <footer class="revealed">
+  <footer>
         <div class="container">
             <div class="row">
                 <div class="col-md-4 col-sm-3">

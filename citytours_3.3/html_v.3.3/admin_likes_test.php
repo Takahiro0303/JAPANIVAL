@@ -65,7 +65,7 @@ for ($i=0; $i < count($records) ; $i++) {
 
 <?php for ($i=0; $i < count($events) ; $i++) { ?>
   <div><?php echo htmlspecialchars($events[$i]['e_name']); ?></div>
-  <img src=“../../event_pictures/<?php echo htmlspecialchars($pics[$i]['e_pic_path']); ?>” width=“550px” height=“400px”>
+  <img src="../../event_pictures/<?php echo htmlspecialchars($pics[$i]['e_pic_path']); ?>" width="550px" height="400px">
   <div><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></div>
   <div><?php echo htmlspecialchars($events[$i]['e_end_date']); ?></div>
   <div><?php echo htmlspecialchars($events[$i]['e_prefecture']); ?></div>
