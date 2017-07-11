@@ -127,8 +127,24 @@ if (!empty($_POST)) {
 
         header('Location:admin_organizer.php');
         exit();
-    }
-}    
+    }    
+}
+
+$e_sql = 'SELECT e.*, e.e_name,e.e_start_date FROM events e,organizers o WHERE e.o_id=o.o_id ORDER BY e.created DESC';
+$e_stmt = $dbh->prepare($e_sql);
+$e_stmt->execute();
+
+$events = array();
+
+while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
+  $events[] = $e_record;
+  
+}
+    
+var_dump($events);
+
+$count = count($events);
+   
 ?>
 
 <!DOCTYPE html>
@@ -143,10 +159,10 @@ if (!empty($_POST)) {
 
   <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
   <meta name="author" content="Ansonika">
-  <title>CITY TOURS - City tours and travel site template by Ansonika</title>
+  <title>JAPANIVAL-EventDetail</title>
 
   <!-- Favicons-->
-  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="img/japanival_icon.jpg" type="image/x-icon">
   <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
   <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
   <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
@@ -161,6 +177,8 @@ if (!empty($_POST)) {
   <!-- SPECIFIC CSS -->
   <link href="css/admin.css" rel="stylesheet">
   <link href="css/jquery.switch.css" rel="stylesheet">
+  <link href="css/slider-pro.min.css" rel="stylesheet">
+  <link href="css/date_time_picker.css" rel="stylesheet">
 
   <!--[if lt IE 9]>
       <script src="js/html5shiv.min.js"></script>
@@ -168,7 +186,6 @@ if (!empty($_POST)) {
     <![endif]-->
 
 </head>
-
 <body>
 
   <!--[if lte IE 8]>
@@ -190,268 +207,9 @@ if (!empty($_POST)) {
   <!-- Mobile menu overlay mask -->
 
   <!-- Header================================================== -->
-
-  <header>
-    <div id="top_line">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 col-sm-6 col-xs-6">
-            <i class="icon-phone"></i><strong>0045 043204434</strong>
-          </div>
-          <div class="col-md-6 col-sm-6 col-xs-6">
-            <ul id="top_links">
-              <li>
-                <div class="dropdown dropdown-access">
-                  <a href="#" id="access_link">Sign Out</a>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-          <!-- End row -->
-      </div>
-        <!-- End container-->
-    </div>
-      <!-- End top line-->
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-3 col-sm-3 col-xs-3">
-          <div id="logo">
-            <a href="index.html"><img src="img/logo.png" width="160" height="34" alt="City tours" data-retina="true" class="logo_normal"></a>
-            <a href="index.html"><img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true" class="logo_sticky"></a>
-          </div>
-        </div>
-        <nav class="col-md-9 col-sm-9 col-xs-9">
-          <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
-            <div class="main-menu">
-                <div id="header_menu">
-                  <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
-                </div>
-                <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
-                <ul>
-                  <li class="submenu">
-                    <a href="javascript:void(0);" class="show-submenu">Home <i class="icon-down-open-mini"></i></a>
-                      <ul>
-                        <li><a href="javascript:void(0);">Revolution slider</a>
-                          <ul>
-                            <li><a href="index.html">Default slider</a></li>
-                            <li><a href="index_20.html">Advanced slider</a></li>
-                            <li><a href="index_14.html">Youtube Hero</a></li>
-                            <li><a href="index_15.html">Vimeo Hero</a></li>
-                            <li><a href="index_17.html">Youtube 4K</a></li>
-                            <li><a href="index_16.html">Carousel</a></li>
-                            <li><a href="index_19.html">Mailchimp Newsletter</a></li>
-                            <li><a href="index_18.html">Fixed Caption</a></li>
-                          </ul>
-                        </li>
-                        <li><a href="index_12.html">Layer slider</a></li>
-                        <li><a href="index_2.html">With Only tours</a></li>
-                        <li><a href="index_3.html">Single image</a></li>
-                        <li><a href="index_4.html">Header video</a></li>
-                        <li><a href="index_7.html">With search panel</a></li>
-                        <li><a href="index_13.html">With tabs</a></li>
-                        <li><a href="index_5.html">With map</a></li>
-                        <li><a href="index_6.html">With search bar</a></li>
-                        <li><a href="index_8.html">Search bar + Video</a></li>
-                        <li><a href="index_9.html">With Text Rotator</a></li>
-                        <li><a href="index_10.html">With Cookie Bar (EU law)</a></li>
-                        <li><a href="index_11.html">Popup Advertising</a></li>
-                      </ul>
-                  </li>
-                  <li class="submenu">
-                    <a href="javascript:void(0);" class="show-submenu">Tours <i class="icon-down-open-mini"></i></a>
-                    <ul>
-                      <li><a href="all_tours_list.html">All tours list</a></li>
-                      <li><a href="all_tours_grid.html">All tours grid</a></li>
-                      <li><a href="all_tours_map_listing.html">All tours map listing</a></li>
-                      <li><a href="single_tour.html">Single tour page</a></li>
-                      <li><a href="single_tour_with_gallery.html">Single tour with gallery</a></li>
-                      <li><a href="javascript:void(0);">Single tour fixed sidebar</a>
-                        <ul>
-                          <li><a href="single_tour_fixed_sidebar.html">Single tour fixed sidebar</a></li>
-                          <li><a href="single_tour_with_gallery_fixed_sidebar.html">Single tour 2 Fixed Sidebar</a></li>
-                          <li><a href="cart_fixed_sidebar.html">Cart Fixed Sidebar</a></li>
-                          <li><a href="payment_fixed_sidebar.html">Payment Fixed Sidebar</a></li>
-                          <li><a href="confirmation_fixed_sidebar.html">Confirmation Fixed Sidebar</a></li>
-                        </ul>
-                      </li>
-                      <li><a href="single_tour_working_booking.php">Single tour working booking</a></li>
-                      <li><a href="cart.html">Single tour cart</a></li>
-                      <li><a href="payment.html">Single tour booking</a></li>
-                    </ul>
-                  </li>
-                  <li class="submenu">
-                    <a href="javascript:void(0);" class="show-submenu">Hotels <i class="icon-down-open-mini"></i></a>
-                    <ul>
-                      <li><a href="all_hotels_list.html">All hotels list</a></li>
-                      <li><a href="all_hotels_grid.html">All hotels grid</a></li>
-                      <li><a href="all_hotels_map_listing.html">All hotels map listing</a></li>
-                      <li><a href="single_hotel.html">Single hotel page</a></li>
-                      <li><a href="single_hotel_datepicker_adv.html">Single hotel datepicker adv</a></li>
-                      <li><a href="single_hotel_working_booking.php">Single hotel working booking</a></li>
-                      <li><a href="single_hotel_contact.php">Single hotel contact working</a></li>
-                      <li><a href="cart_hotel.html">Cart hotel</a></li>
-                      <li><a href="payment_hotel.html">Booking hotel</a></li>
-                      <li><a href="confirmation_hotel.html">Confirmation hotel</a></li>
-                    </ul>
-                  </li>
-                  <li class="submenu">
-                    <a href="javascript:void(0);" class="show-submenu">Transfers <i class="icon-down-open-mini"></i></a>
-                    <ul>
-                      <li><a href="all_transfer_list.html">All transfers list</a></li>
-                      <li><a href="all_transfer_grid.html">All transfers grid</a></li>
-                      <li><a href="single_transfer.html">Single transfer page</a></li>
-                      <li><a href="cart_transfer.html">Cart transfers</a></li>
-                      <li><a href="payment_transfer.html">Booking transfers</a></li>
-                      <li><a href="confirmation_transfer.html">Confirmation transfers</a></li>
-                    </ul>
-                  </li>
-                  <li class="submenu">
-                    <a href="javascript:void(0);" class="show-submenu">Restaurants <i class="icon-down-open-mini"></i></a>
-                    <ul>
-                      <li><a href="all_restaurants_list.html">All restaurants list</a></li>
-                      <li><a href="all_restaurants_grid.html">All restaurants grid</a></li>
-                      <li><a href="all_restaurants_map_listing.html">All restaurants map listing</a></li>
-                      <li><a href="single_restaurant.html">Single restaurant page</a></li>
-                      <li><a href="payment_restaurant.html">Booking restaurant</a></li>
-                      <li><a href="confirmation_restaurant.html">Confirmation transfers</a></li>
-                    </ul>
-                  </li>
-                  <li class="megamenu submenu">
-                    <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
-                      <div class="menu-wrapper">
-                          <div class="col-md-4">
-                            <h3>Header styles</h3>
-                            <ul>
-                              <li><a href="index.html">Default transparent</a></li>
-                              <li><a href="header_2.html">Plain color</a></li>
-                              <li><a href="header_3.html">Plain color on scroll</a></li>
-                              <li><a href="header_4.html">With socials on top</a></li>
-                              <li><a href="header_5.html">With language selection</a></li>
-                              <li><a href="header_6.html">With lang and conversion</a></li>
-                              <li><a href="header_7.html">With full horizontal menu</a></li>
-                            </ul>
-                          </div>
-                          <div class="col-md-4">
-                            <h3>Footer styles</h3>
-                            <ul>
-                              <li><a href="index.html">Footer default</a></li>
-                              <li><a href="footer_2.html">Footer style 2</a></li>
-                              <li><a href="footer_3.html">Footer style 3</a></li>
-                              <li><a href="footer_4.html">Footer style 4</a></li>
-                              <li><a href="footer_5.html">Footer style 5</a></li>
-                              <li><a href="footer_6.html">Footer style 6</a></li>
-                              <li><a href="footer_7.html">Footer style 7</a></li>
-                            </ul>
-                          </div>
-                          <div class="col-md-4">
-                            <h3>Shop</h3>
-                            <ul>
-                              <li><a href="shop.html">Shop</a></li>
-                              <li><a href="shop-single.html">Shop single</a></li>
-                              <li><a href="shopping-cart.html">Shop cart</a></li>
-                              <li><a href="checkout.html">Shop Checkout</a></li>
-                            </ul>
-                          </div>
-                      </div><!-- End menu-wrapper -->
-                  </li>
-                  <li class="megamenu submenu">
-                    <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
-                      <div class="menu-wrapper">
-                          <div class="col-md-4">
-                            <h3>Pages</h3>
-                            <ul>
-                              <li><a href="about.html">About us</a></li>
-                              <li><a href="general_page.html">General page</a></li>
-                              <li><a href="tourist_guide.html">Tourist guide</a></li>
-                              <li><a href="wishlist.html">Wishlist page</a></li>
-                              <li><a href="faq.html">Faq</a></li>
-                              <li><a href="faq_2.html">Faq smooth scroll</a></li>
-                              <li><a href="pricing_tables.html">Pricing tables</a></li>
-                              <li><a href="gallery_3_columns.html">Gallery 3 columns</a></li>
-                              <li><a href="gallery_4_columns.html">Gallery 4 columns</a></li>
-                              <li><a href="grid_gallery_1.html">Grid gallery</a></li>
-                              <li><a href="grid_gallery_2.html">Grid gallery with filters</a></li>
-                            </ul>
-                          </div>
-                          <div class="col-md-4">
-                            <h3>Pages</h3>
-                            <ul>
-                              <li><a href="contact_us_1.html">Contact us 1</a></li>
-                              <li><a href="contact_us_2.html">Contact us 2</a></li>
-                              <li><a href="blog_right_sidebar.html">Blog</a></li>
-                              <li><a href="blog.html">Blog left sidebar</a></li>
-                              <li><a href="login.html">Login</a></li>
-                              <li><a href="register.html">Register</a></li>
-                              <li><a href="invoice.html" target="_blank">Invoice</a></li>
-                              <li><a href="404.html">404 Error page</a></li>
-                              <li><a href="site_launch/index.html">Site launch / Coming soon</a></li>
-                              <li><a href="timeline.html">Tour timeline</a></li>
-                              <li><a href="page_with_map.html"><i class="icon-map"></i>  Full screen map</a></li>
-                            </ul>
-                          </div>
-                          <div class="col-md-4">
-                            <h3>Elements</h3>
-                             <ul>
-                                <li><a href="footer_2.html"><i class="icon-columns"></i> Footer with working newsletter</a></li>
-                                <li><a href="footer_5.html"><i class="icon-columns"></i> Footer with Twitter feed</a></li>
-                                <li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Icon pack 1 (1900)</a></li>
-                                <li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Icon pack 2 (100)</a></li>
-                                <li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Icon pack 3 (30)</a></li>
-                                <li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Icon pack 4 (200)</a></li>
-                                <li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Icon pack 5 (360)</a></li>
-                                <li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
-                                <li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
-                                <li><a href="admin.html"><i class="icon-cog-1"></i>  Admin area</a></li>
-                                <li><a href="general_page.html"><i class="icon-light-up"></i>  Weather Forecast</a></li>                                             
-                            </ul>
-                          </div>
-                        </div><!-- End menu-wrapper -->
-                  </li>
-                </ul>
-            </div><!-- End main-menu -->
-            <ul id="top_tools">
-              <li>
-                <div class="dropdown dropdown-search">
-                  <a href="#" class="search-overlay-menu-btn" data-toggle="dropdown"><i class="icon-search"></i></a>
-                </div>
-              </li>
-              <li>
-                <div class="dropdown dropdown-cart">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class=" icon-basket-1"></i>Cart (0) </a>
-                  <ul class="dropdown-menu" id="cart_items">
-                    <li>
-                      <div class="image"><img src="img/thumb_cart_1.jpg" alt="image"></div>
-                      <strong><a href="#">Louvre museum</a>1x $36.00 </strong>
-                      <a href="#" class="action"><i class="icon-trash"></i></a>
-                    </li>
-                    <li>
-                      <div class="image"><img src="img/thumb_cart_2.jpg" alt="image"></div>
-                      <strong><a href="#">Versailles tour</a>2x $36.00 </strong>
-                      <a href="#" class="action"><i class="icon-trash"></i></a>
-                    </li>
-                    <li>
-                      <div class="image"><img src="img/thumb_cart_3.jpg" alt="image"></div>
-                      <strong><a href="#">Versailles tour</a>1x $36.00 </strong>
-                      <a href="#" class="action"><i class="icon-trash"></i></a>
-                    </li>
-                    <li>
-                      <div>Total: <span>$120.00</span></div>
-                      <a href="cart.html" class="button_drop">Go to cart</a>
-                      <a href="payment.html" class="button_drop outline">Check out</a>
-                    </li>
-                  </ul>
-                </div><!-- End dropdown-cart-->
-              </li>
-            </ul>
-        </nav>
-        </div>
-      </div>
-      <!-- container -->
-  </header>
+  <!-- header.phpのrequire -->
+  <?php require('header.php');  ?>  
   <!-- End Header -->
-
 
   <section class="parallax-window" data-parallax="scroll" data-image-src="img/admin_top.jpg" data-natural-width="1400" data-natural-height="470">
     <div class="parallax-content-1">
@@ -481,11 +239,11 @@ if (!empty($_POST)) {
       <div id="tabs" class="tabs">
         <nav>
           <ul>
-            <li><a href="#section-1" class="icon-calendar"><span>Reservations</span></a>
+            <li><a href="#section-1" class="icon-calendar"><span>登録済みイベント一覧</span></a>
             </li>
-            <li><a href="#section-2" class="icon-wishlist"><span>Favorite</span></a>
+            <li><a href="#section-2" class="icon-wishlist"><span>イベント登録</span></a>
             </li>
-            <li><a href="#section-3" class="icon-back-in-time"><span>Browsing history</span></a>
+            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント </span></a>
             </li>
             <li><a href="#section-4" class="icon-hourglass"><span>Join the Past</span></a>
             </li>
@@ -501,437 +259,630 @@ if (!empty($_POST)) {
                 <div class="col-md-3 col-sm-3 col-xs-6">
                   <div class="styled-select-filters">
                     <select name="sort_type" id="sort_type">
-                      <option value="" selected>Sort by type</option>
-                      <option value="tours">Tours</option>
-                      <option value="hotels">Hotels</option>
-                      <option value="transfers">Transfers</option>
+                      <option value="" selected>イベント実施日 </option>
+                      <option value="hotels">イベント登録</option>
                     </select>
                   </div>
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                  <div class="styled-select-filters">
-                    <select name="sort_date" id="sort_date">
-                      <option value="" selected>Sort by date</option>
-                      <option value="oldest">Oldest</option>
-                      <option value="recent">Recent</option>
-                    </select>
-                  </div>
-                </div>
+                </div>                
               </div>
             </div>
             <!--/tools -->
 
             <div class="strip_booking">
               <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>23</strong>Sat</span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="hotel_booking">Hotel Mariott Paris<span>2 Adults / 2 Nights</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 23 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
+                <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                  <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="ribbon_3 popular">
+                        <span>Popular</span>
+                      </div>
+                      <div class="wishlist">
+                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                      </div>
+                      <div class="img_list" >
+                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                        <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="clearfix visible-xs-block"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="tour_list_desc">
+                        <div class="rating">
+                        </div>
+                          <h3><strong>イベント名</strong></h3>
+                            <p>イベント詳細</p>
+                      </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                      <div class="price_list">
+                        <div>
+                          <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
+                          <p><a href="event_input.php" class="btn_1">編集</a> <!-- Ume待ち -->
+                          </p>
+                          
+                        </div>
+
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               <!-- End row -->
-            </div>
-            <!-- End strip booking -->
 
-            <div class="strip_booking">
               <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>27</strong>Fri</span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="tours_booking">Louvre Museum<span>2 Adults / 2 Childs</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 20 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
+                <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                  <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="ribbon_3 popular">
+                        <span>Popular</span>
+                      </div>
+                      <div class="wishlist">
+                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                      </div>
+                      <div class="img_list" >
+                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                        <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="clearfix visible-xs-block"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="tour_list_desc">
+                        <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
+                        </div>
+                          <h3><strong>Arch Triomphe</strong> tour</h3>
+                            <p>Lorem ipsum dolor sit amet, quem convenire interesset ut vix, ad dicat sanctus detracto vis. Eos modus dolorum ex, qui adipisci maiestatis inciderint no, eos in elit dicat.....</p>
+                            <ul class="add_info">
+                              <li>
+                                <div class="tooltip_styled tooltip-effect-4">
+                                  <span class="tooltip-item"><i class="icon_set_1_icon-83"></i></span>
+                                    <div class="tooltip-content">
+                                        <h4>Schedule</h4>
+                                        <strong>Monday to Friday</strong> 09.00 AM - 5.30 PM
+                                        <br>
+                                        <strong>Saturday</strong> 09.00 AM - 5.30 PM
+                                        <br>
+                                        <strong>Sunday</strong> <span class="label label-danger">Closed</span>
+                                    </div>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="tooltip_styled tooltip-effect-4">
+                                  <span class="tooltip-item"><i class="icon_set_1_icon-41"></i></span>
+                                  <div class="tooltip-content">
+                                    <h4>Address</h4> Musée du Louvre, 75058 Paris - France
+                                    <br>
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="tooltip_styled tooltip-effect-4">
+                                  <span class="tooltip-item"><i class="icon_set_1_icon-97"></i></span>
+                                  <div class="tooltip-content">
+                                    <h4>Languages</h4> English - French - Chinese - Russian - Italian
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="tooltip_styled tooltip-effect-4">
+                                  <span class="tooltip-item"><i class="icon_set_1_icon-27"></i></span>
+                                  <div class="tooltip-content">
+                                    <h4>Parking</h4> 1-3 Rue Elisée Reclus
+                                    <br> 76 Rue du Général Leclerc
+                                    <br> 8 Rue Caillaux 94923
+                                    <br>
+                                  </div>
+                                </div>
+                              </li>
+                              <li>
+                                <div class="tooltip_styled tooltip-effect-4">
+                                  <span class="tooltip-item"><i class="icon_set_1_icon-25"></i></span>
+                                  <div class="tooltip-content">
+                                    <h4>Transport</h4>
+                                    <strong>Metro: </strong>Musée du Louvre station (line 1)
+                                    <br>
+                                    <strong>Bus:</strong> 21, 24, 27, 39, 48, 68, 69, 72, 81, 95
+                                    <br>
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                      </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                      <div class="price_list">
+                        <div><sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small>
+                          <p><a href="single_tour.html" class="btn_1">Details</a>
+                          </p>
+                        </div>
+
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <!-- End row -->
+              <!-- End row -->            
             </div>
             <!-- End strip booking -->
-
-            <div class="strip_booking">
-              <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>28</strong>Fri</span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="tours_booking">Tour Eiffel<span>2 Adults</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 20 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
-                  </div>
-                </div>
-              </div>
-              <!-- End row -->
-            </div>
-            <!-- End strip booking -->
-
-            <div class="strip_booking">
-              <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>30</strong>Fri</span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="transfers_booking">Orly Airport<span>2 Adults / 2Childs</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 20 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
-                  </div>
-                </div>
-              </div>
-              <!-- End row -->
-            </div>
-            <!-- End strip booking -->
-
           </section>
           <!-- End section 1 -->
 
           <section id="section-2">
-            <div class="row">
-              <div class="col-md-4 col-sm-6">
-                <div class="hotel_container">
-                  <div class="img_container">
-                    <a href="single_hotel.html">
-                      <img src="img/hotel_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="score">
-                        <span>7.5</span>Good
-                      </div>
-                      <div class="short_info hotel">
-                        From/Per night<span class="price"><sup>$</sup>59</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="hotel_title">
-                    <h3><strong>Park Hyatt</strong> Hotel</h3>
-                    <div class="rating">
-                      <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                    </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div>
-                <!-- End box tour -->
-              </div>
-              <!-- End col-md-6 -->
+          <form method="POST" action="event_input.php" enctype="multipart/form-data">
+    <div class="collapse" id="collapseMap">
+      <div id="map" class="map"></div>
+    </div>
+    <!-- End Map -->
 
-              <div class="col-md-4 col-sm-6 ">
-                <div class="hotel_container">
-                  <div class="img_container">
-                    <a href="single_hotel.html">
-                      <img src="img/hotel_2.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="score">
-                        <span>9.0</span>Superb
-                      </div>
-                      <div class="short_info hotel">
-                        From/Per night<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="hotel_title">
-                    <h3><strong>Mariott</strong> Hotel</h3>
-                    <div class="rating">
-                      <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                    </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div>
-                <!-- End box -->
-              </div>
-              <!-- End col-md-6 -->
+    <div class="container margin_60">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="visible-sm visible-xs"><a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
+          </p>
+          <!-- Map button for tablets/mobiles -->
 
-              <div class="col-md-4 col-sm-6">
-                <div class="tour_container">
-                  <div class="img_container">
-                    <a href="single_tour.html">
-                      <img src="img/tour_box_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="short_info">
-                        <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="tour_title">
-                    <h3><strong>Arc Triomphe</strong> tour</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div>
-                <!-- End box tour -->
-              </div>
-              <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6">
-                <div class="tour_container">
-                  <div class="img_container">
-                    <a href="single_tour.html">
-                      <img src="img/tour_box_3.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon popular">
-                      </div>
-                      <div class="short_info">
-                        <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="tour_title">
-                    <h3><strong>Versailles</strong> tour</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div>
-                <!-- End box tour -->
-              </div>
-              <!-- End col-md-6 -->
 
-              <div class="col-md-4 col-sm-6">
-                <div class="tour_container">
-                  <div class="img_container">
-                    <a href="single_tour.html">
-                      <img src="img/tour_box_4.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon popular">
-                      </div>
-                      <div class="short_info">
-                        <i class="icon_set_1_icon-30"></i>Walking tour<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="tour_title">
-                    <h3><strong>Pompidue</strong> tour</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div>
-                <!-- End box tour -->
-              </div>
-              <!-- End col-md-6 -->
+          <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
+            <div class="sp-slides">
 
-              <div class="col-md-4 col-sm-6">
-                <div class="transfer_container">
-                  <div class="img_container">
-                    <a href="single_transfer.html">
-                      <img src="img/transfer_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="short_info">
-                        From/Per person<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="transfer_title">
-                    <h3><strong>Orly Airport</strong> private</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-                    <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div>
-                <!-- End box tour -->
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/1_medium.jpg" data-small="img/slider_single_tour/1_small.jpg" data-medium="img/slider_single_tour/1_medium.jpg" data-large="img/slider_single_tour/1_large.jpg" data-retina="img/slider_single_tour/1_large.jpg">
               </div>
-              <!-- End col-md-6 -->
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/2_medium.jpg" data-small="img/slider_single_tour/2_small.jpg" data-medium="img/slider_single_tour/2_medium.jpg" data-large="img/slider_single_tour/2_large.jpg" data-retina="img/slider_single_tour/2_large.jpg">
+                <h3 class="sp-layer sp-black sp-padding" data-horizontal="40" data-vertical="40" data-show-transition="left">
+                        Lorem ipsum dolor sit amet </h3>
+                <p class="sp-layer sp-white sp-padding" data-horizontal="40" data-vertical="100" data-show-transition="left" data-show-delay="200">
+                  consectetur adipisicing elit
+                </p>
+                <p class="sp-layer sp-black sp-padding" data-horizontal="40" data-vertical="160" data-width="350" data-show-transition="left" data-show-delay="400">
+                  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+              </div>
 
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/3_medium.jpg" data-small="img/slider_single_tour/3_small.jpg" data-medium="img/slider_single_tour/3_medium.jpg" data-large="img/slider_single_tour/3_large.jpg" data-retina="img/slider_single_tour/3_large.jpg">
+                <p class="sp-layer sp-white sp-padding" data-position="centerCenter" data-vertical="-50" data-show-transition="right" data-show-delay="500">
+                  Lorem ipsum dolor sit amet
+                </p>
+                <p class="sp-layer sp-black sp-padding" data-position="centerCenter" data-vertical="50" data-show-transition="left" data-show-delay="700">
+                  consectetur adipisicing elit
+                </p>
+              </div>
+
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/4_medium.jpg" data-small="img/slider_single_tour/4_small.jpg" data-medium="img/slider_single_tour/4_medium.jpg" data-large="img/slider_single_tour/4_large.jpg" data-retina="img/slider_single_tour/4_large.jpg">
+                <p class="sp-layer sp-black sp-padding" data-position="bottomLeft" data-vertical="0" data-width="100%" data-show-transition="up">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+              </div>
+
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/5_medium.jpg" data-small="img/slider_single_tour/5_small.jpg" data-medium="img/slider_single_tour/5_medium.jpg" data-large="img/slider_single_tour/5_large.jpg" data-retina="img/slider_single_tour/5_large.jpg">
+                <p class="sp-layer sp-white sp-padding" data-vertical="5%" data-horizontal="5%" data-width="90%" data-show-transition="down" data-show-delay="400">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+              </div>
+
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/6_medium.jpg" data-small="img/slider_single_tour/6_small.jpg" data-medium="img/slider_single_tour/6_medium.jpg" data-large="img/slider_single_tour/6_large.jpg" data-retina="img/slider_single_tour/6_large.jpg">
+                <p class="sp-layer sp-white sp-padding" data-horizontal="10" data-vertical="10" data-width="300">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+              </div>
+
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/7_medium.jpg" data-small="img/slider_single_tour/7_small.jpg" data-medium="img/slider_single_tour/7_medium.jpg" data-large="img/slider_single_tour/7_large.jpg" data-retina="img/slider_single_tour/7_large.jpg">
+                <p class="sp-layer sp-black sp-padding" data-position="bottomLeft" data-horizontal="5%" data-vertical="5%" data-width="90%" data-show-transition="up" data-show-delay="400">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+              </div>
+
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/8_medium.jpg" data-small="img/slider_single_tour/8_small.jpg" data-medium="img/slider_single_tour/8_medium.jpg" data-large="img/slider_single_tour/8_large.jpg" data-retina="img/slider_single_tour/8_large.jpg">
+                <p class="sp-layer sp-black sp-padding" data-horizontal="50" data-vertical="50" data-show-transition="down" data-show-delay="500">
+                  Lorem ipsum dolor sit amet
+                </p>
+                <p class="sp-layer sp-white sp-padding" data-horizontal="50" data-vertical="100" data-show-transition="up" data-show-delay="500">
+                  consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+              </div>
+
+              <div class="sp-slide">
+                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/9_medium.jpg" data-small="img/slider_single_tour/9_small.jpg" data-medium="img/slider_single_tour/9_medium.jpg" data-large="img/slider_single_tour/9_large.jpg" data-retina="img/slider_single_tour/9_large.jpg">
+              </div>
             </div>
+            <div class="sp-thumbnails">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/1_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/2_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/3_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/4_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/5_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/6_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/7_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/8_medium.jpg">
+              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/9_medium.jpg">
+            </div>
+          </div>
+
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Browse&hellip; <input type="file" style="display: none;" name="e_pic_path[]" multiple>
+                    </span>
+                </label>
+                <input type="text" class="form-control" readonly>
+            </div>
+<!--                   <input type="file" class="btn btn-primary" name="e_pic_path[]" multiple> -->
+                  <!-- <input type="submit" value="submit"> -->
+
+                  <!-- <?php if(isset($errors['e_pic_path']) && $errors['e_pic_path'] == 'type') { ?>
+                    <p class="error">画像は「jpg」「png」「gif」の画像を選択してください。</p>
+                  <?php } ?>
+                  <!-- <?php //if(!empty($errors)) { ?> -->
+                  <!-- <?php if(isset($errors['e_pic_path']) && $errors['e_pic_path'] == 'blank') { ?>
+                    <p class="error">画像を指定してください</p>
+                  <?php } ?> -->
+                  <!-- <input type="submit" value="アップロードを実行する" /> -->
+          <hr>
+          <!-- 以下、イベント説明 -->
+          <div class="row">
+            <div class="col-md-3">
+              <h3>Event Description</h3>
+            </div>
+            <div class="col-md-9">
+              <div>
+                <textarea name="explanation" class="form-control" style="width:99%; height:300px;" placeholder = "説明文を入力してください"><?php echo htmlspecialchars($explanation); ?></textarea>
+                <?php if(isset($errors['explanation']) && $errors['explanation'] == 'blank') { ?>
+                  <p class="error">説明文を入力してください</p>
+                <?php } ?>
+                </div>
+            </div>
+          </div> <!-- End row  -->
+
+          <hr>
+          <!-- 以下、イベント詳細 -->
+          <div class="row">
+            <div class="col-md-3">
+              <h3>Event Detail</h3>
+            </div>
+            <div class="col-md-9">
+              <div class=" table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th colspan="2">
+                        イベント開催詳細
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td width= "200" style="vertical-align: middle;">
+                          Event Name
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name="e_name" placeholder = "イベント名の入力" value="<?php echo htmlspecialchars($e_name); ?>">
+                          <?php if(isset($errors['e_name']) && $errors['e_name'] == 'blank') { ?>
+                            <p class="error">イベント名を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        Date and time
+                      </td>
+                      <td>
+                        <div style="margin-bottom: 10px;">
+                          イベント日程（開始日）（必須）<br>
+                          <input type="date" class="form-control" name="e_start_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
+                          <?php if(isset($errors['e_start_date']) && $errors['e_start_date'] == 'blank') { ?>
+                            <p class="error">開始日を入力してください</p>
+                          <?php } ?>
+                        </div>
+                        <div>
+                          イベント日程（終了日）（必須）<br>
+                          <input type="date" class="form-control" name="e_end_date" value= "<?php echo htmlspecialchars($e_end_date); ?>">
+                          <?php if(isset($errors['e_end_date']) && $errors['e_end_date'] == 'blank') { ?>
+                            <p class="error">終了日を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        city
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name= "e_prefecture" placeholder = "都道府県の入力" value="<?php echo htmlspecialchars($e_prefecture); ?>">
+                          <?php if(isset($errors['e_prefecture']) && $errors['e_prefecture'] == 'blank') { ?>
+                            <p class="error">都道府県を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        the place (follow on map)
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name="e_venue" placeholder = "会場を入力してください" value= "<?php echo htmlspecialchars($e_venue); ?>">
+                          <?php if(isset($errors['e_venue']) && $errors['e_venue'] == 'blank') { ?>
+                            <p class="error">会場を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        Web page
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name="official_url" placeholder = "URLを入力してください" value= "<?php echo htmlspecialchars($official_url); ?>">
+                          <?php if(isset($errors['official_url']) && $errors['official_url'] == 'blank') { ?>
+                            <p class="error">URLを入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        Acces
+                        </td>
+                      <td>
+                        <input type="text" class="form-control" name="e_access" placeholder = "アクセスの入力" value= "<?php echo htmlspecialchars($e_access); ?>">
+                        <?php if(isset($errors['e_access']) && $errors['e_access'] == 'blank') { ?>
+                          <p class="error">アクセスを入力してください</p> -->
+                        <?php } ?>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class=" table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th colspan="2">
+                        The latest participants (The number of visitors)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td width= "200" style="vertical-align: middle;">
+                        2014
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name="year_ppp" placeholder = "数字を入力してください" value= "<?php echo htmlspecialchars($year_ppp); ?>">
+                          <?php if(isset($errors['year_ppp']) && $errors['year_ppp'] == 'blank') { ?>
+                            <p class="error">数字を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        2015
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name="year_pp" placeholder = "数字を入力してください" value= "<?php echo htmlspecialchars($year_pp); ?>">
+                          <?php if(isset($errors['year_pp']) && $errors['year_pp'] == 'blank') { ?>
+                            <p class="error">数字を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="vertical-align: middle;">
+                        2016
+                      </td>
+                      <td>
+                        <div>
+                          <input type="text" class="form-control" name="year_p" placeholder = "数字を入力してください"value= "<?php echo htmlspecialchars($year_p); ?>">
+                          <?php if(isset($errors['year_p']) && $errors['year_p'] == 'blank') { ?>
+                            <p class="error">数字を入力してください</p>
+                          <?php } ?>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <input class="btn btn-primary" type="submit" value="確認">
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="col-md-3">
+              <h3>Map</h3>
+            </div>
+            <div class="col-md-9">
+              <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">            
+            <div class="col-md-9">
+
+              <hr>
+              <div align="center">
+                <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">See all review</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <aside class="col-md-4">
+          <div class="row">
+            <div id="eve_info" class="box_style_1"><!-- //TODO!:変更前 class="box_style_1 expose" -->
+              <h3 class="inner">Information</h3>
+                <div id="scroll" class="info">
+                  <div>
+                    ニュース登録日
+                    <input type="date" class="form-control" name="news_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
+                    ニュース記載欄
+                    <textarea name="news_comment" class="form-control"  placeholder = "こちらにイベント情報（ニュース）を入力してください"><?php echo htmlspecialchars($news_comment); ?></textarea>
+                  </div>
+                </div>
+            </div>
+</form>
+            <div id="eve_tomo" class="box_style_1">
+              <h3 class="inner">Eve tomo</h3>
+                <div class="eve_tomo">
+                  <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                      <div class="form-group">
+                        <label><i class="icon-globe"></i>Nationality</label>
+                        <div class="styled-select">
+                          <select class="form-control" name="nationarity" id="nationarity">
+                            <option value="not specified" selected>not specified</option>
+                            <option value="Japan">Japan</option>
+                            <option value="Philippine">Philippine</option>
+                            <option value="Afghanistan">Afghanistan</option>
+                            <option value="Albanie">Albanie</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                      <div class="form-group">
+                        <label><i class="icon-language"></i>Language</label>
+                        <div class="styled-select">
+                          <select class="form-control" name="language" id="language">
+                              <option value="not specified" selected>not specified</option>
+                              <option value="Japanese">Japanese</option>
+                              <option value="Tagalog">Tagalog</option>
+                              <option value="English">English</option>
+                              <option value="Tagalog">Tagalog</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="eve_tomo" class="scr">
+                      <div id="profile">          
+                        <div class="profile 1">
+                          <div class="col-md-5 col-sm-5">
+                            <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="80px" height="80px">
+                          </div>
+                          <div class="col-md-7 col-sm-7" align="center">
+                            <h3>Sponge Bob</h3> 
+                            <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                            <p>JP/EN</p> <!-- 対応可能言語表示 -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="purpose">
+                      <div class="purpose title">Purpose:</div>
+                      <div class="purpose content">この祭りのガイドをしてもらいたいです！</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="button">
+                      <!-- 個人詳細ページに戦遷移 -->
+                      <div class="col-md-6 col-sm-6">
+                        <a class="btn_full" href="profile.html"><i class=" icon-user"></i>Profile</a>
+                      </div>
+                      <!-- チャットページに遷移 -->
+                      <div class="col-md-6 col-sm-6">
+                        <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--/box_style_1 -->
+
+                <!-- マッチング希望ボタン -->
+                <div>
+                 <p>
+                  <a class="btn_map" data-toggle="collapse" href="" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Cancel" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
+                </p>
+                <!-- 終了タグ　マッチング希望ボタン -->
+                </div>
+                    </div>.
+        </aside>
+      </div>            
             <!-- End row -->
             <button type="submit" class="btn_1 green">Update wishlist</button>
           </section>
           <!-- End section 2 -->
 
           <section id="section-3">
-            <div class="row">
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your password</h4>
-                <div class="form-group">
-                  <label>Old password</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New password</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new password</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Password</button>
-              </div>
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your email</h4>
-                <div class="form-group">
-                  <label>Old email</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New email</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new email</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Email</button>
+            <div id="tools">
+              <div class="row">
+                <div class="col-md-3 col-sm-3 col-xs-6">
+                  <div class="styled-select-filters">
+                    <select name="sort_type" id="sort_type">
+                      <option value="" selected>イベント実施日 </option>
+                      <option value="hotels">イベント登録</option>
+                    </select>
+                  </div>
+                </div>                
               </div>
             </div>
-            <!-- End row -->
+            <!--/tools -->
 
-            <hr>
-            <br>
-            <div class="row">
-              <div class="col-md-6 col-sm-6">
-                <h4>Notification settings</h4>
-                <table class="table table-striped options_cart">
-                  <tbody>
-                    <tr>
-                      <td style="width:10%">
-                        <i class="icon_set_1_icon-33"></i>
-                      </td>
-                      <td style="width:60%">
-                        New Citytours Tours
-                      </td>
-                      <td style="width:35%">
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_1" id="option_1" checked value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-6"></i>
-                      </td>
-                      <td>
-                        New Citytours Hotels
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_2" id="option_2" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-26"></i>
-                      </td>
-                      <td>
-                        New Citytours Transfers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_3" id="option_3" value="" checked>
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-81"></i>
-                      </td>
-                      <td>
-                        New Citytours special offers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_4" id="option_4" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button type="submit" class="btn_1 green">Update notifications settings</button>
+            <div class="strip_booking">
+              <div class="row">
+                <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                  <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                      <div class="ribbon_3 popular">
+                        <span>Popular</span>
+                      </div>
+                      <div class="wishlist">
+                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                      </div>
+                      <div class="img_list" >
+                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                        <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="clearfix visible-xs-block"></div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                      <div class="tour_list_desc">
+                        <div class="rating">
+                        </div>
+                          <h3><strong>イベント名</strong></h3>
+                            <p>イベント詳細</p>
+                      </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2">
+                      <div class="price_list">
+                        <div>
+                          <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
+                          </p>
+                          
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              
+              
+              <!-- End row -->            
             </div>
             <!-- End row -->
           </section>
@@ -1089,7 +1040,7 @@ if (!empty($_POST)) {
             <!-- End row -->
 <form method="POST" action="" enctype="multipart/form-data">
             <div class="divider"></div>
-            <div class="row">
+            <div class="row">section
               <div class="col-md-12">
                 <h4 id="edit_profile">Edit profile</h4>
               </div>
@@ -1308,7 +1259,7 @@ if (!empty($_POST)) {
   <script src="js/common_scripts_min.js"></script>
   <script src="js/functions.js"></script>
 
-  <!-- Specific scripts -->
+  <!-- Specific scripts -->  
   <script src="js/tabs.js"></script>
   <script>
     new CBPFWTabs(document.getElementById('tabs'));
@@ -1319,9 +1270,58 @@ if (!empty($_POST)) {
     });
   </script>
 
+  <script src="js/icheck.js"></script>
+  <script>
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-grey',
+      radioClass: 'iradio_square-grey'
+    });
+  </script>
+  <!-- Date and time pickers -->
+  <script src="js/jquery.sliderPro.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function ($) {
+      $('#Img_carousel').sliderPro({
+        width: 960,
+        height: 500,
+        fade: true,
+        arrows: true,
+        buttons: false,
+        fullScreen: false,
+        smallSize: 500,
+        startSlide: 0,
+        mediumSize: 1000,
+        largeSize: 3000,
+        thumbnailArrows: true,
+        autoplay: false
+      });
+    });
+  </script>
+
+  <!-- Date and time pickers -->
+  <script src="js/bootstrap-datepicker.js"></script>
+  <script src="js/bootstrap-timepicker.js"></script>
+  <script>
+    $('input.date-pick').datepicker('setDate', 'today');
+    $('input.time-pick').timepicker({
+      minuteStep: 15,
+      showInpunts: false
+    })
+  </script>
+
+  <!--Review modal validation -->
+  <script src="assets/validate.js"></script>
+
+  <!-- Map -->
+  <script src="http://maps.googleapis.com/maps/api/js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/infobox.js"></script>
+
+
+  <script src="js/custom.js"></script>
+
   <!-- 郵便番号 -->
   <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
-
 
 </body>
 

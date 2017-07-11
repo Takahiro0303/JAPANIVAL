@@ -85,7 +85,7 @@ require('../../common/dbconnect.php');
                         e_pic_path = ?,
                         created = NOW()';
 
-  $data = [ $event_id,
+  $data = [ $event_id['event_id'],
             $_SESSION['event']['e_pic_path']];
     $event_pics_stmt = $dbh->prepare($sql);
     $event_pics_stmt->execute($data);
