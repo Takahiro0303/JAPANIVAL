@@ -142,7 +142,7 @@ if (!empty($_POST)) {
       <script src="js/html5shiv.min.js"></script>
       <script src="js/respond.min.js"></script>
     <![endif]-->
-    <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+    
         
 </head>
 <body>
@@ -166,7 +166,7 @@ if (!empty($_POST)) {
     <!-- Mobile menu overlay mask -->
 
      <!-- main================================================== -->
-    <form method="POST" action="register_organizer.php" enctype="multipart/form-data">   
+    <form method="POST" action="register_organizer.php" enctype="multipart/form-data">
 	<main>
     <section id="hero" class="login">
         <div class="container">
@@ -302,6 +302,7 @@ if (!empty($_POST)) {
 <script src="js/functions.js"></script>
 <script src="//code.jquery.com/jquery-2.1.0.min.js" type="text/javascript"></script>
 <script src="//jpostal-1006.appspot.com/jquery.jpostal.js" type="text/javascript"></script>
+<script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
 
 
  <!-- Specific scripts -->
