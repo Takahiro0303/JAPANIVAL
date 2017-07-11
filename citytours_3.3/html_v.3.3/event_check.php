@@ -383,25 +383,24 @@ if(!empty($_POST)){
                 <!--End  single_tour_desc-->
 
                 <aside class="col-md-4">
-                    <div class="row">
+                    <div>
 
-                        <div id="eve_info" class="box_style_1"><!-- //TODO!:変更前 class="box_style_1 expose" -->
+                        <div class="box_style_ume"><!-- //TODO!:変更前 class="box_style_1 expose" -->
                             
                             <h3 class="inner">Information</h3>
-                            <div id="scroll" class="info">
-                                <div>
-                                    ニュース登録日
-                                    <input type="date" class="form-control" name="news_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
-                                    ニュース記載欄
-                                    <textarea name="news_comment" class="form-control"  placeholder = "こちらにイベント情報（ニュース）を入力してください">
-                                        <?php echo htmlspecialchars($news_comment); ?>
-                                    </textarea>
-                                </div>
+                            <div>
+                                ニュース登録日
+                                <input type="date" class="form-control" name="news_date" value= "<?php echo htmlspecialchars($e_start_date); ?>" style="margin-right: 5px; margin-bottom: 5px;">
+                                ニュース記載欄
+                                <textarea name="news_comment" class="form-control"  placeholder = "こちらにイベント情報（ニュース）を入力してください">
+                                    <?php echo htmlspecialchars($news_comment); ?>
+                                </textarea>
                             </div>
+
                         </div>
 
                         <div id="eve_tomo" class="box_style_1">
-                            <h3 class="inner" style="margin-bottom: 5px;"">Requests!!</h3>
+                            <h3 class="inner" style="margin-bottom: 5px;">Requests!!</h3>
                             <div class="requests" style="margin-bottom: 0px;">
                                 <div class="row">
                                     <div class="col-md-6 col-sm-6">
@@ -439,12 +438,12 @@ if(!empty($_POST)){
                                 </div>
                                 <hr style="margin-bottom: 0px; margin-top: 0px;">
 
-                                <div class="row">
-                                    <div style=" border-radius: 3px; width: 100%; height: 200px; padding: 20px; padding-top: 15px; padding-right: 40px; margin-right: 27px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                    <div >
                                                 
-                                        <div class="col-md-6 col-sm-6">
+                                        <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
                                             <div style="text-align: center">
-                                                <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="100px" height="100px" >
+                                                <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="95px" height="95px" >
                                             </div>
                                             <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;">Sponge Bob</h4>
                                             <div style="text-align: center">
@@ -454,13 +453,13 @@ if(!empty($_POST)){
                                         </div>
                                         <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
                                             <div class="button">
-                                                <!-- 個人詳細ページに戦遷移 -->
+                                                <!-- 個人詳細ページに遷移 -->
                                                 <div class="col-md-12 col-sm-12" style="padding : 0px; ">
                                                     <a class="btn_full" href="profile.html" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
                                                 </div>
                                                 <!-- チャットページに遷移 -->
                                                 <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                    <div class="panel panel-danger">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
                                                         <div class="panel-heading" style="padding : 10px; ">
                                                             <div style="margin-bottom: 5px;">
                                                                 Request Category
