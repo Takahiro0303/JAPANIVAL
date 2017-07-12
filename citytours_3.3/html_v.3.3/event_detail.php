@@ -8,17 +8,28 @@ require('../../common/functions.php'); //関数ファイル読み込み
 
 // イベントデータ取得
 $sql = 'SELECT * FROM events WHERE event_id=1';
-$data = ['event_id'];
+$data = [];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // v($event_data);
 
+// イベント写真データ取得
+$sql = 'SELECT * FROM event_pics WHERE event_id=1';
+$data = [];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $event_pics[] = $event_pic;
+ }
+
+v($event_pics);
+
 // newssテーブルからぜ全データ取得
 $sql = 'SELECT * FROM news WHERE event_id=1';
 // $data = ['notisfuction_id'];
-$data = ['news'];
+$data = [];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $news = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -85,21 +96,20 @@ v($count);
 
   <body>
     <!-- 【トップ】画像表示-->
-    <section class="parallax-window" data-parallax="scroll" data-image-src="e_pic_path/松ぼん6.jpg" data-natural-width="1000" data-natural-height="470">
-        <!-- ＊画像データ挿入 -->
+    <section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/<?php e($event_data['e_pic_path'][0]) ?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-7 col-sm-7">
+                    <div class="col-md-5 col-sm-5">
                         <h1><?php e($event_data['e_name']) ?></h1>
                         <span><?php e($event_data['e_prefecture']) ?></span>
                     </div>
-                    <div class="col-md-4 col-sm-4" style="font-size: 30px;">
+                    <div class="col-md-2 col-sm-2">
+                        <!-- <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a> -->
+                    </div>
+                    <div class="col-md-5 col-sm-5" style="font-size: 30px;">
                         <span><sup style="font-size: 20px;">Sat</sup><?php echo($event_data['e_start_date']) ?> ~ <?php echo($event_data['e_end_date']) ?></span> <!-- ＊曜日・開催日時表示 -->
                         <!-- <span class="favorites"><i class="icon-heart" style="color: red;" value="125"></i></span> --> <!-- ＊お気に入り数挿入 -->
-                    </div>
-                    <div class="col-md-1 col-sm-1">
-                        <!-- <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a> -->
                     </div>
                 </div>
             </div>
@@ -112,35 +122,21 @@ v($count);
         <div class="container margin_60">
             <div class="row">
                 <div class="col-md-8">
-                    <p class="visible-sm visible-xs"><a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-                    </p>
-                    <!-- Map button for tablets/mobiles -->
 
-
-
+                    <!-- イベント写真データ表示 -->
                     <div id="Img_carousel" class="slider-pro">
                         <div class="sp-slides">
-
                             <div class="sp-slide">
-                                <img class="sp-image" src="../../event_pictures/<?php e($event_data['e_pic_path']) ?>"
-                                >
+                                <img class="sp-image" src="../../event_pictures/<?php e($event_data[0]['e_pic_path']) ?>">
                             </div>
-
-
-
                         </div>
 
+                        <?php v($event_pics) ?>
+
                         <div class="sp-thumbnails">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん1.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん2.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん3.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん4.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん5.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん6.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん7.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん8.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん9.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん10.jpg">
+                            <?php  foreach($event_pics as $event_pic){ ?>
+                            <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
+                            <?php } ?>
                         </div>
                     </div>
 
@@ -152,13 +148,11 @@ v($count);
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <p>
-                             <?php e($event_data['explanation']) ?>
-                         </p>
-                     </div>
-                 </div> <!-- End row  -->
+                            <p><?php e($event_data['explanation']) ?></p>
+                        </div>
+                    </div> <!-- End row  -->
 
-                 <hr>
+                    <hr>
 
                  <!-- 以下、イベント詳細 -->
                  <div class="row">
@@ -559,12 +553,11 @@ v($count);
                                 <label>Position</label>
                                 <select class="form-control" name="position_review" id="position_review">
                                     <option value="">Please review</option>
-                                    <option value="Low">Low</option>
-                                    <option value="Sufficient">Sufficient</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Excellent">Excellent</option>
-                                    <option value="Superb">Super</option>
-                                    <option value="Not rated">I don't know</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
                                 </select>
                             </div>
                         </div>
