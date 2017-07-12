@@ -125,19 +125,16 @@ v($count);
 
                     <!-- イベント写真データ表示 -->
                     <div id="Img_carousel" class="slider-pro">
-                        <div class="sp-slides">
-                            <div class="sp-slide">
-                                <img class="sp-image" src="../../event_pictures/<?php e($event_data[0]['e_pic_path']) ?>">
+                    <?php v($event_pics) ?>
+                        <?php  foreach($event_pics as $event_pic){ ?>
+                            <div class="sp-slides">
+                                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="<?php echo($event_pic['e_pic_path']); ?>" data-small="<?php echo($event_pic['e_pic_path']); ?>/" data-medium="<?php echo($event_pic['e_pic_path']); ?>/" data-large="<?php echo($event_pic['e_pic_path']); ?>/" data-retina="<?php echo($event_pic['e_pic_path']); ?>/">
                             </div>
-                        </div>
 
-                        <?php v($event_pics) ?>
-
-                        <div class="sp-thumbnails">
-                            <?php  foreach($event_pics as $event_pic){ ?>
-                            <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
-                            <?php } ?>
-                        </div>
+                            <div class="sp-thumbnails">
+                                <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
+                            </div>
+                        <?php } ?>
                     </div>
 
                     <hr>
@@ -150,7 +147,8 @@ v($count);
                         <div class="col-md-9">
                             <p><?php e($event_data['explanation']) ?></p>
                         </div>
-                    </div> <!-- End row  -->
+                    </div>
+                </div> <!-- End row  -->
 
                     <hr>
 
@@ -363,7 +361,7 @@ v($count);
                         
                     </div>
                 </div>
-            </div>
+            </div> <!-- row -->
             <!--End  single_tour_desc-->
 
             <aside class="col-md-4">
