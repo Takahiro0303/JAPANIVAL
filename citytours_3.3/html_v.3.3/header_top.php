@@ -9,6 +9,11 @@
 <!-- ユーザーとしてヘッダーを呼び出し -->
 <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == '1'): ?>
     
+    <?php  ?>
+
+
+    <?php  ?>
+
         <div id="top_line">
             <div class="container">
                 <div class="row">
