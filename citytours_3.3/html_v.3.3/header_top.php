@@ -93,14 +93,11 @@
                     <div class="col-md-6 col-sm-6 col-xs-6">
                         <ul id="top_links">
                             <li>
+                            
                                 <div class="dropdown dropdown-access">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="access_link">Guest</a>
-                                    <div class="dropdown-menu" id="log_out">
-                                        <img src="img/avatar1.jpg" alt="" class="img-circle">
-                                        <h4>Guest</h4>
-
-                                    </div>
                                 </div>
+
                                 <!-- End Dropdown access -->
                             </li>
                             <li id="lang_top"><i class="icon-globe-1"></i> <a href="#0">EN</a> - <a href="#0">JA</a> - <a href="#0">CH</a>

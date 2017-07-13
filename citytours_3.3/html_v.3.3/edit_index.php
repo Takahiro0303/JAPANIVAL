@@ -16,11 +16,34 @@ $stmt->execute();
 // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
 
 while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $events[] = $record;
+    // $future[] = $record;
+    if (strtotime(date('Y-m-d')) < strtotime($record['e_start_date'])){
+        $future[] = $record;
+    } else{
+        $past[] = $record;
+    }
+    echo date('Y-m-d');
+    echo $record['e_start_date'];
 }
 
-$count = count($events);
+// $count = count($future);
+// while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//     if (strtotime(date('Y-m-d')) < strtotime($future['e_start_date'])){
+//         $future[] = $record;
+//     } else{
+//         $past[] = $record;
+//     }
+// }
 
+
+
+
+  // echo '<pre>';
+  // var_dump($future);
+  // echo '</pre>';
+  // echo '<pre>';
+  // var_dump($past);
+  // echo '</pre>';
 
 ?>
 
@@ -283,9 +306,9 @@ $count = count($events);
                     <div id="tabs" class="tabs">
                         <nav>
                             <ul>
-                                <li><a href="#section-1" ><span>Pick Up!!</span></a></li>
-                                <li><a href="#section-2" ><span>Refine Search</span></a></li>
-                                <li><a href="#section-3" ><span>Map Search</span></a></li>
+                                <li><a href="#section-1" ><i class="icon_set_1_icon-39"><span>Pick Up!!</span></a></li>
+                                <li><a href="#section-2" ><i class="icon_set_1_icon-42"><span>Refine Search</span></a></li>
+                                <li><a href="#section-3" ><i class="icon_set_1_icon-37"></i><span>Map Search</span></a></li>
                             </ul>
                         </nav>
                     <div class="content">
@@ -321,11 +344,11 @@ $count = count($events);
 
             <div class="row">
 
-                <?php for($i=0;$i < $count; $i++) { ?>
+                <?php for($i=0;$i < count($future); $i++) { ?>
                     <?php
                         // 窓に表示する写真の取得
                         $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                        $data = [$events[$i]['event_id']];
+                        $data = [$future[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
                         $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -336,14 +359,14 @@ $count = count($events);
 
                         //like数カウント
                         $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
-                        $data = [$events[$i]['event_id']];
+                        $data = [$future[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
                         $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
                         //join数カウント
                         $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
-                        $data = [$events[$i]['event_id']];
+                        $data = [$future[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
                         $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -355,10 +378,10 @@ $count = count($events);
                         // $stmt = $dbh->prepare($sql);
                         // $stmt->execute($data);
                         // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
-                        if ($events[$i]['e_start_date'] == $events[$i]['e_end_date']) {
-                            $duration = $events[$i]['e_start_date'];
+                        if ($future[$i]['e_start_date'] == $future[$i]['e_end_date']) {
+                            $duration = $future[$i]['e_start_date'];
                         } else{
-                            $duration = $events[$i]['e_start_date'] . ' - ' . $events[$i]['e_end_date'];
+                            $duration = $future[$i]['e_start_date'] . ' - ' . $future[$i]['e_end_date'];
                         }
 
                     ?>
@@ -367,7 +390,7 @@ $count = count($events);
                         <div class="tour_container">
                             <div class="ribbon_3 popular"><span>New</span></div>
                             <div class="img_container">
-                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>">
+                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
                                     <img src="../../event_pictures/<?php echo htmlspecialchars($e_pic_path['e_pic_path']); ?>" class="img-responsive" alt="Image">
                                     <div class="short_info">
                                         <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>
@@ -375,7 +398,7 @@ $count = count($events);
                                 </a>
                             </div>
                             <div class="tour_title">
-                                <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
+                                <h3><strong><?php echo htmlspecialchars($future[$i]['e_name']); ?></strong></h3>
                                 <div><?php echo $duration; ?></div>
                                 <!-- end rating -->
                                 <div class="wishlist">
@@ -549,97 +572,139 @@ $count = count($events);
 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
 
                                     <div class="col-lg-9 col-md-9">
+                                        <?php for($i=0;$i < count($future); $i++) { ?>
+                                            <?php
+                                                // 窓に表示する写真の取得
+                                                $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+                                                $data = [$future[$i]['event_id']];
+                                                $stmt = $dbh->prepare($sql);
+                                                $stmt->execute($data);
+                                                $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                        <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-                                            <div class="row">
-                                                <div class="col-lg-4 col-md-4 col-sm-4">
-                                                    <div class="ribbon_3 popular"><span>Popular</span>
-                                                    </div>
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div>
-                                                    <div class="img_list">
-                                                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                                                            <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="clearfix visible-xs-block"></div>
-                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                    <div class="tour_list_desc">
-                                                        <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
-                                                        </div>
-                                                        <h3><strong>Arch Triomphe</strong> tour</h3>
-                                                        <p>Lorem ipsum dolor sit amet, quem convenire interesset ut vix, ad dicat sanctus detracto vis. Eos modus dolorum ex, qui adipisci maiestatis inciderint no, eos in elit dicat.....</p>
-                                                        <ul class="add_info">
-                                                            <li>
-                                                                <div class="tooltip_styled tooltip-effect-4">
-                                                                    <span class="tooltip-item"><i class="icon_set_1_icon-83"></i></span>
-                                                                    <div class="tooltip-content">
-                                                                        <h4>Schedule</h4>
-                                                                        <strong>Monday to Friday</strong> 09.00 AM - 5.30 PM
-                                                                        <br>
-                                                                        <strong>Saturday</strong> 09.00 AM - 5.30 PM
-                                                                        <br>
-                                                                        <strong>Sunday</strong> <span class="label label-danger">Closed</span>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="tooltip_styled tooltip-effect-4">
-                                                                    <span class="tooltip-item"><i class="icon_set_1_icon-41"></i></span>
-                                                                    <div class="tooltip-content">
-                                                                        <h4>Address</h4> Musée du Louvre, 75058 Paris - France
-                                                                        <br>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="tooltip_styled tooltip-effect-4">
-                                                                    <span class="tooltip-item"><i class="icon_set_1_icon-97"></i></span>
-                                                                    <div class="tooltip-content">
-                                                                        <h4>Languages</h4> English - French - Chinese - Russian - Italian
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="tooltip_styled tooltip-effect-4">
-                                                                    <span class="tooltip-item"><i class="icon_set_1_icon-27"></i></span>
-                                                                    <div class="tooltip-content">
-                                                                        <h4>Parking</h4> 1-3 Rue Elisée Reclus
-                                                                        <br> 76 Rue du Général Leclerc
-                                                                        <br> 8 Rue Caillaux 94923
-                                                                        <br>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="tooltip_styled tooltip-effect-4">
-                                                                    <span class="tooltip-item"><i class="icon_set_1_icon-25"></i></span>
-                                                                    <div class="tooltip-content">
-                                                                        <h4>Transport</h4>
-                                                                        <strong>Metro: </strong>Musée du Louvre station (line 1)
-                                                                        <br>
-                                                                        <strong>Bus:</strong> 21, 24, 27, 39, 48, 68, 69, 72, 81, 95
-                                                                        <br>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 col-md-2 col-sm-2">
-                                                    <div class="price_list">
-                                                        <div><sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small>
-                                                            <p><a href="single_tour.html" class="btn_1">Details</a>
-                                                            </p>
-                                                        </div>
+                                                  // echo '<pre>';
+                                                  // var_dump($e_pic_path);
+                                                  // echo '</pre>';
 
+                                                //like数カウント
+                                                $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+                                                $data = [$future[$i]['event_id']];
+                                                $stmt = $dbh->prepare($sql);
+                                                $stmt->execute($data);
+                                                $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                                                //join数カウント
+                                                $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
+                                                $data = [$future[$i]['event_id']];
+                                                $stmt = $dbh->prepare($sql);
+                                                $stmt->execute($data);
+                                                $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                                            
+
+                                                // join数カウント
+                                                // $sql = 'SELECT * FROM likes WHERE member_id=? AND tweet_id=?';
+                                                // $data = [$login_user['member_id'], $tweets[$i]['tweet_id']];
+                                                // $stmt = $dbh->prepare($sql);
+                                                // $stmt->execute($data);
+                                                // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                if ($future[$i]['e_start_date'] == $future[$i]['e_end_date']) {
+                                                    $duration = $future[$i]['e_start_date'];
+                                                } else{
+                                                    $duration = $future[$i]['e_start_date'] . ' - ' . $future[$i]['e_end_date'];
+                                                }
+
+                                            ?>
+                                            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                                                <div class="row">
+                                                    <div class="col-lg-4 col-md-4 col-sm-4">
+                                                        <div class="ribbon_3 popular"><span>Popular</span>
+                                                        </div>
+                                                        <div class="wishlist">
+                                                            <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                                                        </div>
+                                                        <div class="img_list">
+                                                            <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                                                                <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clearfix visible-xs-block"></div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                        <?php  ?>
+                                                        <div class="tour_list_desc">
+                                                            <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
+                                                            </div>
+                                                            <h3><strong>Arch Triomphe</strong> tour</h3>
+                                                            <p>Lorem ipsum dolor sit amet, quem convenire interesset ut vix, ad dicat sanctus detracto vis. Eos modus dolorum ex, qui adipisci maiestatis inciderint no, eos in elit dicat.....</p>
+                                                            <ul class="add_info">
+                                                                <li>
+                                                                    <div class="tooltip_styled tooltip-effect-4">
+                                                                        <span class="tooltip-item"><i class="icon_set_1_icon-83"></i></span>
+                                                                        <div class="tooltip-content">
+                                                                            <h4>Schedule</h4>
+                                                                            <strong>Monday to Friday</strong> 09.00 AM - 5.30 PM
+                                                                            <br>
+                                                                            <strong>Saturday</strong> 09.00 AM - 5.30 PM
+                                                                            <br>
+                                                                            <strong>Sunday</strong> <span class="label label-danger">Closed</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="tooltip_styled tooltip-effect-4">
+                                                                        <span class="tooltip-item"><i class="icon_set_1_icon-41"></i></span>
+                                                                        <div class="tooltip-content">
+                                                                            <h4>Address</h4> Musée du Louvre, 75058 Paris - France
+                                                                            <br>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="tooltip_styled tooltip-effect-4">
+                                                                        <span class="tooltip-item"><i class="icon_set_1_icon-97"></i></span>
+                                                                        <div class="tooltip-content">
+                                                                            <h4>Languages</h4> English - French - Chinese - Russian - Italian
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="tooltip_styled tooltip-effect-4">
+                                                                        <span class="tooltip-item"><i class="icon_set_1_icon-27"></i></span>
+                                                                        <div class="tooltip-content">
+                                                                            <h4>Parking</h4> 1-3 Rue Elisée Reclus
+                                                                            <br> 76 Rue du Général Leclerc
+                                                                            <br> 8 Rue Caillaux 94923
+                                                                            <br>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="tooltip_styled tooltip-effect-4">
+                                                                        <span class="tooltip-item"><i class="icon_set_1_icon-25"></i></span>
+                                                                        <div class="tooltip-content">
+                                                                            <h4>Transport</h4>
+                                                                            <strong>Metro: </strong>Musée du Louvre station (line 1)
+                                                                            <br>
+                                                                            <strong>Bus:</strong> 21, 24, 27, 39, 48, 68, 69, 72, 81, 95
+                                                                            <br>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2 col-md-2 col-sm-2">
+                                                        <div class="price_list">
+                                                            <div><sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small>
+                                                                <p><a href="single_tour.html" class="btn_1">Details</a>
+                                                                </p>
+                                                            </div>
+
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!--End strip -->
+                                            <!--End strip -->
+                                        <?php } ?>
 
 
 
