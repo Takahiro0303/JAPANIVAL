@@ -30,7 +30,6 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // newssテーブルからぜ全データ取得
 $sql = 'SELECT * FROM news WHERE event_id=?';
-// $data = ['notisfuction_id'];
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
@@ -39,7 +38,6 @@ while ($notification = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // v($notifications);
-
 // reviews&usersテーブルから全データ取得
 $sql ='SELECT r.*, u.* FROM reviews r, users u WHERE r.user_id=u.user_id AND r.event_id=?';
 $data = [$_REQUEST['event_id']];
@@ -341,7 +339,7 @@ $count = count($reviews);
                         <!-- ニュース表示 -->
                         <div id="scroll" class="news">
                             <?php foreach($notifications as $notification){ ?>
-                                <div><?php e($notification['news_comment']); ?></div>
+                                <?php e($notification['news_comment']); ?>
                             <?php } ?> 
                         </div>
                     </div> <!-- box_style_1 expose -->
