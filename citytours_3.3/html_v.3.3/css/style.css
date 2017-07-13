@@ -104,10 +104,10 @@ h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 }
 
 /*大澤　【追加】イベトモ機能のデザイン追加*/
-.eve_tomo{
+/*.eve_tomo{
 	margin: auto;
 	padding: 20px;
-}
+}*/
 
 .purpose{
 	font-size: 20px;
