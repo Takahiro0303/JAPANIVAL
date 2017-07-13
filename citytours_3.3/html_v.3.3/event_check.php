@@ -2,9 +2,9 @@
 
 session_start();
 
-// echo '<pre>';
-//  var_dump($_SESSION['event']['e_pic_path']);
-//  echo '</pre>';
+echo '<pre>';
+ var_dump($_SESSION['event']['e_pic_path']);
+ echo '</pre>';
 
 require('../../common/dbconnect.php');
 require('../../common/functions.php');

@@ -117,16 +117,13 @@ if (!empty($file_name)) { //画像が選択されていれば
         if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
             $errors['picture_path'] = 'type';
         }   
-    }
 
-
-    for ($j = 0; $j< count($_FILES["e_pic_path"]["tmp_name"]); $j++) {
-        if (is_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$j])) {
-            $fileName = "../../event_pictures/".date("YmdHis").$_FILES["e_pic_path"]["name"][$j];
-            $_SESSION['event']['e_pic_path'][$j] = $fileName;
-            // echo $_SESSION['event']['e_pic_path'][$j];
+        if (is_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i])) {
+            $fileName = "../../event_pictures/".date("YmdHis").$_FILES["e_pic_path"]["name"][$i];
+            $_SESSION['event']['e_pic_path'][$i] = $fileName;
+            // echo $_SESSION['event']['e_pic_path'][$i];
             if (file_exists($fileName)===false) {
-                if (move_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$j],$fileName)) {
+                if (move_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i],$fileName)) {
                     chmod($fileName, 0644);
 
                 } else {
@@ -361,6 +358,14 @@ if (!empty($file_name)) { //画像が選択されていれば
 
 
 
+<!--                     <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Browse&hellip; <input type="file" style="display: none;" name="e_pic_path[]" multiple>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly>
+                    </div> -->
 
 
 
