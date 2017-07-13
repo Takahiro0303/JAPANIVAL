@@ -399,7 +399,7 @@ if(!empty($_POST)){
 
                         </div>
 
-                        <div id="eve_tomo" class="box_style_ume">
+                        <div id="eve_tomo" class="box_style_1">
                             <h3 class="inner" style="margin-bottom: 5px;">Requests!!</h3>
                             <div class="requests" style="margin-bottom: 0px;">
                                 <div class="row">
