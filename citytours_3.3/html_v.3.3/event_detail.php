@@ -6,49 +6,58 @@ require('../../common/functions.php'); //関数ファイル読み込み
 // require('header.php');
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
 
-if (isset($_REQUEST['event_id'])) {
-    // イベントデータ取得
-    $sql = 'SELECT * FROM events WHERE event_id=?';
-    $data = [$_REQUEST['event_id']];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // v($event_data);
+// イベントデータ取得
+$sql = 'SELECT * FROM events WHERE event_id=1';
+$data = [];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // newssテーブルからぜ全データ取得
-    $sql = 'SELECT * FROM news WHERE event_id=1';
-    // $data = ['notisfuction_id'];
-    $data = [$_REQUEST['event_id']];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $news = $stmt->fetch(PDO::FETCH_ASSOC);
+// v($event_data);
 
-    // v($news);
+// イベント写真データ取得
+$sql = 'SELECT * FROM event_pics WHERE event_id=1';
+$data = [];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $event_pics[] = $event_pic;
+ }
 
-    // reviews&usersテーブルから全データ取得
-    $sql ='SELECT r.*, u.*
-            FROM reviews r, users u
-            WHERE r.event_id=1';
-            // -- ORDER BY r.created
-            // -- DESC LIMIT %d, 3
-     $data = [$_REQUEST['event_id']];   
-     $stmt = $dbh->prepare($sql);
-     $stmt->execute($data);
-     $reviews = $stmt->fetch(PDO::FETCH_ASSOC);
+// v($event_pics);
 
+// newssテーブルからぜ全データ取得
+$sql = 'SELECT * FROM news WHERE event_id=1';
+// $data = ['notisfuction_id'];
+$data = [];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$news = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// v($news);
+
+// reviews&usersテーブルから全データ取得
+$sql ='SELECT r.*, u.*
+        FROM reviews r, users u
+        WHERE r.user_id=u.user_id AND r.event_id=1';
+        // -- ORDER BY r.created
+        // -- DESC LIMIT %d, 3
+ $data = [];   
+ $stmt = $dbh->prepare($sql);
+ $stmt->execute($data);
+$reviews = [];
+ while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $reviews[] = $review;
     // v($reviews);
-} else{
-    header('Location: edit_index.php');
-    exit();
-}
+ }
+// v($reviews);
 
 
+$count = count($reviews);
+// v($count);
 
-
-
-
-
+v($event_pics[0]['e_pic_path']);
 ?>
 
 <!DOCTYPE html>
@@ -90,21 +99,20 @@ if (isset($_REQUEST['event_id'])) {
 
   <body>
     <!-- 【トップ】画像表示-->
-    <section class="parallax-window" data-parallax="scroll" data-image-src="e_pic_path/松ぼん6.jpg" data-natural-width="1000" data-natural-height="470">
-        <!-- ＊画像データ挿入 -->
+    <section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/<?php e(); ?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-7 col-sm-7">
+                    <div class="col-md-5 col-sm-5">
                         <h1><?php e($event_data['e_name']) ?></h1>
                         <span><?php e($event_data['e_prefecture']) ?></span>
                     </div>
-                    <div class="col-md-4 col-sm-4" style="font-size: 30px;">
+                    <div class="col-md-2 col-sm-2">
+                        <!-- <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a> -->
+                    </div>
+                    <div class="col-md-5 col-sm-5" style="font-size: 30px;">
                         <span><sup style="font-size: 20px;">Sat</sup><?php echo($event_data['e_start_date']) ?> ~ <?php echo($event_data['e_end_date']) ?></span> <!-- ＊曜日・開催日時表示 -->
                         <!-- <span class="favorites"><i class="icon-heart" style="color: red;" value="125"></i></span> --> <!-- ＊お気に入り数挿入 -->
-                    </div>
-                    <div class="col-md-1 col-sm-1">
-                        <!-- <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a> -->
                     </div>
                 </div>
             </div>
@@ -117,36 +125,30 @@ if (isset($_REQUEST['event_id'])) {
         <div class="container margin_60">
             <div class="row">
                 <div class="col-md-8">
-                    <p class="visible-sm visible-xs"><a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-                    </p>
-                    <!-- Map button for tablets/mobiles -->
 
-
-
-                    <div id="Img_carousel" class="slider-pro">
+                    <!-- イベント写真データ表示 -->
+                    <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
                         <div class="sp-slides">
-
-                            <div class="sp-slide">
-                                <img class="sp-image" src="../../event_pictures/<?php e($event_data['e_pic_path']) ?>"
-                                >
-                            </div>
-
-
-
+                            <?php  foreach($event_pics as $event_pic){ ?>
+                                <div class="sp-slides">
+                                    <img alt="Image" 
+                                    class="sp-image" 
+                                    src="<?php echo($event_pic['e_pic_path']); ?>" 
+                                    data-src="<?php echo($event_pic['e_pic_path']); ?>" data-small="<?php echo($event_pic['e_pic_path']); ?>/"
+                                    data-medium="<?php echo($event_pic['e_pic_path']); ?>/" 
+                                    data-large="<?php echo($event_pic['e_pic_path']); ?>/"
+                                    data-retina="<?php echo($event_pic['e_pic_path']); ?>/">
+                                </div>
+                            <?php } ?>
                         </div>
 
                         <div class="sp-thumbnails">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん1.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん2.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん3.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん4.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん5.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん6.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん7.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん8.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん9.jpg">
-                            <img class="sp-thumbnail" src="e_pic_path/松ぼん10.jpg">
-                        </div>
+                            <?php  foreach($event_pics as $event_pic){ ?>
+                                <div>
+                                 <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
+                                </div>
+                            <?php } ?>            
+                        </div>          
                     </div>
 
                     <hr>
@@ -157,13 +159,12 @@ if (isset($_REQUEST['event_id'])) {
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <p>
-                             <?php e($event_data['explanation']) ?>
-                         </p>
-                     </div>
-                 </div> <!-- End row  -->
+                            <p><?php e($event_data['explanation']) ?></p>
+                        </div>
+                    </div>
+                </div> <!-- End row  -->
 
-                 <hr>
+                    <hr>
 
                  <!-- 以下、イベント詳細 -->
                  <div class="row">
@@ -299,48 +300,82 @@ if (isset($_REQUEST['event_id'])) {
                         <h3>Reviews </h3> 
                     </div>
                     <div class="col-md-9">
-                        <div id="general_rating" class="rating">? Reviews <!-- レビュー件数表示 -->                   
+                        <div id="general_rating" class="rating"><?php echo($count); ?> Reviews <!-- レビュー件数表示 -->                   
                             <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>
                             <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
                         </div>
                         <!-- End general_rating -->
                         <hr>
-                        <div class="review_strip_single">
-                            <img src="img/<?php echo($reviews['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
-                            <h4><?php echo($reviews['nickname']); ?></h4>　<!-- ユーザー名表示 -->
-                            
-                            <!-- レビュー評価表示機能 -->
-                            <div class="rating">
-                                <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i>
-                            </div>
 
-                            <!--　レビュー作成日表示 -->
-                            <small><?php  ?></small>
 
-                            <!-- レビュー本文表示 -->
-                            <p>
-                               <?php echo($reviews['comment']) ; ?>
-                            </p>
+                         <?php// v($reviews);?> 
 
-                        </div>
-                        <!-- End review strip -->
+                        <?php foreach ($reviews as $review){ ?>
+                            <div class="review_strip_single">
+                                <img src="../../users_pic/<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
+                                
+                                <!-- ユーザー名表示 -->
+                                <h4><?php echo($review['nickname']); ?></h4>　
 
-                        <div class="review_strip_single">
-                            <img src="img/patrick.png" alt="Image" class="img-circle" width="70px" height="70px">
-                            <small> - 10 August 2016 -</small>
-                            <h4>Patrick</h4>
-                            <p>
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed a lorem quis neque interdum consequat ut sed sem. Duis quis tempor nunc. Interdum et malesuada fames ac ante ipsum primis in faucibus."
-                            </p>
-                            <div class="rating">
-                                <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i>
-                            </div>
-                        </div>
-                        <!-- End review strip -->
+                                <!-- レビュー評価表示機能 -->
+                                <?php if ($review['rating'] == '1'){ ?>
+                                <?php v($review); ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star"></i>
+                                        <i class="icon-star"></i>
+                                        <i class="icon-star"></i>
+                                        <i class="icon-star"></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '2'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star "></i>
+                                        <i class="icon-star "></i>
+                                        <i class="icon-star "></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '3'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star "></i>
+                                        <i class="icon-star "></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '4'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star "></i>
+                                    </div>
+                                <?php }elseif ($review['rating'] == '5'){ ?>
+                                    <div class="rating">
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                        <i class="icon-star voted"></i>
+                                    </div>
+                                <?php }; ?>
 
+                                <!--　レビュー作成日表示 -->
+                                <small><?php echo($review['created']);?></small>
+
+                                <!-- レビュー本文表示 -->
+                                <p><?php echo($review['comment']) ; ?></p>
+
+                            </div> <!-- End review strip -->
+                
+                        <?php }; ?>
+
+
+                        
                     </div>
                 </div>
-            </div>
+            </div> <!-- row -->
             <!--End  single_tour_desc-->
 
             <aside class="col-md-4">
@@ -530,12 +565,11 @@ if (isset($_REQUEST['event_id'])) {
                                 <label>Position</label>
                                 <select class="form-control" name="position_review" id="position_review">
                                     <option value="">Please review</option>
-                                    <option value="Low">Low</option>
-                                    <option value="Sufficient">Sufficient</option>
-                                    <option value="Good">Good</option>
-                                    <option value="Excellent">Excellent</option>
-                                    <option value="Superb">Super</option>
-                                    <option value="Not rated">I don't know</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
                                 </select>
                             </div>
                         </div>
