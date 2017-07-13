@@ -24,7 +24,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_pics[] = $event_pic;
  }
 
-v($event_pics);
+// v($event_pics);
 
 // newssテーブルからぜ全データ取得
 $sql = 'SELECT * FROM news WHERE event_id=1';
@@ -50,11 +50,12 @@ $reviews = [];
     $reviews[] = $review;
     // v($reviews);
  }
-v($reviews);
+// v($reviews);
 
 $count = count($reviews);
-v($count);
+// v($count);
 
+v($event_pics[0]['e_pic_path']);
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +97,7 @@ v($count);
 
   <body>
     <!-- 【トップ】画像表示-->
-    <section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/<?php e($event_data['e_pic_path'][0]) ?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/<?php e(); ?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
@@ -124,17 +125,28 @@ v($count);
                 <div class="col-md-8">
 
                     <!-- イベント写真データ表示 -->
-                    <div id="Img_carousel" class="slider-pro">
-                    <?php v($event_pics) ?>
-                        <?php  foreach($event_pics as $event_pic){ ?>
-                            <div class="sp-slides">
-                                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="<?php echo($event_pic['e_pic_path']); ?>" data-small="<?php echo($event_pic['e_pic_path']); ?>/" data-medium="<?php echo($event_pic['e_pic_path']); ?>/" data-large="<?php echo($event_pic['e_pic_path']); ?>/" data-retina="<?php echo($event_pic['e_pic_path']); ?>/">
-                            </div>
+                    <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
+                        <div class="sp-slides">
+                            <?php  foreach($event_pics as $event_pic){ ?>
+                                <div class="sp-slides">
+                                    <img alt="Image" 
+                                    class="sp-image" 
+                                    src="<?php echo($event_pic['e_pic_path']); ?>" 
+                                    data-src="<?php echo($event_pic['e_pic_path']); ?>" data-small="<?php echo($event_pic['e_pic_path']); ?>/"
+                                    data-medium="<?php echo($event_pic['e_pic_path']); ?>/" 
+                                    data-large="<?php echo($event_pic['e_pic_path']); ?>/"
+                                    data-retina="<?php echo($event_pic['e_pic_path']); ?>/">
+                                </div>
+                            <?php } ?>
+                        </div>
 
-                            <div class="sp-thumbnails">
-                                <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
-                            </div>
-                        <?php } ?>
+                        <div class="sp-thumbnails">
+                            <?php  foreach($event_pics as $event_pic){ ?>
+                                <div>
+                                 <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
+                                </div>
+                            <?php } ?>            
+                        </div>          
                     </div>
 
                     <hr>
@@ -286,7 +298,7 @@ v($count);
                         <h3>Reviews </h3> 
                     </div>
                     <div class="col-md-9">
-                        <div id="general_rating" class="rating"><?php echo($count); ?>Reviews <!-- レビュー件数表示 -->                   
+                        <div id="general_rating" class="rating"><?php echo($count); ?> Reviews <!-- レビュー件数表示 -->                   
                             <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>
                             <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
                         </div>
@@ -294,7 +306,7 @@ v($count);
                         <hr>
 
 
-                         <?php v($reviews); ?>
+                         <?php// v($reviews);?> 
 
                         <?php foreach ($reviews as $review){ ?>
                             <div class="review_strip_single">
