@@ -1,17 +1,15 @@
-<?php  
+<?php
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
-// require('header.php'); // ヘッダー読み込み・表示
-// require('footer.php'); // フッター読み込み・表示
 
-// クリックされたイベントデータを一件を取得
+// require('header.php');
+// require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
 $event_id = $_REQUEST['event_id'];
-
 
 // イベントデータ取得
 $sql = 'SELECT * FROM events WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,7 +18,8 @@ $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // イベント写真データ取得
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
+
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -31,7 +30,9 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // newssテーブルからぜ全データ取得
 $sql = 'SELECT * FROM news WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
+
+
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 while ($notification = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -40,10 +41,14 @@ while ($notification = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // v($notifications);
 // reviews&usersテーブルから全データ取得
-$sql ='SELECT r.*, u.* FROM reviews r, users u WHERE r.user_id=u.user_id AND r.event_id=?';
-$data = [$_REQUEST['event_id']];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
+$sql ='SELECT r.*, u.*
+        FROM reviews r, users u
+        WHERE r.user_id=u.user_id AND r.event_id=?';
+        // -- ORDER BY r.created
+        // -- DESC LIMIT %d, 3
+ $data = [$event_id];   
+ $stmt = $dbh->prepare($sql);
+ $stmt->execute($data);
 $reviews = [];
 
 while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -387,14 +392,153 @@ $count = count($reviews);
                                     <div class="col-md-4">
                                     <!-- 一旦放置 -->
                                 </div>
-                            </div><!-- eve_tomos -->
-                        
-                        </div> <!-- eve_tomo -->
-                    </div> <!-- col-md-6 col-sm-6 -->
-                </aside> <!-- class="col-md-4" -->
-            </div> <!-- row -->
-        </div><!--End container -->
-    </main><!-- End main -->
+
+                                <div class="button">
+                                   <!-- 個人詳細ページに戦遷移 -->
+                                   <div class="col-md-6 col-sm-6">
+                                    <a class="btn_full" href="profile.html"><i class=" icon-user"></i>Profile</a>
+                                </div>
+                                <!-- チャットページに遷移 -->
+                                <div class="col-md-6 col-sm-6">
+                                    <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                    </div>
+                    <!--/box_style_1 -->
+
+                    <!-- マッチング希望ボタン -->
+                    <p>
+                        <a class="btn_map" data-toggle="collapse" href="" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Cancel" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
+                    </p>
+                    <!-- 終了タグ　マッチング希望ボタン -->
+                </div>
+            </aside>
+        </div>
+        <!--End row -->
+    </div>
+    <!--End container -->
+
+    <div id="overlay"></div>
+    <!-- Mask on input focus -->
+
+</main>
+<!-- End main -->
+
+<footer class="revealed">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-3">
+                <h3>Need help?</h3>
+                <a href="tel://004542344599" id="phone">+45 423 445 99</a>
+                <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
+            </div>
+            <div class="col-md-3 col-sm-3">
+                <h3>About</h3>
+                <ul>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">Register</a></li>
+                    <li><a href="#">Terms and condition</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-3">
+                <h3>Discover</h3>
+                <ul>
+                    <li><a href="#">Community blog</a></li>
+                    <li><a href="#">Tour guide</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Gallery</a></li>
+                </ul>
+            </div>
+            <div class="col-md-2 col-sm-3">
+                <h3>Settings</h3>
+                <div class="styled-select">
+                    <select class="form-control" name="lang" id="lang">
+                        <option value="English" selected>English</option>
+                        <option value="French">Japanese</option>
+                    </select>
+                </div>
+            </div>
+        </div><!-- End row -->
+        <div class="row">
+            <div class="col-md-12">
+                <div id="social_footer">
+                    <ul>
+                        <li><a href="#"><i class="icon-facebook"></i></a></li>
+                        <li><a href="#"><i class="icon-twitter"></i></a></li>
+                        <li><a href="#"><i class="icon-google"></i></a></li>
+                        <li><a href="#"><i class="icon-instagram"></i></a></li>
+                        <li><a href="#"><i class="icon-pinterest"></i></a></li>
+                        <li><a href="#"><i class="icon-vimeo"></i></a></li>
+                        <li><a href="#"><i class="icon-youtube-play"></i></a></li>
+                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
+                    </ul>
+                    <p>© Japanival 2017</p>
+                </div>
+            </div>
+        </div><!-- End row -->
+    </div><!-- End container -->
+</footer><!-- End footer -->
+
+<div id="toTop"></div><!-- Back to top button -->
+
+<!-- Search Menu -->
+<div class="search-overlay-menu">
+    <span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+    <form role="search" id="searchform" method="get">
+        <input value="" name="q" type="search" placeholder="Search..." />
+        <button type="submit"><i class="icon_set_1_icon-78"></i>
+        </button>
+    </form>
+</div><!-- End Search Menu -->
+
+<!-- Modal Review -->
+<div class="modal fade" id="myReview" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myReviewLabel">Write your review</h4>
+            </div>
+            <div class="modal-body">
+                <div id="message-review">
+                </div>
+                <form method="post" action="assets/review_tour.php" name="review_tour" id="review_tour">
+
+                    <!-- End row -->
+                    
+                    <!-- End row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Position</label>
+                                <select class="form-control" name="position_review" id="position_review">
+                                    <option value="">Please review</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End row -->
+
+                    <!-- End row -->
+                    <div class="form-group">
+                        <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"><?php echo 'hogehoge'; ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" name="picture" value=写真の選択>
+                    </div>
+
 
     <footer class="revealed">
         <div class="container">
