@@ -130,9 +130,7 @@ if (!empty($_POST)) {
     }    
 }
 
-if (/*イベント実施日が選択されたらe.e_start_date、イベント登録日が選択されたらmodified*/) {
-  # code...
-}
+
 $e_sql = 'SELECT e.*, e.e_name,e.e_start_date FROM events e,organizers o WHERE e.o_id=o.o_id ORDER BY e.e_start_date ASC'; /*DESCの逆を使う*/
 $e_stmt = $dbh->prepare($e_sql);
 $e_stmt->execute();
@@ -146,6 +144,8 @@ while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
 /*var_dump($events);*/
 
 $count = count($events);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -243,10 +243,12 @@ $count = count($events);
             </li>
             <li><a href="#section-2" class="icon-wishlist"><span>イベント登録</span></a>
             </li>
-            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント </span></a>
+            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント① </span></a>
             </li>
-            <li><a href="#section-4" class="icon-hourglass"><span>Join the Past</span></a>
+            <li><a href="#section-3-2" class="icon-back-in-time"><span>実施済みイベント② </span></a>
             </li>
+            <!-- <li><a href="#section-4" class="icon-hourglass"><span>Join the Past</span></a>
+            </li> -->
             <li><a href="#section-5" class="icon-profile"><span>Profile</span></a>
             </li>
           </ul>
@@ -254,7 +256,7 @@ $count = count($events);
 
         <div class="content">
           <section id="section-1">
-            <div id="tools">
+            <div id="tools" class="col-md-12">
               <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-6">
                   <div class="styled-select-filters">
@@ -268,7 +270,7 @@ $count = count($events);
             </div>
             <!--/tools -->
 
-            <div class="strip_booking">
+            <div class="strip_booking col-md-12">
               <?php for ($i=0; $i <$count ; $i++) { ?>
                 <div class="row">
                   <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
@@ -313,487 +315,128 @@ $count = count($events);
           </section>
           <!-- End section 1 -->
 
+
           <section id="section-2">
-          <form method="POST" action="event_input.php" enctype="multipart/form-data">
-    <div class="collapse" id="collapseMap">
-      <div id="map" class="map"></div>
-    </div>
-    <!-- End Map -->
-
-    <div class="container margin_60">
-      <div class="row">
-        <div class="col-md-8">
-          <p class="visible-sm visible-xs"><a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-          </p>
-          <!-- Map button for tablets/mobiles -->
-
-
-
-          <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
-            <div class="sp-slides">
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/1_medium.jpg" data-small="img/slider_single_tour/1_small.jpg" data-medium="img/slider_single_tour/1_medium.jpg" data-large="img/slider_single_tour/1_large.jpg" data-retina="img/slider_single_tour/1_large.jpg">
-              </div>
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/2_medium.jpg" data-small="img/slider_single_tour/2_small.jpg" data-medium="img/slider_single_tour/2_medium.jpg" data-large="img/slider_single_tour/2_large.jpg" data-retina="img/slider_single_tour/2_large.jpg">
-                <h3 class="sp-layer sp-black sp-padding" data-horizontal="40" data-vertical="40" data-show-transition="left">
-                        Lorem ipsum dolor sit amet </h3>
-                <p class="sp-layer sp-white sp-padding" data-horizontal="40" data-vertical="100" data-show-transition="left" data-show-delay="200">
-                  consectetur adipisicing elit
-                </p>
-                <p class="sp-layer sp-black sp-padding" data-horizontal="40" data-vertical="160" data-width="350" data-show-transition="left" data-show-delay="400">
-                  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/3_medium.jpg" data-small="img/slider_single_tour/3_small.jpg" data-medium="img/slider_single_tour/3_medium.jpg" data-large="img/slider_single_tour/3_large.jpg" data-retina="img/slider_single_tour/3_large.jpg">
-                <p class="sp-layer sp-white sp-padding" data-position="centerCenter" data-vertical="-50" data-show-transition="right" data-show-delay="500">
-                  Lorem ipsum dolor sit amet
-                </p>
-                <p class="sp-layer sp-black sp-padding" data-position="centerCenter" data-vertical="50" data-show-transition="left" data-show-delay="700">
-                  consectetur adipisicing elit
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/4_medium.jpg" data-small="img/slider_single_tour/4_small.jpg" data-medium="img/slider_single_tour/4_medium.jpg" data-large="img/slider_single_tour/4_large.jpg" data-retina="img/slider_single_tour/4_large.jpg">
-                <p class="sp-layer sp-black sp-padding" data-position="bottomLeft" data-vertical="0" data-width="100%" data-show-transition="up">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/5_medium.jpg" data-small="img/slider_single_tour/5_small.jpg" data-medium="img/slider_single_tour/5_medium.jpg" data-large="img/slider_single_tour/5_large.jpg" data-retina="img/slider_single_tour/5_large.jpg">
-                <p class="sp-layer sp-white sp-padding" data-vertical="5%" data-horizontal="5%" data-width="90%" data-show-transition="down" data-show-delay="400">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/6_medium.jpg" data-small="img/slider_single_tour/6_small.jpg" data-medium="img/slider_single_tour/6_medium.jpg" data-large="img/slider_single_tour/6_large.jpg" data-retina="img/slider_single_tour/6_large.jpg">
-                <p class="sp-layer sp-white sp-padding" data-horizontal="10" data-vertical="10" data-width="300">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/7_medium.jpg" data-small="img/slider_single_tour/7_small.jpg" data-medium="img/slider_single_tour/7_medium.jpg" data-large="img/slider_single_tour/7_large.jpg" data-retina="img/slider_single_tour/7_large.jpg">
-                <p class="sp-layer sp-black sp-padding" data-position="bottomLeft" data-horizontal="5%" data-vertical="5%" data-width="90%" data-show-transition="up" data-show-delay="400">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/8_medium.jpg" data-small="img/slider_single_tour/8_small.jpg" data-medium="img/slider_single_tour/8_medium.jpg" data-large="img/slider_single_tour/8_large.jpg" data-retina="img/slider_single_tour/8_large.jpg">
-                <p class="sp-layer sp-black sp-padding" data-horizontal="50" data-vertical="50" data-show-transition="down" data-show-delay="500">
-                  Lorem ipsum dolor sit amet
-                </p>
-                <p class="sp-layer sp-white sp-padding" data-horizontal="50" data-vertical="100" data-show-transition="up" data-show-delay="500">
-                  consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
-
-              <div class="sp-slide">
-                <img alt="Image" class="sp-image" src="css/images/blank.gif" data-src="img/slider_single_tour/9_medium.jpg" data-small="img/slider_single_tour/9_small.jpg" data-medium="img/slider_single_tour/9_medium.jpg" data-large="img/slider_single_tour/9_large.jpg" data-retina="img/slider_single_tour/9_large.jpg">
-              </div>
-            </div>
-            <div class="sp-thumbnails">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/1_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/2_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/3_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/4_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/5_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/6_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/7_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/8_medium.jpg">
-              <img alt="Image" class="sp-thumbnail" src="img/slider_single_tour/9_medium.jpg">
-            </div>
-          </div>
-
-            <div class="input-group">
-                <label class="input-group-btn">
-                    <span class="btn btn-primary">
-                        Browse&hellip; <input type="file" style="display: none;" name="e_pic_path[]" multiple>
-                    </span>
-                </label>
-                <input type="text" class="form-control" readonly>
-            </div>
-<!--                   <input type="file" class="btn btn-primary" name="e_pic_path[]" multiple> -->
-                  <!-- <input type="submit" value="submit"> -->
-
-                  <!-- <?php if(isset($errors['e_pic_path']) && $errors['e_pic_path'] == 'type') { ?>
-                    <p class="error">画像は「jpg」「png」「gif」の画像を選択してください。</p>
-                  <?php } ?>
-                  <!-- <?php //if(!empty($errors)) { ?> -->
-                  <!-- <?php if(isset($errors['e_pic_path']) && $errors['e_pic_path'] == 'blank') { ?>
-                    <p class="error">画像を指定してください</p>
-                  <?php } ?> -->
-                  <!-- <input type="submit" value="アップロードを実行する" /> -->
-          <hr>
-          <!-- 以下、イベント説明 -->
-          <div class="row">
-            <div class="col-md-3">
-              <h3>Event Description</h3>
-            </div>
-            <div class="col-md-9">
-              <div>
-                <textarea name="explanation" class="form-control" style="width:99%; height:300px;" placeholder = "説明文を入力してください"><?php echo htmlspecialchars($explanation); ?></textarea>
-                <?php if(isset($errors['explanation']) && $errors['explanation'] == 'blank') { ?>
-                  <p class="error">説明文を入力してください</p>
-                <?php } ?>
-                </div>
-            </div>
-          </div> <!-- End row  -->
-
-          <hr>
-          <!-- 以下、イベント詳細 -->
-          <div class="row">
-            <div class="col-md-3">
-              <h3>Event Detail</h3>
-            </div>
-            <div class="col-md-9">
-              <div class=" table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th colspan="2">
-                        イベント開催詳細
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td width= "200" style="vertical-align: middle;">
-                          Event Name
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name="e_name" placeholder = "イベント名の入力" value="<?php echo htmlspecialchars($e_name); ?>">
-                          <?php if(isset($errors['e_name']) && $errors['e_name'] == 'blank') { ?>
-                            <p class="error">イベント名を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        Date and time
-                      </td>
-                      <td>
-                        <div style="margin-bottom: 10px;">
-                          イベント日程（開始日）（必須）<br>
-                          <input type="date" class="form-control" name="e_start_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
-                          <?php if(isset($errors['e_start_date']) && $errors['e_start_date'] == 'blank') { ?>
-                            <p class="error">開始日を入力してください</p>
-                          <?php } ?>
-                        </div>
-                        <div>
-                          イベント日程（終了日）（必須）<br>
-                          <input type="date" class="form-control" name="e_end_date" value= "<?php echo htmlspecialchars($e_end_date); ?>">
-                          <?php if(isset($errors['e_end_date']) && $errors['e_end_date'] == 'blank') { ?>
-                            <p class="error">終了日を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        city
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name= "e_prefecture" placeholder = "都道府県の入力" value="<?php echo htmlspecialchars($e_prefecture); ?>">
-                          <?php if(isset($errors['e_prefecture']) && $errors['e_prefecture'] == 'blank') { ?>
-                            <p class="error">都道府県を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        the place (follow on map)
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name="e_venue" placeholder = "会場を入力してください" value= "<?php echo htmlspecialchars($e_venue); ?>">
-                          <?php if(isset($errors['e_venue']) && $errors['e_venue'] == 'blank') { ?>
-                            <p class="error">会場を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        Web page
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name="official_url" placeholder = "URLを入力してください" value= "<?php echo htmlspecialchars($official_url); ?>">
-                          <?php if(isset($errors['official_url']) && $errors['official_url'] == 'blank') { ?>
-                            <p class="error">URLを入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        Acces
-                        </td>
-                      <td>
-                        <input type="text" class="form-control" name="e_access" placeholder = "アクセスの入力" value= "<?php echo htmlspecialchars($e_access); ?>">
-                        <?php if(isset($errors['e_access']) && $errors['e_access'] == 'blank') { ?>
-                          <p class="error">アクセスを入力してください</p> -->
-                        <?php } ?>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class=" table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th colspan="2">
-                        The latest participants (The number of visitors)
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td width= "200" style="vertical-align: middle;">
-                        2014
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name="year_ppp" placeholder = "数字を入力してください" value= "<?php echo htmlspecialchars($year_ppp); ?>">
-                          <?php if(isset($errors['year_ppp']) && $errors['year_ppp'] == 'blank') { ?>
-                            <p class="error">数字を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        2015
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name="year_pp" placeholder = "数字を入力してください" value= "<?php echo htmlspecialchars($year_pp); ?>">
-                          <?php if(isset($errors['year_pp']) && $errors['year_pp'] == 'blank') { ?>
-                            <p class="error">数字を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="vertical-align: middle;">
-                        2016
-                      </td>
-                      <td>
-                        <div>
-                          <input type="text" class="form-control" name="year_p" placeholder = "数字を入力してください"value= "<?php echo htmlspecialchars($year_p); ?>">
-                          <?php if(isset($errors['year_p']) && $errors['year_p'] == 'blank') { ?>
-                            <p class="error">数字を入力してください</p>
-                          <?php } ?>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <input class="btn btn-primary" type="submit" value="確認">
-              </div>
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="row">
-            <div class="col-md-3">
-              <h3>Map</h3>
-            </div>
-            <div class="col-md-9">
-              <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="row">            
-            <div class="col-md-9">
-
-              <hr>
-              <div align="center">
-                <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">See all review</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <aside class="col-md-4">
-          <div class="row">
-            <div id="eve_info" class="box_style_1"><!-- //TODO!:変更前 class="box_style_1 expose" -->
-              <h3 class="inner">Information</h3>
-                <div id="scroll" class="info">
-                  <div>
-                    ニュース登録日
-                    <input type="date" class="form-control" name="news_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
-                    ニュース記載欄
-                    <textarea name="news_comment" class="form-control"  placeholder = "こちらにイベント情報（ニュース）を入力してください"><?php echo htmlspecialchars($news_comment); ?></textarea>
-                  </div>
-                </div>
-            </div>
-</form>
-            <div id="eve_tomo" class="box_style_1">
-              <h3 class="inner">Eve tomo</h3>
-                <div class="eve_tomo">
-                  <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                      <div class="form-group">
-                        <label><i class="icon-globe"></i>Nationality</label>
-                        <div class="styled-select">
-                          <select class="form-control" name="nationarity" id="nationarity">
-                            <option value="not specified" selected>not specified</option>
-                            <option value="Japan">Japan</option>
-                            <option value="Philippine">Philippine</option>
-                            <option value="Afghanistan">Afghanistan</option>
-                            <option value="Albanie">Albanie</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6">
-                      <div class="form-group">
-                        <label><i class="icon-language"></i>Language</label>
-                        <div class="styled-select">
-                          <select class="form-control" name="language" id="language">
-                              <option value="not specified" selected>not specified</option>
-                              <option value="Japanese">Japanese</option>
-                              <option value="Tagalog">Tagalog</option>
-                              <option value="English">English</option>
-                              <option value="Tagalog">Tagalog</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="eve_tomo" class="scr">
-                      <div id="profile">          
-                        <div class="profile 1">
-                          <div class="col-md-5 col-sm-5">
-                            <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="80px" height="80px">
-                          </div>
-                          <div class="col-md-7 col-sm-7" align="center">
-                            <h3>Sponge Bob</h3> 
-                            <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                            <p>JP/EN</p> <!-- 対応可能言語表示 -->
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="purpose">
-                      <div class="purpose title">Purpose:</div>
-                      <div class="purpose content">この祭りのガイドをしてもらいたいです！</div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="button">
-                      <!-- 個人詳細ページに戦遷移 -->
-                      <div class="col-md-6 col-sm-6">
-                        <a class="btn_full" href="profile.html"><i class=" icon-user"></i>Profile</a>
-                      </div>
-                      <!-- チャットページに遷移 -->
-                      <div class="col-md-6 col-sm-6">
-                        <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!--/box_style_1 -->
-
-                <!-- マッチング希望ボタン -->
-                <div>
-                 <p>
-                  <a class="btn_map" data-toggle="collapse" href="" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Cancel" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-                </p>
-                <!-- 終了タグ　マッチング希望ボタン -->
-                </div>
-                    </div>.
-        </aside>
-      </div>            
-            <!-- End row -->
-            <button type="submit" class="btn_1 green">Update wishlist</button>
+         
           </section>
           <!-- End section 2 -->
 
           <section id="section-3">
-            <div id="tools">
+            <!-- 実施済みイベント一覧 -->
+            <div class="container row col-md-12">
               <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                  <div class="styled-select-filters">
-                    <select name="sort_type" id="sort_type">
-                      <option value="" selected>イベント実施日 </option>
-                      <option value="hotels">イベント登録</option>
-                    </select>
+                <!-- イベント名一覧 -->
+                <aside class="col-lg-3 col-md-3">
+                  <div class="box_style_cat">
+                    <ul id="cat_nav">
+                      <li><strong>イベント一覧①</strong></li>
+
+                      <?php for ($i=0; $i <$count ; $i++) { ?>
+                      <li><a href="admin_organizer.php?o_id=idの変数&パラメータ=(値)"><?php echo htmlspecialchars($events[$i]['e_name']); ?> </a>
+                      </li>
+                      <?php } ?>
+
+                    </ul>
                   </div>
-                </div>                
-              </div>
-            </div>
-            <!--/tools -->
+                <!--End filters col-->
+                </aside>
+                <!-- イベント名一覧終わり -->
 
-            <div class="strip_booking">
-              <div class="row">
-                <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                <!-- イベント詳細・レビュー -->
+                <!-- イベント名が押されたら該当イベントの詳細を表示  -->
+                <div class="col-md-9 col-sm-9 col-xs-6">
+                  <?php for ($i=0; $i <$count ; $i++) { ?>
                   <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4">
-                      <div class="ribbon_3 popular">
-                        <span>Popular</span>
-                      </div>
-                      <div class="wishlist">
-                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                      </div>
-                      <div class="img_list" >
-                        <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                        <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                        </a>
+                    <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                      <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                          <div class="ribbon_3 popular">
+                            <span>Popular</span>
+                          </div>
+                          <div class="wishlist">
+                            <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                          </div>
+                          <div class="img_list" >
+                            <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                            <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                            </a>
+                          </div>
+                        </div>
+                        <div class="clearfix visible-xs-block"></div>
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                          <div class="tour_list_desc">
+                            <div class="rating"></div>
+                              <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
+                              <p><?php echo htmlspecialchars($events[$i]['explanation']); ?></p>
+                              <p><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></p>
+                          </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2">
+                          <div class="price_list">
+                            <div>
+                              <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
+                              <p><a href="event_input.php" class="btn_1">編集</a></p> <!-- Ume待ち -->
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="clearfix visible-xs-block"></div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                      <div class="tour_list_desc">
-                        <div class="rating">
-                        </div>
-                          <h3><strong>イベント名</strong></h3>
-                            <p>イベント詳細</p>
-                      </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2 col-sm-2">
-                      <div class="price_list">
-                        <div>
-                          <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
-                          </p>
-                          
-                        </div>
+                  </div>
+                  <?php } ?>                  
+                </div>                
+              </div>  
+            <!-- End row -->
+            </div>
+          </section>
+          <!-- End section 3 -->
 
+<!-- 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
+          <section id="section-3-2">
+            <div class="strip_booking col-md-12">
+              <?php for ($i=0; $i <$count ; $i++) { ?>
+                <div class="row">
+                  <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="ribbon_3 popular">
+                          <span>Popular</span>
+                        </div>
+                        <div class="wishlist">
+                          <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                        </div>
+                        <div class="img_list" >
+                          <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                          <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="clearfix visible-xs-block"></div>
+                      <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="tour_list_desc">
+                          <div class="rating"></div>
+                            <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
+                            <p><?php echo htmlspecialchars($events[$i]['explanation']); ?></p>
+                            <p><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></p>
+                        </div>  
+                      </div>
+                      <div class="col-lg-2 col-md-2 col-sm-2">
+                        <div class="price_list">
+                          <div>
+                            <p><a href="review_modal.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_1">レビューを見る</a></p><br>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              
-              <!-- End row -->            
-            </div>
-            <!-- End row -->
+              <?php } ?>
+              <!-- End row -->              
+            </div>     
           </section>
           <!-- End section 3 -->
+<!-- 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
 
-          <section id="section-4">
+          <!-- <section id="section-4">
             <div class="row">
               <div class="col-md-6 col-sm-6 add_bottom_30">
                 <h4>Change your password</h4>
@@ -830,7 +473,7 @@ $count = count($events);
             </div>
             <!-- End row -->
 
-            <hr>
+            <!--<hr>
             <br>
             <div class="row">
               <div class="col-md-6 col-sm-6">
@@ -914,7 +557,7 @@ $count = count($events);
                 <button type="submit" class="btn_1 green">Update notifications settings</button>
               </div>
             </div>
-          </section>
+          </section> -->
           <!-- End section 4 -->
 
           <section id="section-5">
