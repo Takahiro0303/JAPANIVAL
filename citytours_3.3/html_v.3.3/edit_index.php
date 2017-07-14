@@ -306,8 +306,8 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <div id="tabs" class="tabs">
                         <nav>
                             <ul>
-                                <li><a href="#section-1" ><i class="icon_set_1_icon-39"><span>Pick Up!!</span></a></li>
-                                <li><a href="#section-2" ><i class="icon_set_1_icon-42"><span>Refine Search</span></a></li>
+                                <li><a href="#section-1" ><i class="icon_set_1_icon-39"></i><span>Pick Up!!</span></a></li>
+                                <li><a href="#section-2" ><i class="icon_set_1_icon-42"></i><span>Refine Search</span></a></li>
                                 <li><a href="#section-3" ><i class="icon_set_1_icon-37"></i><span>Map Search</span></a></li>
                             </ul>
                         </nav>
