@@ -1,15 +1,15 @@
-<?php  
+<?php
 session_start();
 
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
 // require('header.php');
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
-
+$event_id = $_REQUEST['event_id'];
 
 // イベントデータ取得
-$sql = 'SELECT * FROM events WHERE event_id=1';
-$data = [];
+$sql = 'SELECT * FROM events WHERE event_id=?';
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -17,8 +17,8 @@ $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 // v($event_data);
 
 // イベント写真データ取得
-$sql = 'SELECT * FROM event_pics WHERE event_id=1';
-$data = [];
+$sql = 'SELECT * FROM event_pics WHERE event_id=?';
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -28,9 +28,9 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 // v($event_pics);
 
 // newssテーブルからぜ全データ取得
-$sql = 'SELECT * FROM news WHERE event_id=1';
+$sql = 'SELECT * FROM news WHERE event_id=?';
 // $data = ['notisfuction_id'];
-$data = [];
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $news = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,10 +40,10 @@ $news = $stmt->fetch(PDO::FETCH_ASSOC);
 // reviews&usersテーブルから全データ取得
 $sql ='SELECT r.*, u.*
         FROM reviews r, users u
-        WHERE r.user_id=u.user_id AND r.event_id=1';
+        WHERE r.user_id=u.user_id AND r.event_id=?';
         // -- ORDER BY r.created
         // -- DESC LIMIT %d, 3
- $data = [];   
+ $data = [$event_id];   
  $stmt = $dbh->prepare($sql);
  $stmt->execute($data);
 $reviews = [];
@@ -578,7 +578,7 @@ v($event_pics[0]['e_pic_path']);
 
                     <!-- End row -->
                     <div class="form-group">
-                        <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"></textarea>
+                        <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"><?php echo 'hogehoge'; ?></textarea>
                     </div>
                     <div class="form-group">
                         <input type="button" name="picture" value=写真の選択>

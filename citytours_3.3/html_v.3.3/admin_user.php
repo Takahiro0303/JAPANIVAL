@@ -132,25 +132,34 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 for ($i=0; $i < count($records) ; $i++) {
-    $sql = 'SELECT * FROM events WHERE event_id=?';
+    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date > CURDATE()';
     $event_data =  [$records[$i]['event_id']];
     $event_stmt = $dbh->prepare($sql);
     $event_stmt->execute($event_data);
     while ($event = $event_stmt->fetch(PDO::FETCH_ASSOC)) {
         $events[] = $event;
     }
+    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date < CURDATE()';
+    $event_end_data =  [$records[$i]['event_id']];
+    $event_end_stmt = $dbh->prepare($sql);
+    $event_end_stmt->execute($event_end_data);
+    while ($event_end = $event_end_stmt->fetch(PDO::FETCH_ASSOC)) {
+        $events_end[] = $event_end;
+    }
+
+
 
    // echo $record[$i]['event_id'] . "iあり";
     // echo "<br>";
     // echo $record['event_id'] . "iなし";
 
-   $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-    $event_data =  [$records[$i]['event_id']];
-    $pic_stmt = $dbh->prepare($sql);
-    $pic_stmt->execute($event_data);
-    while ($pic = $pic_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $pics[] = $pic;
-    }
+   // $sql = 'SELECT * FROM event_pics WHERE event_id=?';
+   //  $event_data =  [$records[$i]['event_id']];
+   //  $pic_stmt = $dbh->prepare($sql);
+   //  $pic_stmt->execute($event_data);
+   //  while ($pic = $pic_stmt->fetch(PDO::FETCH_ASSOC)) {
+   //      $pics[] = $pic;
+   //  }
 
 }
 // v($events);
@@ -171,7 +180,7 @@ while ($like = $like_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 for ($i=0; $i < count($likes) ; $i++) {
-    $sql = 'SELECT * FROM events WHERE event_id=?';
+    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date > CURDATE()';
     $event_like_data =  [$likes[$i]['event_id']];
     $event_like_stmt = $dbh->prepare($sql);
     $event_like_stmt->execute($event_like_data);
@@ -183,15 +192,17 @@ for ($i=0; $i < count($likes) ; $i++) {
     // echo "<br>";
     // echo $record['event_id'] . "iなし";
 
-    $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-    $like_data =  [$records[$i]['event_id']];
-    $pic_like_stmt = $dbh->prepare($sql);
-    $pic_like_stmt->execute($like_data);
-    while ($pic_like = $pic_like_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $pics_like[] = $pic_like;
-    }
+    // $sql = 'SELECT * FROM event_pics WHERE event_id=?';
+    // $like_data =  [$likes[$i]['event_id']];
+    // $pic_like_stmt = $dbh->prepare($sql);
+    // $pic_like_stmt->execute($like_data);
+    // while ($pic_like = $pic_like_stmt->fetch(PDO::FETCH_ASSOC)) {
+    //     $pics_like[] = $pic_like;
+    // }
 
 }
+
+
 
 // v($event_likes);
 
@@ -337,7 +348,7 @@ for ($i=0; $i < count($likes) ; $i++) {
                 <div class="col-md-2 col-sm-2">
                   <div class="date">
                     <!-- <span class="month">Dec</span> -->
-                    <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($pics[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
+                    <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($events[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-5">
@@ -454,8 +465,8 @@ for ($i=0; $i < count($likes) ; $i++) {
               <div class="col-md-4 col-sm-6">
                 <div class="hotel_container">
                   <div class="img_container">
-                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>">
-                      <img src="../../event_pictures/<?php echo htmlspecialchars($pics_like[$i]['e_pic_path']); ?>" width="300" height="233" class="img-responsive" alt="Image">
+                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($event_likes[$i]['event_id']); ?>">
+                      <img src="../../event_pictures/<?php echo htmlspecialchars($event_likes[$i]['e_pic_path']); ?>" width="200" height="200" class="img-responsive" alt="Image">
                       <div class="">
                       </div>
                       <div class="score">
@@ -755,7 +766,34 @@ for ($i=0; $i < count($likes) ; $i++) {
           <!-- End section 3 -->
 
           <section id="section-4">
-            <div class="row">
+            <?php for ($i=0; $i < count($events_end) ; $i++) { ?>
+              <div class="strip_booking">
+                <div class="row">
+                  <div class="col-md-2 col-sm-2">
+                    <div class="date">
+                      <!-- <span class="month">Dec</span> -->
+                      <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($events_end[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-5">
+                    <h3 class="tours_booking"><?php echo htmlspecialchars($events_end[$i]['e_name']); ?><span><?php echo htmlspecialchars($events_end[$i]['e_prefecture']); ?></span></h3>
+                  </div>
+                  <div class="col-md-2 col-sm-3">
+                    <ul class="info_booking">
+                      <li><strong>Event start</strong><?php echo htmlspecialchars($events_end[$i]['e_start_date']); ?></li>
+                      <li><strong>Event end</strong><?php echo htmlspecialchars($events_end[$i]['e_end_date']); ?></li>
+                    </ul>
+                  </div>
+                  <div class="col-md-2 col-sm-2">
+                    <div class="booking_buttons">
+                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events_end[$i]['event_id']); ?>" class="btn_2">Review</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- End row -->
+              </div>
+            <?php } ?>
+            <!-- <div class="row">
               <div class="col-md-4 col-sm-6">
                 <div class="hotel_container">
                   <div class="img_container">
@@ -775,23 +813,23 @@ for ($i=0; $i < count($likes) ; $i++) {
                     <h3><strong>Park Hyatt</strong> Hotel</h3>
                     <div class="rating">
                       <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                    </div>
+                    </div> -->
                     <!-- end rating -->
-                    <div class="wishlist_close_admin">
+                    <!-- <div class="wishlist_close_admin">
                 
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <!-- End box tour -->
-              </div>
+              <!-- </div> -->
               <!-- End col-md-6 -->
 
-            </div>
+            <!-- </div> -->
             <!-- End row -->
-            <div class="col-md-12 col-sm-12">
+            <!-- <div class="col-md-12 col-sm-12">
               <textarea class="form-control"></textarea><br> 
               <button type="submit" class="btn_1 green">Review</button>  
-            </div>
+            </div> -->
             
           </section>
           <!-- End section 4 -->
