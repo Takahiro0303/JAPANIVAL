@@ -22,28 +22,8 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     } else{
         $past[] = $record;
     }
-    echo date('Y-m-d');
-    echo $record['e_start_date'];
+
 }
-
-// $count = count($future);
-// while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     if (strtotime(date('Y-m-d')) < strtotime($future['e_start_date'])){
-//         $future[] = $record;
-//     } else{
-//         $past[] = $record;
-//     }
-// }
-
-
-
-
-  // echo '<pre>';
-  // var_dump($future);
-  // echo '</pre>';
-  // echo '<pre>';
-  // var_dump($past);
-  // echo '</pre>';
 
 ?>
 
@@ -945,44 +925,15 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <!-- /content -->
                 </div>
 
+    <!-- フッター呼び出し -->
+    <?php require('footer.php'); ?>
 
-
-
-
-
-	
-	<footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10 col-sm-10">
-                    <h3>User Policy</h3>
-                    <h3>Notation based on the Specified Commercial Transaction Act</h3>
-                    <h3>Inquiry</h3>
-                    <h3>Privacy Policy</h3>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                    <h3>Settings</h3>
-                    <div class="styled-select">
-                        <select class="form-control" name="lang" id="lang">
-                            <option value="English" selected>English</option>
-                            <option value="Japanese">Japanese</option>
-                        </select>
-                    </div>
-                </div>
-            </div><!-- End row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="social_footer">
-
-                        <p>© Japanival 2017</p>
-                    </div>
-                </div>
-            </div><!-- End row -->
-        </div><!-- End container -->
-    </footer><!-- End footer -->
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
 
 	<div id="toTop"></div><!-- Back to top button -->
 	
+
 
 
 <!-- searchbar側のJS -->
@@ -1145,6 +1096,7 @@ $("#searchDropdownBox").change(function(){
         </script>
     
     <script src="js/notify_func.js"></script>
+    <script src="js/modal_login_ajax.js"></script>
 
 
 

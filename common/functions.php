@@ -36,6 +36,12 @@
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
         $login_user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($login_user == null) {
+            $_SESSION['id'] = '';
+            $_SESSION['flag'] = '';
+        }
+
         return $login_user;
     }
 

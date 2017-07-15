@@ -20,14 +20,14 @@
             <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">
                     <div id="logo_home">
-                      <h1><a href="index.html" title="City tours travel template">City Tours travel template</a></h1>
+                      <h1 style="line-height: 2;"><a href="edit_index.php" title="JAPANIVAL">City Tours travel template</a></h1>
                     </div>
                 </div>
                 <nav class="col-md-9 col-sm-9 col-xs-9">
-                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);" ><span>Menu mobile</span></a>
                     <div class="main-menu">
                         <div id="header_menu">
-                            <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
+                            <img src="" width="160" height="34" alt="City tours" data-retina="true">
                         </div>
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
@@ -57,14 +57,14 @@
             <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">
                     <div id="logo_home">
-                      <h1><a href="index.html" title="City tours travel template">City Tours travel template</a></h1>
+                      <h1 style="line-height: 2;"><a href="edit_index.php" title="JAPANIVAL">City Tours travel template</a></h1>
                     </div>
                 </div>
                 <nav class="col-md-9 col-sm-9 col-xs-9">
                     <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
                     <div class="main-menu">
                         <div id="header_menu">
-                            <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
+                            <img src="" width="160" height="34" alt="City tours" data-retina="true">
                         </div>
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
@@ -75,7 +75,7 @@
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="login.php" class="show-submenu">Sign in<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#myReview">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->
@@ -89,23 +89,23 @@
 <?php elseif ($_SESSION['id'] == '' && $_SESSION['flag'] == ''): ?>
 
     <!-- Header================================================== -->
-    <header>
+    <header style="height: 80px;">
 
         <!-- ヘッダーの上段部分をrequire -->
         <?php require('header_top.php') ?>
 
-        <div class="container">
-            <div class="row">
+        <div class="container" style="height: 65px;">
+            <div class="row" style="height: 65px;">
                 <div class="col-md-3 col-sm-3 col-xs-3">
                     <div id="logo_home">
-                      <h1><a href="index.html" title="City tours travel template">City Tours travel template</a></h1>
+                      <h1 style="line-height: 2;"><a href="edit_index.php" title="JAPANIVAL">City Tours travel template</a></h1>
                     </div>
                 </div>
                 <nav class="col-md-9 col-sm-9 col-xs-9">
                     <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
                     <div class="main-menu">
                         <div id="header_menu">
-                            <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
+                            <img src="" width="160" height="34" alt="City tours" data-retina="true">
                         </div>
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
@@ -119,7 +119,7 @@
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="login.php" class="show-submenu">Sing in<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#myReview">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->
@@ -142,14 +142,14 @@
             <div class="row">
                 <div class="col-md-3 col-sm-3 col-xs-3">
                     <div id="logo_home">
-                      <h1><a href="index.html" title="City tours travel template">City Tours travel template</a></h1>
+                      <h1 style="line-height: 2;"><a href="edit_index.php" title="JAPANIVAL">City Tours travel template</a></h1>
                     </div>
                 </div>
                 <nav class="col-md-9 col-sm-9 col-xs-9">
                     <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
                     <div class="main-menu">
                         <div id="header_menu">
-                            <img src="img/logo_sticky.png" width="160" height="34" alt="City tours" data-retina="true">
+                            <img src="" width="160" height="34" alt="City tours" data-retina="true">
                         </div>
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
@@ -163,7 +163,7 @@
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="login.php" class="show-submenu">Sing in<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#myReview">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->
