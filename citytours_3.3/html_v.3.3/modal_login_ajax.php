@@ -4,8 +4,6 @@ require('../../common/dbconnect.php');
 
 $errors = array();
 $errors['login'] = 'no';
-$email = '';
-
 
 $email = $_POST['email'];
 $password = $_POST['password'];
@@ -23,9 +21,6 @@ if ($email != '' && $password != '') {
     if ($o_record != false) {
         $_SESSION['id'] = $o_record['o_id'];
         $_SESSION['flag'] = '';//オーガナイザーの場合にはユーザーフラグは空
-
-        // header('Location:edit_index.php');
-        // exit();
     } else {
         //emailとpasswordがusersテーブルに入っているかの確認
         $sql = 'SELECT * FROM users WHERE email=? AND password=?';
@@ -37,13 +32,9 @@ if ($email != '' && $password != '') {
 
         if ($record != false) {
             $_SESSION['id'] = $record['user_id'];
-            $_SESSION['flag'] = $record['user_flag'];//ユーザーフラグ0番が管理者、1番がユーザー、空がオーガナイザー
-
-            // $record = '';
+            $_SESSION['flag'] = $record['user_flag'];//
         }else{
             $errors['login'] = 'failed';
-            // header('Location:edit_index.php');
-            // exit();
         }
     }
 
@@ -52,19 +43,9 @@ if ($email != '' && $password != '') {
 }
 
 //データを返す
-
-
 $data = ['error' => $errors['login']];
 echo json_encode($data);
 
-
-//データを返す
-// if ($_POST['like_data'] == 'like') {
-//   $data = ['like_data' => 'unlike', 'like_count' => $like_count['cnt']];
-//   echo json_encode($data);
-// } else{
-//   $data = ['like_data' => 'like', 'like_count' => $like_count['cnt']];
-//   echo json_encode($data);
 
 
 ?>

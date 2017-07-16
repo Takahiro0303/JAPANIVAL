@@ -10,7 +10,7 @@
 <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == '1'): ?>
 
     <!-- Header================================================== -->
-    <header>
+    <header style="height: 80px; z-index: 1040;">
 
         <!-- ヘッダーの上段部分をrequire -->
         <?php require('header_top.php') ?>
@@ -37,6 +37,9 @@
                              <li class="submenu">
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
+                            <li class="submenu">
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
+                            </li>
                         </ul>
                     </div><!-- End main-menu -->
                 </nav>
@@ -48,7 +51,7 @@
 <?php elseif ($_SESSION['id'] != '' && $_SESSION['flag'] == ''): ?>
 
     <!-- Header================================================== -->
-    <header>
+    <header style="height: 80px; z-index: 1040;">
 
         <!-- ヘッダーの上段部分をrequire -->
         <?php require('header_top.php') ?>
@@ -75,7 +78,7 @@
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#myReview">Sing in<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->
@@ -89,7 +92,7 @@
 <?php elseif ($_SESSION['id'] == '' && $_SESSION['flag'] == ''): ?>
 
     <!-- Header================================================== -->
-    <header style="height: 80px;">
+    <header style="height: 80px; z-index: 1040;">
 
         <!-- ヘッダーの上段部分をrequire -->
         <?php require('header_top.php') ?>
@@ -113,13 +116,13 @@
                                 <a href="javascript:void(0);" class="show-submenu">About us GUEST<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="register_user.php" class="show-submenu">Sign Up<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_user">Sign Up<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#myReview">Sing in<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->
@@ -133,7 +136,7 @@
 <?php elseif ($_SESSION['id'] == '1' && $_SESSION['flag'] == '0'): ?>
 
     <!-- Header================================================== -->
-    <header>
+    <header style="height: 80px; z-index: 1040;">
 
         <!-- ヘッダーの上段部分をrequire -->
         <?php require('header_top.php') ?>
@@ -157,13 +160,13 @@
                                 <a href="javascript:void(0);" class="show-submenu">About us MANAGER<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="register_user.php" class="show-submenu">Sign Up<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_user">Sign Up<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
                                 <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
-                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#myReview">Sing in<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
                             </li>
                         </ul>
                     </div><!-- End main-menu -->

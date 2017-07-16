@@ -1,6 +1,12 @@
-$(document).ready(function(){
 
-  $('#modal_login').click(function(){
+// alert("modal_login_ajax.js"); 
+$(document).ready(function(){
+// alert("modal_login_ajax.js"); 
+  $('#modal_login_button').click(function(){
+        console.log('click');
+              console.log('click');
+              console.log('click');
+
   //ajax処理
 
     // var tweet_id = $('#tweet_id1').val();

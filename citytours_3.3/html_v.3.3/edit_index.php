@@ -931,6 +931,9 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <!-- モーダル・ログイン -->
     <?php require('modal_login.php'); ?>
 
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
+
 	<div id="toTop"></div><!-- Back to top button -->
 	
 
@@ -1097,6 +1100,7 @@ $("#searchDropdownBox").change(function(){
     
     <script src="js/notify_func.js"></script>
     <script src="js/modal_login_ajax.js"></script>
+    <script src="js/modal_register_user_ajax.js"></script>
 
 
 
