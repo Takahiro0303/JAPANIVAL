@@ -28,7 +28,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // v($event_pics);
 
-// newssテーブルからぜ全データ取得
+// newsテーブルからぜ全データ取得
 $sql = 'SELECT * FROM news WHERE event_id=?';
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
@@ -54,6 +54,23 @@ $count = count($reviews);
 // v($count);
 
 // v($event_pics[0]['e_pic_path']);
+
+// もしログインしていた場合、マッチング情報の表示
+// requestsテーブルから全データ取得
+if (isset($_SESSION['id'])){
+    $sql ='SELECT * FROM requests WHERE event_id=?';
+    $data = [$_REQUEST['event_id']];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $requests = [];
+
+    while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $requests[] = $request;
+    }
+}
+
+// v($requests);
+
 ?>
 
 <!DOCTYPE html>
