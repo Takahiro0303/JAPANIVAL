@@ -13,14 +13,14 @@ if (!isset($_REQUEST['chat_room_id']) || empty($_REQUEST['chat_room_id'])) {
     exit();
 }
 
-// クリックされたチャットデータを一件取得
+// ○クリックされたチャットデータを一件取得
 $chat_room_id = $_REQUEST['chat_room_id'];
 
 // chat_room_idをもとにチャットルームの情報を取得
-$sql ='SELECT c.*,m.* 
-       FROM caht_rooms c,messages m
-       WHERE c.chat_room_id=m.chat_room_id
-       AND c.chat_room_id=?
+$sql ='SELECT m.*,u.* 
+       FROM caht_rooms u,users u
+       WHERE m.=m.chat_room_id
+       AND m.chat_room_id=?
        ORDER BY c.created DESC';
 $data = [$_REQUEST['chat_room_id']];
 $stmt = $dbh->prepare($sql);

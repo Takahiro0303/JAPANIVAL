@@ -80,6 +80,8 @@ $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
 v($like_count);
 
+// リクエスト送信
+
 ?>
 
 <!DOCTYPE html>
