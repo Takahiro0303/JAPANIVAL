@@ -2,6 +2,7 @@
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
+require('request.php');
 // require('header.php'); // ヘッダー読み込み・表示
 // require('footer.php'); // フッター読み込み・表示
 
@@ -44,7 +45,6 @@ $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $reviews = [];
-
 while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $reviews[] = $review;
 }
@@ -63,13 +63,22 @@ if (isset($_SESSION['id'])){
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $requests = [];
-
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
 }
 
 // v($requests);
+
+// お気に入り数の取得
+$sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+$data = [$_REQUEST['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+
+$like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+v($like_count);
 
 ?>
 
@@ -115,8 +124,8 @@ if (isset($_SESSION['id'])){
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-5 col-sm-5 col-xs-5">
-                        <h1><?php e($event_data['e_name']); ?></h1>
+                    <div class="col-md-5 col-sm-5 col-xs-5" style="font-size: 40px">
+                        <span><?php echo($event_data['e_name']); ?><?php echo $like_count['total']; ?></span>
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-2">
                         <!-- お気に入り数表示 -->
@@ -131,6 +140,7 @@ if (isset($_SESSION['id'])){
     </section><!-- End section -->
 
     <!-- 【メイン】イベント内容表示・マッチング機能表示-->
+
     <main>
 
         <div id="position">
