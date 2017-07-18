@@ -10,7 +10,7 @@ $nickname = $login_user['nickname'];
 $email = $login_user['email'];
 $nationality = $login_user['nationality'];
 $gender = $login_user['gender'];
-$level = $login_user['level'];
+// $level = $login_user['level'];
 $self_intro = $login_user['self_intro'];
 $errors = [];
 
@@ -23,7 +23,7 @@ if (!empty($_POST)) {
         $email = $_POST['email'];
         $nationality = $_POST['nationality'];
         $gender = $_POST['gender'];
-        $level = $_POST['level'];
+        // $level = $_POST['level'];
         $self_intro = $_POST['self_intro'];
 
         if ($nickname == '') {
@@ -202,9 +202,44 @@ for ($i=0; $i < count($likes) ; $i++) {
 
 }
 
+// reviewDB登録
+$review_rating = '';
+$review_comment = '';
+
+if (!empty($_POST)) {
+  $review_rating = $_POST['review_rating'];
+  $review_comment = $_POST['review_comment'];
+
+  $review_sql = 'INSERT INTO reviews SET event_id = ?, user_id = ?, rating = ?, comment = ?, created = NOW()';
+  $review = [$_POST['event_id'],$login_user['user_id'],$_POST['review_rating'],$_POST['review_comment']];
+  $review_stmt = $dbh->prepare($review_sql);
+  $review_stmt->execute($review);
+
+}
+
+// v($review_comment);
+// v($review_rating);
+    
+
+$file_review = $_FILES['review_pic_path']['name'];
+        //もし画像がセットされていれば画像アップデート処理
+        if (!empty($file_review)) {
+            $date_str = date('YmdHis');
+            $submit_file_name = $date_str . $_FILES['review_pic_path']['name'];
+            move_uploaded_file($_FILES['review_pic_path']['tmp_name'], '../../review_photos/' . $submit_file_name);
+
+                $sql = 'SELECT review_id FROM reviews ORDER BY review_id desc limit 1';
+                $review_stmt = $dbh->prepare($sql);
+                $review_stmt->execute();
+                $review_id = $review_stmt->fetch(PDO::FETCH_ASSOC);
 
 
-// v($event_likes);
+            $sql = 'INSERT INTO review_photos SET review_id = ?, review_pic_path = ?';
+            $data = [$review_id['review_id'],$submit_file_name];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+        }
+// v($_FILES['review_pic_path']);
 
 ?>
 
@@ -307,7 +342,7 @@ for ($i=0; $i < count($likes) ; $i++) {
             </li>
             <li><a href="#section-2" class="icon-wishlist"><span>like</span></a>
             </li>
-            <li><a href="#section-3" class="icon-back-in-time"><span>Browsing history</span></a>
+            <li><a href="#section-3" class="icon-back-in-time"><span>Reveiw</span></a>
             </li>
             <li><a href="#section-4" class="icon-hourglass"><span>Join the Past</span></a>
             </li>
@@ -786,7 +821,7 @@ for ($i=0; $i < count($likes) ; $i++) {
                   </div>
                   <div class="col-md-2 col-sm-2">
                     <div class="booking_buttons">
-                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events_end[$i]['event_id']); ?>" class="btn_2">Review</a>
+                      <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview" id="<?php echo htmlspecialchars($events_end[$i]['event_id']); ?>">Review</a>
                     </div>
                   </div>
                 </div>
@@ -846,9 +881,9 @@ for ($i=0; $i < count($likes) ; $i++) {
                   <li>Country <span><?php echo htmlspecialchars($nationality);?></span>
                   </li>
                   <li>Gender <span><?php echo htmlspecialchars($gender);?></span>
-                  </li>
+                  <!-- </li>
                   <li>Level of Japanese<span><?php echo htmlspecialchars($level);?></span>
-                  </li>
+                  </li> -->
                   <li>Comment<span><?php echo htmlspecialchars($self_intro);?></span>
                   </li>
                 </ul>
@@ -1352,6 +1387,129 @@ for ($i=0; $i < count($likes) ; $i++) {
 
   <!-- 郵便番号 -->
   <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+
+  <!-- Modal Review -->
+  <form method="POST" action="admin_user.php" enctype="multipart/form-data">
+   <div class="modal fade" id="myReview" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="myReviewLabel">Write your review</h4>
+              </div>
+              <div class="modal-body">
+                  <div id="message-review"></div>
+                  <form method="post" action="assets/review_tour.php" name="review_tour" id="review_tour">
+
+                      <!-- End row -->
+
+                      <!-- End row -->
+                      <div class="row">
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label>Position</label>
+                                  <select class="form-control" name="review_rating" id="position_review">
+                                      <option value="">Please review</option>
+                                      <option value="1">1</option>
+                                      <option value="2">2</option>
+                                      <option value="3">3</option>
+                                      <option value="4">4</option>
+                                      <option value="5">5</option>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- End row -->
+
+                      <!-- End row -->
+                      <div class="form-group">
+                          <textarea name="review_comment" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"></textarea>
+                      </div>
+                      <div class="form-group">
+                          <span class="btn btn-primary">
+                          <input type="file" name="review_pic_path" multiple>
+                          </span>
+                      </div>
+                      <div>
+                        <input type="hidden" name="event_id" value="" id="modal_event_id">
+                      </div>
+                      <div>
+                        <input class="btn btn-primary" type="submit">
+                      </div>
+                  </div>
+          </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- <footer class="revealed">
+  <div class="container">
+  <div class="row">
+  ※requireで呼び出し
+  </div>
+  </div> -->
+  <!-- End modal review -->
+
+      <!-- Common scripts -->
+      <script src="js/jquery-2.2.4.min.js"></script>
+      <script src="js/common_scripts_min.js"></script>
+      <script src="js/functions.js"></script>
+
+      <!-- Specific scripts -->
+      <script src="js/icheck.js"></script>
+      <script>
+      $('input').iCheck({
+      checkboxClass: 'icheckbox_square-grey',
+      radioClass: 'iradio_square-grey'
+      });
+      </script>
+      <!-- Date and time pickers -->
+      <script src="js/jquery.sliderPro.min.js"></script>
+      <script type="text/javascript">
+      $(document).ready(function ($) {
+      $('#Img_carousel').sliderPro({
+      width: 960,
+      height: 500,
+      fade: true,
+      arrows: true,
+      buttons: false,
+      fullScreen: false,
+      smallSize: 500,
+      startSlide: 0,
+      mediumSize: 1000,
+      largeSize: 3000,
+      thumbnailArrows: true,
+      autoplay: false
+      });
+      });
+      </script>
+
+      <!-- Date and time pickers -->
+      <script src="js/bootstrap-datepicker.js"></script>
+      <script src="js/bootstrap-timepicker.js"></script>
+      <script>
+      $('input.date-pick').datepicker('setDate', 'today');
+      $('input.time-pick').timepicker({
+      minuteStep: 15,
+      showInpunts: false
+      })
+      </script>
+
+      <!--Review modal validation -->
+      <script src="assets/validate.js"></script>
+      <!-- jsのプログラムの実行 -->
+      <script>
+        $(document).ready(function(){
+          $('a').click(function(){
+            var event_id = $(this).attr('id');
+            console.log(event_id);
+            $('#modal_event_id').val(event_id);
+          });
+        });
+
+      </script>
+
 
 </body>
 
