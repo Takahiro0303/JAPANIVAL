@@ -601,5 +601,12 @@ $count = count($reviews);
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/map.js"></script>
     <script src="js/infobox.js"></script>
+
+<script src="js/modal_login_ajax.js"></script>
+<script src="js/modal_register_user_ajax.js"></script>
+<script src="js/modal_register_organizer_ajax.js"></script>
+<!-- 自作のJS -->
+<script src="js/custom.js"></script>
+
 </body>
 </html>

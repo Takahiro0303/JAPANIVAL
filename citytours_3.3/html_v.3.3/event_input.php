@@ -641,65 +641,19 @@ if (!empty($file_name)) { //画像が選択されていれば
 </main>
 <!-- End main -->
 
-    <footer><!-- //TODO!:元はclass名revealed -->
+    <!-- フッター呼び出し -->
+    <?php require('footer.php'); ?>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-sm-3">
-                    <h3>Need help?</h3>
-                    <a href="tel://004542344599" id="phone">+45 423 445 99</a>
-                    <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <h3>About</h3>
-                    <ul>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Register</a></li>
-                        <li><a href="#">Terms and condition</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <h3>Discover</h3>
-                    <ul>
-                        <li><a href="#">Community blog</a></li>
-                        <li><a href="#">Tour guide</a></li>
-                        <li><a href="#">Wishlist</a></li>
-                        <li><a href="#">Gallery</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                    <h3>Settings</h3>
-                    <div class="styled-select">
-                        <select class="form-control" name="lang" id="lang">
-                            <option value="English" selected>English</option>
-                            <option value="French">Japanese</option>
-                        </select>
-                    </div>
-                </div>
-            </div><!-- End row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="social_footer">
-                        <ul>
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-google"></i></a></li>
-                            <li><a href="#"><i class="icon-instagram"></i></a></li>
-                            <li><a href="#"><i class="icon-pinterest"></i></a></li>
-                            <li><a href="#"><i class="icon-vimeo"></i></a></li>
-                            <li><a href="#"><i class="icon-youtube-play"></i></a></li>
-                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        </ul>
-                        <p>© Japanival 2017</p>
-                    </div>
-                </div>
-            </div><!-- End row -->
-        </div><!-- End container -->
-    </footer><!-- End footer -->
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
 
-<<<<<<< HEAD
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
+
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
+
+
 <div id="toTop"></div><!-- Back to top button -->
 
 <!-- Search Menu -->
@@ -877,9 +831,11 @@ if (!empty($file_name)) { //画像が選択されていれば
 <script src="js/map.js"></script>
 <script src="js/infobox.js"></script>
 
-
+<script src="js/modal_login_ajax.js"></script>
+<script src="js/modal_register_user_ajax.js"></script>
+<script src="js/modal_register_organizer_ajax.js"></script>
+<!-- 自作のJS -->
 <script src="js/custom.js"></script>
-
 
 
 </body>

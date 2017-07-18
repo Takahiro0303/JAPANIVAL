@@ -72,11 +72,8 @@ if (!isset($_POST['db_register'])) {
 
     if ($confirm_password == '') {
         $errors['confirm_password'] = 'blank';
-    }
-
-
-    if ($password !== $confirm_password) {
-        $errors['password'] = 'wrong';
+    } elseif ($password !== $confirm_password) {
+        $errors['confirm_password'] = 'wrong';
     }
     // console.log($errors);
       // echo '<pre>';

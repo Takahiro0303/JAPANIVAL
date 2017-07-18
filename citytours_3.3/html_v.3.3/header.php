@@ -35,7 +35,7 @@
                                 <a href="javascript:void(0);" class="show-submenu">About us USER<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
-                                <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_organizer">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
@@ -75,7 +75,7 @@
                                 <a href="javascript:void(0);" class="show-submenu">About us ORGANIZER<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
-                                <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_organizer">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
@@ -119,7 +119,7 @@
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_user">Sign Up<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
-                                <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_organizer">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
@@ -163,7 +163,7 @@
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_user">Sign Up<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
-                                <a href="register_organizer.php" class="show-submenu">Make An Event<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_organizer">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>

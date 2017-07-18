@@ -382,7 +382,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 <div><?php echo $duration; ?></div>
                                 <!-- end rating -->
                                 <div class="wishlist">
-                                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);"  style="display: block;">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                                 </div>
                                 <!-- End wish list-->
                             </div>
@@ -934,6 +934,9 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <!-- モーダル・ユーザー登録 -->
     <?php require('modal_register_user.php'); ?>
 
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
+
 	<div id="toTop"></div><!-- Back to top button -->
 	
 
@@ -957,8 +960,6 @@ $("#searchDropdownBox").change(function(){
 });
 </script>
 
-    <!-- 自作のJS -->
-    <script src="js/custom.js"></script>
 
     <!-- tabs側のJS -->
     <!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
@@ -1101,6 +1102,10 @@ $("#searchDropdownBox").change(function(){
     <script src="js/notify_func.js"></script>
     <script src="js/modal_login_ajax.js"></script>
     <script src="js/modal_register_user_ajax.js"></script>
+    <script src="js/modal_register_organizer_ajax.js"></script>
+    <!-- 自作のJS -->
+    <script src="js/custom.js"></script>
+
 
 
 
