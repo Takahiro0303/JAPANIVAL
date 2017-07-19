@@ -117,16 +117,13 @@ if (!empty($file_name)) { //画像が選択されていれば
         if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
             $errors['picture_path'] = 'type';
         }   
-    }
 
-
-    for ($j = 0; $j< count($_FILES["e_pic_path"]["tmp_name"]); $j++) {
-        if (is_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$j])) {
-            $fileName = "../../event_pictures/".date("YmdHis").$_FILES["e_pic_path"]["name"][$j];
-            $_SESSION['event']['e_pic_path'][$j] = $fileName;
-            // echo $_SESSION['event']['e_pic_path'][$j];
+        if (is_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i])) {
+            $fileName = "../../event_pictures/".date("YmdHis").$_FILES["e_pic_path"]["name"][$i];
+            $_SESSION['event']['e_pic_path'][$i] = $fileName;
+            // echo $_SESSION['event']['e_pic_path'][$i];
             if (file_exists($fileName)===false) {
-                if (move_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$j],$fileName)) {
+                if (move_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i],$fileName)) {
                     chmod($fileName, 0644);
 
                 } else {
@@ -361,6 +358,14 @@ if (!empty($file_name)) { //画像が選択されていれば
 
 
 
+<!--                     <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Browse&hellip; <input type="file" style="display: none;" name="e_pic_path[]" multiple>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly>
+                    </div> -->
 
 
 
@@ -618,99 +623,13 @@ if (!empty($file_name)) { //画像が選択されていれば
 </div>
 <!--End  single_tour_desc-->
 
-<aside class="col-md-4">
-    <div class="row">
-        <div id="eve_info" class="box_style_1"><!-- //TODO!:変更前 class="box_style_1 expose" -->
-            <h3 class="inner">Information</h3>
-            <div id="scroll" class="info">
-                <div>
-                    ニュース登録日
-                    <input type="date" class="form-control" name="news_date" value= "<?php echo htmlspecialchars($e_start_date); ?>">
-                    ニュース記載欄
-                    <textarea name="news_comment" class="form-control"  placeholder = "こちらにイベント情報（ニュース）を入力してください"><?php echo htmlspecialchars($news_comment); ?></textarea>
-                </div>
-            </div>
-        </div>
-    </form>
-    <div id="eve_tomo" class="box_style_1">
-        <h3 class="inner">Eve tomo</h3>
-        <div class="eve_tomo">
-            <div class="row">
-                <div class="col-md-6 col-sm-6">
-                    <div class="form-group">
-                        <label><i class="icon-globe"></i>Nationality</label>
-                        <div class="styled-select">
-                            <select class="form-control" name="nationarity" id="nationarity">
-                                <option value="not specified" selected>not specified</option>
-                                <option value="Japan">Japan</option>
-                                <option value="Philippine">Philippine</option>
-                                <option value="Afghanistan">Afghanistan</option>
-                                <option value="Albanie">Albanie</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-6">
-                    <div class="form-group">
-                        <label><i class="icon-language"></i>Language</label>
-                        <div class="styled-select">
-                            <select class="form-control" name="language" id="language">
-                                <option value="not specified" selected>not specified</option>
-                                <option value="Japanese">Japanese</option>
-                                <option value="Tagalog">Tagalog</option>
-                                <option value="English">English</option>
-                                <option value="Tagalog">Tagalog</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="eve_tomo" class="scr">
-                    <div id="profile">          
-                        <div class="profile 1">
-                            <div class="col-md-5 col-sm-5">
-                                <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="80px" height="80px">
-                            </div>
-                            <div class="col-md-7 col-sm-7" align="center">
-                                <h3>Sponge Bob</h3> 
-                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                                <p>JP/EN</p> <!-- 対応可能言語表示 -->
-                            </div>
-                        </div>
-                    </div>
 
-                </div>
-            </div>
-            <div class="row">
-                <div class="purpose">
-                    <div class="purpose title">Purpose:</div>
-                    <div class="purpose content">この祭りのガイドをしてもらいたいです！</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="button">
-                    <!-- 個人詳細ページに戦遷移 -->
-                    <div class="col-md-6 col-sm-6">
-                        <a class="btn_full" href="profile.html"><i class=" icon-user"></i>Profile</a>
-                    </div>
-                    <!-- チャットページに遷移 -->
-                    <div class="col-md-6 col-sm-6">
-                        <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/box_style_1 -->
 
-        <!-- マッチング希望ボタン -->
-        <div>
-            <p>
-                <a class="btn_map" data-toggle="collapse" href="" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Cancel" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-            </p>
-            <!-- 終了タグ　マッチング希望ボタン -->
-        </div>
-    </aside>
+                <!-- event_aside挿入 -->
+                <?php require('event_aside.php');  ?>
+
+
+
 </div>
 <!--End row -->
 </div>

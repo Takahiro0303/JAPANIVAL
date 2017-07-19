@@ -48,7 +48,7 @@ for ($i=0; $i < count($records) ; $i++) {
 }
 
 // v($events);
-v($pics);
+// v($pics);
 
 ?>
 
@@ -59,7 +59,9 @@ v($pics);
  </head>
  <body>
 
-<?php for ($i=0; $i < count($events) ; $i++) { ?>
+<?php if (strtotime(data('Y-m-d')) < strtotime($event['e_start_date'])) { ?>
+
+  <?php for ($i=0; $i < count($events) ; $i++) { ?>
   <div><?php echo htmlspecialchars($events[$i]['e_name']); ?></div>
   <img src="../../event_pictures/<?php echo htmlspecialchars($pics[$i]['e_pic_path']); ?>"width=“550px" height=“400px”>
   <div><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></div>
@@ -69,5 +71,6 @@ v($pics);
   <div><?php echo htmlspecialchars($events[$i]['e_venue']) ?></div>
 <?php } ?>
 
+<?php } ?>
 </body>
 </html>
