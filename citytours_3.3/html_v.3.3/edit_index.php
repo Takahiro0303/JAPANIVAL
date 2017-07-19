@@ -327,11 +327,23 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <?php for($i=0;$i < count($future); $i++) { ?>
                     <?php
                         // 窓に表示する写真の取得
-                        $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                        $data = [$future[$i]['event_id']];
-                        $stmt = $dbh->prepare($sql);
-                        $stmt->execute($data);
-                        $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
+                        // $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+                        // $data = [$future[$i]['event_id']];
+                        // $stmt = $dbh->prepare($sql);
+                        // $stmt->execute($data);
+                        // $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+$data = [$future[$i]['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+// $event_pics[] = $event_pic;
+// echo $event_pic['e_pic_path'];
+//   echo '<pre>';
+//   var_dump($event_pics);
+//   echo '</pre>';
 
                           // echo '<pre>';
                           // var_dump($e_pic_path);
@@ -371,7 +383,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             <div class="ribbon_3 popular"><span>New</span></div>
                             <div class="img_container">
                                 <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                    <img src="../../event_pictures/<?php echo htmlspecialchars($e_pic_path['e_pic_path']); ?>" class="img-responsive" alt="Image">
+                                    <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image">
                                     <div class="short_info">
                                         <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>
                                     </div>

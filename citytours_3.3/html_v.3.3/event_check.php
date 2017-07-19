@@ -2,46 +2,48 @@
 
 session_start();
 
-echo '<pre>';
- var_dump($_SESSION['event']['e_pic_path']);
- echo '</pre>';
-
 require('../../common/dbconnect.php');
 require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
-// echo '<pre>';
-// var_dump($_SESSION['event']);
-// echo '</pre>';
-
+if ($_SESSION['id'] == '' && $_SESSION['flag'] == '') {
+    header('Location: edit_index.php');
+    exit();//ここでこのファイルの読み込みを強制終了
+} elseif ($_SESSION['flag'] == '1') {
+    header('Location: edit_index.php');
+    exit();//ここでこのファイルの読み込みを強制終了
+}
 
 // sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移
 if(!isset($_SESSION['event'])){
     header('Location: event_input.php');
     exit();
-
-//emptyは箱があって、値が入っているかどうか？
-//issetはそもそも箱があるかどうか。
 }
 
+  echo '<pre>';
+  var_dump($_POST);
+  echo '</pre>';
 
 //会員登録ボタンが押された際の処理
 if(!empty($_POST)){
 
+  echo '<pre>';
+  var_dump($_SESSION['event']);
+  echo '</pre>';
     $sql = 'INSERT INTO events
-    SET e_name = ?,
-    e_start_date = ?,
-    e_end_date = ?,
-    e_prefecture = ?,
-    e_venue = ?,
-    explanation = ?,
-    e_access = ?,
-    year_p = ?,
-    year_pp = ?,
-    year_ppp = ?,
-    official_url = ?,
-    created = NOW()';
+    SET     e_name = ?,
+            e_start_date = ?,
+            e_end_date = ?,
+            e_prefecture = ?,
+            e_venue = ?,
+            explanation = ?,
+            e_access = ?,
+            year_p = ?,
+            year_pp = ?,
+            year_ppp = ?,
+            official_url = ?,
+            created = NOW()';
 
     $data = [ $_SESSION['event']['e_name'],
     $_SESSION['event']['e_start_date'],
@@ -59,32 +61,22 @@ if(!empty($_POST)){
     $events_stmt->execute($data);
 
     $sql = 'SELECT event_id FROM events ORDER BY event_id desc limit 1';
-//TODO!:条件に主催者IDを加えないと、他人も含めた最新の一件を取得しちゃうかも。
+    //TODO!:条件に主催者IDを加えないと、他人も含めた最新の一件を取得しちゃうかも。
     $events_stmt = $dbh->prepare($sql);
     $events_stmt->execute();
-    $event_id = $events_stmt->fetch(PDO::FETCH_ASSOC);
+    $event_id_register = $events_stmt->fetch(PDO::FETCH_ASSOC);
 
+    for ($j = 0; $j< count($_SESSION['event']['e_pic_path']); $j++) {
+    // event_picsテーブルへの登録
+        $sql = 'INSERT INTO event_pics
+        SET event_id= ?,
+        e_pic_path = ?,
+        created = NOW()';
 
-// newsテーブルへの登録
-    $sql = 'INSERT INTO news
-    SET event_id= ?,
-    news_comment = ?,
-    created = NOW()';
-
-    $data = [ $event_id,$_SESSION['event']['news_comment']];
-    $news_comment_stmt = $dbh->prepare($sql);
-    $news_comment_stmt->execute($data);
-
-
-// event_picsテーブルへの登録
-    $sql = 'INSERT INTO event_pics
-    SET event_id= ?,
-    e_pic_path = ?,
-    created = NOW()';
-
-    $data = [ $event_id,$_SESSION['event']['e_pic_path']];
-    $event_pics_stmt = $dbh->prepare($sql);
-    $event_pics_stmt->execute($data);
+        $data = [$event_id_register['event_id'],$_SESSION['event']['e_pic_path'][$j]];
+        $event_pics_stmt = $dbh->prepare($sql);
+        $event_pics_stmt->execute($data);
+    } 
 
 // echo '<pre>';
 // var_dump($_SESSION['event']['e_pic_path']);
@@ -93,7 +85,7 @@ if(!empty($_POST)){
 // unset($_SESSION['event']);
 //TODO!:なんでunsetなんだっけ？
 
-    header('Location: event_thanks.php');
+    header("Location: event_detail.php?event_id=" . $event_id_register['event_id']);
     exit();
 
 }
@@ -189,17 +181,17 @@ if(!empty($_POST)){
                         <div class="sp-slides">
 
                             <?php  for ($j = 0; $j< count($_SESSION['event']['e_pic_path']); $j++) { ?>
-                                <?php echo '<div class="sp-slide">' ?>
-                                    <?php echo '<img' ?>    
-                                    <?php echo 'alt="Image"'  ?> 
-                                    <?php echo 'class="sp-image"'  ?> 
-                                    <?php echo 'src="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
-                                    <?php echo 'data-src="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
-                                    <?php echo 'data-small="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
-                                    <?php echo 'data-medium="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
-                                    <?php echo 'data-large="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
-                                    <?php echo 'data-retina="' . $_SESSION['event']['e_pic_path'][$j] . '">'  ?> 
-                                <?php echo '</div>'  ?>
+                            <?php echo '<div class="sp-slide">' ?>
+                            <?php echo '<img' ?>    
+                            <?php echo 'alt="Image"'  ?> 
+                            <?php echo 'class="sp-image"'  ?> 
+                            <?php echo 'src="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
+                            <?php echo 'data-src="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
+                            <?php echo 'data-small="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
+                            <?php echo 'data-medium="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
+                            <?php echo 'data-large="' . $_SESSION['event']['e_pic_path'][$j] . '"'  ?> 
+                            <?php echo 'data-retina="' . $_SESSION['event']['e_pic_path'][$j] . '">'  ?> 
+                            <?php echo '</div>'  ?>
                             <?php } ?>
 
                         </div>
@@ -219,7 +211,7 @@ if(!empty($_POST)){
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <div style="word-wrap: break-word; width:99%; height:300px;">
+                            <div style="word-wrap: break-word; width:99%; height:300px; overflow: auto;">
                                 <?php echo $_SESSION['event']['explanation'] ?>
                             </div>
                         </div>
@@ -354,8 +346,9 @@ if(!empty($_POST)){
                                     </tbody>
                                 </table>
                                 <div style="display: inline-block;">
-                                    <form method="POST" action="event_input.php" enctype="multipart/form-data">
+                                    <form method="POST" action="event_check.php" enctype="multipart/form-data">
                                         <input class="btn btn-primary" type="submit" value="確認">
+                                        <input type="hidden" name="action" value="確認ボタン">
                                     </form>
                                 </div>
                                 <div style="display: inline-block;">
@@ -378,7 +371,7 @@ if(!empty($_POST)){
 
                     <hr>
 
-                    
+
                 </div>
                 <!--End  single_tour_desc-->
 
@@ -405,17 +398,17 @@ if(!empty($_POST)){
 </main>
 <!-- End main -->
 
-    <!-- フッター呼び出し -->
-    <?php require('footer.php'); ?>
+<!-- フッター呼び出し -->
+<?php require('footer.php'); ?>
 
-    <!-- モーダル・ログイン -->
-    <?php require('modal_login.php'); ?>
+<!-- モーダル・ログイン -->
+<?php require('modal_login.php'); ?>
 
-    <!-- モーダル・ユーザー登録 -->
-    <?php require('modal_register_user.php'); ?>
+<!-- モーダル・ユーザー登録 -->
+<?php require('modal_register_user.php'); ?>
 
-    <!-- モーダル・主催者登録 -->
-    <?php require('modal_register_organizer.php'); ?>
+<!-- モーダル・主催者登録 -->
+<?php require('modal_register_organizer.php'); ?>
 
 <div id="toTop"></div>
 <!-- Back to top button -->
@@ -479,8 +472,6 @@ if(!empty($_POST)){
 <script src="js/modal_register_organizer_ajax.js"></script>
 <!-- 自作のJS -->
 <script src="js/custom.js"></script>
-
-  <?php var_dump($_SESSION['event']['e_name']); ?>
 
 
 </body>

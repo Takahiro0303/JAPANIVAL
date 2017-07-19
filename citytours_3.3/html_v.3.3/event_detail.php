@@ -1,10 +1,19 @@
 <?php
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
-require('../../common/functions.php'); //関数ファイル読み込み
+require('../../common/functions.php');
+
+$login_user = get_login_user($dbh);
+
+// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移
+if(!isset($_SESSION['event'])){
+    header('Location: edit_index.php');
+    exit();
+}
 
 // require('header.php');
-// require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦　他でも使うようなら復活させる
+// require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦他でも使うようなら復活させる
+// $_REQUEST['event_id'] = 1;
 $event_id = $_REQUEST['event_id'];
 
 // イベントデータ取得
@@ -26,44 +35,41 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_pics[] = $event_pic;
 }
 
+  // echo '<pre>';
+  // var_dump($event_pics);
+  // echo '</pre>';
+  // echo $event_id;
+
 // v($event_pics);
 
-// newssテーブルからぜ全データ取得
-$sql = 'SELECT * FROM news WHERE event_id=?';
 
 
-$data = [$event_id];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-while ($notification = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $notifications[] = $notification;
-}
-
-// v($notifications);
 // reviews&usersテーブルから全データ取得
-$sql ='SELECT r.*, u.*
-        FROM reviews r, users u
-        WHERE r.user_id=u.user_id AND r.event_id=?';
-        // -- ORDER BY r.created
-        // -- DESC LIMIT %d, 3
- $data = [$event_id];   
- $stmt = $dbh->prepare($sql);
- $stmt->execute($data);
-$reviews = [];
+// $sql ='SELECT r.*, u.*
+//         FROM reviews r, users u
+//         WHERE r.user_id=u.user_id AND r.event_id=?';
+//         // -- ORDER BY r.created
+//         // -- DESC LIMIT %d, 3
+//  $data = [$event_id];   
+//  $stmt = $dbh->prepare($sql);
+//  $stmt->execute($data);
+// $reviews = [];
 
-while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $reviews[] = $review;
-}
+// while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//     $reviews[] = $review;
+// }
 // v($reviews);
 
 
-$count = count($reviews);
+// $count = count($reviews);
 // v($count);
 
 // v($event_pics[0]['e_pic_path']);
 ?>
 
 <!DOCTYPE html>
+<!--[if IE 8]><html class="ie ie8"> <![endif]-->
+<!--[if IE 9]><html class="ie ie9"> <![endif]-->
 <html lang="en">
 
 <head>
@@ -73,8 +79,7 @@ $count = count($reviews);
 
     <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
     <meta name="author" content="Ansonika">
-    <!-- 【タイトル表示】(イベントタイトル)の詳細-->
-    <title><?php echo ($event_data['e_name']) ?>の詳細</title>
+    <title>JAPANIVAL-EventDetail</title>
 
     <!-- Favicons-->
     <link rel="shortcut icon" href="img/japanival_icon.jpg" type="image/x-icon">
@@ -92,84 +97,101 @@ $count = count($reviews);
     <!-- CSS -->
     <link href="css/slider-pro.min.css" rel="stylesheet">
     <link href="css/date_time_picker.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.min.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
 </head>
 
 <body>
 
-    <header>
-    <!-- require('../../common/functions.php'); -->
-    </header>
 
-    <!-- 【○トップ】画像表示-->
-    <section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/<?php echo(($event_pics[0]['e_pic_path'])); ?>" data-natural-width="1400" data-natural-height="470">
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+
+    <!-- header.phpのrequire -->
+    <?php require('header.php');  ?>
+
+    <!-- End Header -->
+
+    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $event_pics[0]['e_pic_path'];?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-5 col-sm-5 col-xs-5">
-                        <h1><?php e($event_data['e_name']); ?></h1>
+                    <div class="col-md-7 col-sm-7">
+                        <h1><?php echo $event_data['e_name']; ?></h1> <!-- イベント名表示 -->
+                        <span><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
                     </div>
-                    <div class="col-md-2 col-sm-2 col-xs-2">
-                        <!-- お気に入り数表示 -->
-                        <!-- <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20px">♡</a> -->
-                    </div>
-                    <div class="col-md-5 col-sm-5 col-xs-5" style="font-size: 30px;">
-                        <div class="event_date"><?php echo($event_data['e_start_date']) ?> ~ <?php echo($event_data['e_end_date']); ?></div>
+                    <div class="col-md-5 col-sm-5" style="font-size: 60px;">
+                        <span><h1><?php echo $event_data['e_start_date'] . '〜'. $event_data['e_end_date']; ?></h1></span> <!-- 曜日・開催日時を表示 -->
+                        <!-- <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
+                        <!--                         <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a> -->
                     </div>
                 </div>
             </div>
         </div>
-    </section><!-- End section -->
+    </section>
+    <!-- End section -->
 
-    <!-- 【メイン】イベント内容表示・マッチング機能表示-->
     <main>
 
-        <div id="position">
-            <div class="container">
-                <ul>
-                    <li><a href="#"><span><?php e($event_data['e_prefecture']); ?></span></a>
-                    </li>
-                </ul>
-            </div>
+        <div class="collapse" id="collapseMap">
+            <div id="map" class="map"></div>
         </div>
+        <!-- End Map -->
+
 
         <div class="container margin_60">
             <div class="row">
-                <div class="col-md-8" id="single_tour_desc">
-                    <!-- イベント写真データ表示 -->
-                    <div id="Img_carousel" class="slider-pro">
+                <div class="col-md-8">
+                    <!-- Map button for tablets/mobiles -->
+
+                    <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
                         <div class="sp-slides">
-                            <?php  foreach($event_pics as $event_pic){ ?>
-                                <div class="sp-slides">
-                                    <img alt="Image" 
-                                    class="sp-image" 
-                                    src="css/images/blank.gif" 
-                                    data-src=../../event_pictures/"<?php echo($event_pic['e_pic_path']); ?>" 
-                                    data-small="../../event_pictures/"<?php echo($event_pic['e_pic_path']); ?>"
-                                    data-medium="../../event_pictures/"<?php echo($event_pic['e_pic_path']); ?>" 
-                                    data-large="../../event_pictures/"<?php echo($event_pic['e_pic_path']); ?>"
-                                    data-retina="../../event_pictures/"<?php echo($event_pic['e_pic_path']); ?>">
-                                </div> <!-- sp-slides -->
+
+                            <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
+                                <?php echo '<div class="sp-slide">' ?>
+                                    <?php echo '<img' ?>    
+                                    <?php echo 'alt="Image"'  ?> 
+                                    <?php echo 'class="sp-image"'  ?> 
+                                    <?php echo 'src="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
+                                    <?php echo 'data-src="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
+                                    <?php echo 'data-small="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
+                                    <?php echo 'data-medium="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
+                                    <?php echo 'data-large="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
+                                    <?php echo 'data-retina="' . $event_pics[$j]['e_pic_path'] . '">'  ?> 
+                                <?php echo '</div>'  ?>
                             <?php } ?>
-                        </div> <!-- sp-slides -->
-                       
+
+                        </div>
                         <div class="sp-thumbnails">
-                            <?php  foreach($event_pics as $event_pic){ ?>
-                                    <img class="sp-thumbnail" src="../../event_pictures/<?php echo($event_pic['e_pic_path']); ?>"> 
-                            <?php } ?>            
-                        </div><!-- sp-slides -->
-                    </div><!-- Img_carousel -->
+                            <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
+                            <?php echo '<img alt="Image" class="sp-thumbnail" src="' . $event_pics[$j]['e_pic_path'] . '">'  ?> 
+                            <?php } ?>
+                        </div>
+
+                    </div>
 
                     <hr>
 
                     <!-- 以下、イベント説明 -->
                     <div class="row">
                         <div class="col-md-3">
-                            <h3>Description</h3>
-                        </div> <!-- col-md-3 -->
+                            <h3>Event Description</h3>
+                        </div>
                         <div class="col-md-9">
-                            <p><?php e($event_data['explanation']) ?></p>
-                        </div> <!-- col-md-9 -->
-                    </div> <!-- End row  -->
+                            <div style="word-wrap: break-word; width:99%; height:300px;">
+                                <?php echo $event_data['explanation'] ?>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <!-- End row  -->
 
                     <hr>
 
@@ -177,73 +199,129 @@ $count = count($reviews);
                     <div class="row">
                         <div class="col-md-3">
                             <h3>Event Detail</h3>
-                        </div> <!-- col-md-3 -->
+                        </div>
                         <div class="col-md-9">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th rowspan="6">イベント詳細</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">Event Name</th>
-                                            <td><?php e($event_data['e_name']) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Category</th>
-                                            <td>※カテゴリ表示</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Date</th>
-                                            <td><?php echo($event_data['e_start_date']) ?> ~ <?php echo($event_data['e_end_date']) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">city</th>
-                                            <td><?php e($event_data['e_prefecture']) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">the place (follow on map)</th>
-                                            <td><?php e($event_data['e_venue']) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Web page</th>
-                                            <td><?php e($event_data['official_url']) ?></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Acces</th>
-                                            <td>*アクセス方法表示</td>
-                                        </tr>
-                                    </tbody>
-                                </table> <!-- table class="table table-striped" -->
-                            </div> <!-- table-responsive -->
-
                             <div class=" table-responsive">
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th rowspan="3">The number of visitors</th>
+                                            <th colspan="2">
+                                                イベント開催詳細
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <th scope="row"><?php e($event_data['year_p']) ?></td>
-                                            <td><?php e($event_data['attendance_p']) ?></td>
+                                            <td width= "200" style="vertical-align: middle;">
+                                                Event Name
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['e_name']; ?>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row"><?php e($event_data['year_pp']) ?></td>
-                                            <td><?php e($event_data['attendance_p']) ?></td>
+                                            <td style="vertical-align: middle;">
+                                                Date and time
+                                            </td>
+                                            <td>
+                                                <div style="margin-bottom: 10px;">
+                                                    イベント日程（開始日）（必須）<br>
+                                                    <?php echo $event_data['e_start_date']; ?>
+                                                </div>
+                                                <div>
+                                                    イベント日程（終了日）（必須）<br>
+                                                    <?php echo $event_data['e_start_date']; ?>
+                                                </div>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <th scope="row"><?php e($event_data['year_ppp']) ?></td>
-                                            <td><?php e($event_data['attendance_p']) ?></td>
-                                        </tr>                                   
+                                            <td style="vertical-align: middle;">
+                                                city
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['e_prefecture']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                the place (follow on map)
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['e_venue']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                Web page
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['official_url']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                Acces
+                                            </td>
+                                            <td>
+                                                <?php echo $event_data['e_access']; ?>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                        </div> <!-- col-md-9 -->
-                    </div><!-- row -->
+                            <div class=" table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">
+                                                The latest participants (The number of visitors)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td width= "200" style="vertical-align: middle;">
+                                                2014
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['year_ppp']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                2015
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['year_pp']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                2016
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['year_p']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                     <hr>
 
@@ -252,361 +330,114 @@ $count = count($reviews);
                             <h3>Map</h3>
                         </div>
                         <div class="col-md-9">
-                        <!--　地図表示 -->
-                        <!-- Google map apiでドカン -->
+                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
                         </div>
                     </div>
 
                     <hr>
 
-                    <div class="row"><!-- レビュー表示 -->
-                        <div class="col-md-3">
-                            <h3>Reviews </h3> 
-                        </div>
-                        <div class="col-md-9">
-                            <div id="general_rating" class="rating">
-                                <span><?php echo($count); ?></span> Reviews <!-- レビュー件数表示 -->                   
-                                <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>             
-                                <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
-                            </div> <!-- general_rating -->
-
-                            <hr>
-
-                            <?php foreach ($reviews as $review){ ?>
-                                <div class="review_strip_single">
-                                    <img src="../../users_pic/<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
-
-                                    <!-- ユーザー名表示 -->
-                                    <h4><?php echo($review['nickname']); ?></h4>
-
-                                    <!-- レビュー評価表示機能 -->
-                                    <?php if ($review['rating'] == '1'){ ?>
-                                        <?php v($review); ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == '2'){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star "></i>
-                                            <i class="icon-star "></i>
-                                            <i class="icon-star "></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == '3'){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star "></i>
-                                            <i class="icon-star "></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == '4'){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star "></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == '5'){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                        </div>
-                                    <?php }; ?>
-
-                                    <!--　レビュー作成日表示 -->
-                                    <small><?php echo($review['created']);?></small>
-
-                                    <!-- レビュー本文表示 -->
-                                    <p><?php echo($review['comment']) ; ?></p>
-
-                                </div> <!-- End review strip -->
-
-                            <?php }; ?>
-
-
-                        </div> <!-- col-md-9 -->
-                    </div> <!-- row -->
-                </div> <!-- col-md-8 -->
-
+                    
+                </div>
                 <!--End  single_tour_desc-->
 
-                <aside class="col-md-4">
-                    <div class="box_style_1 expose">
-                        <h3 class="inner">EVENT NEWS</h3>
-                        <!-- ニュース表示 -->
-                        <div id="scroll" class="news">
-                            <?php foreach($notifications as $notification){ ?>
-                                <?php e($notification['news_comment']); ?>
-                            <?php } ?> 
-                        </div>
-                    </div> <!-- box_style_1 expose -->
 
-                    <div class="box_style_1 expose">
-                        <h3 class="inner">Eve tomo</h3>
-                        <div class="eve_tomo">
-                            <div class="row">
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label><i class="icon-globe"></i>Nationality</label>
-                                        <div class="styled-select">
-                                            <select class="form-control" name="currency" id="currency">
-                                                <option value="not specified" selected>not specified</option>
-                                                <option value="Japan">Japan</option>
-                                                <option value="Philippine">Philippine</option>
-                                                <option value="Afghanistan">Afghanistan</option>
-                                                <option value="Albanie">Albanie</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="form-group">
-                                        <label><i class=" icon-language"></i>Language</label>
-                                        <div class="styled-select">
-                                            <select class="form-control" name="currency" id="currency">
-                                                <option value="not specified" selected>not specified</option>
-                                                <option value="Japanese">Japanese</option>
-                                                <option value="Tagalog">Tagalog</option>
-                                                <option value="English">English</option>
-                                                <option value="Tagalog">Tagalog</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- row -->
+                <!-- event_aside挿入 -->
+                <?php require('event_aside.php');  ?>
 
-                            <hr>
 
-                            <div class="eve_tomo" class="scr">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                    <!-- 一旦放置 -->
-                                </div>
 
-                                <div class="button">
-                                   <!-- 個人詳細ページに戦遷移 -->
-                                   <div class="col-md-6 col-sm-6">
-                                    <a class="btn_full" href="profile.html"><i class=" icon-user"></i>Profile</a>
-                                </div>
-                                <!-- チャットページに遷移 -->
-                                <div class="col-md-6 col-sm-6">
-                                    <a class="btn_full_outline" href="chat"><i class=" icon-chat"></i>Chat</a>
-                                </div>
-                            </div>
-                        </div>
 
-                        <hr>
 
-                    </div>
-                    <!--/box_style_1 -->
 
-                    <!-- マッチング希望ボタン -->
-                    <p>
-                        <a class="btn_map" data-toggle="collapse" href="" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Cancel" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-                    </p>
-                    <!-- 終了タグ　マッチング希望ボタン -->
-                </div>
-            </aside>
+
+
+
+
+
+            </div>
         </div>
-        <!--End row -->
+        <!--End container -->
+        <div id="overlay"></div>
+        <!-- Mask on input focus -->
     </div>
-    <!--End container -->
-
-    <div id="overlay"></div>
-    <!-- Mask on input focus -->
-
 </main>
 <!-- End main -->
 
-<footer class="revealed">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-sm-3">
-                <h3>Need help?</h3>
-                <a href="tel://004542344599" id="phone">+45 423 445 99</a>
-                <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
-            </div>
-            <div class="col-md-3 col-sm-3">
-                <h3>About</h3>
-                <ul>
-                    <li><a href="#">About us</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Login</a></li>
-                    <li><a href="#">Register</a></li>
-                    <li><a href="#">Terms and condition</a></li>
-                </ul>
-            </div>
-            <div class="col-md-3 col-sm-3">
-                <h3>Discover</h3>
-                <ul>
-                    <li><a href="#">Community blog</a></li>
-                    <li><a href="#">Tour guide</a></li>
-                    <li><a href="#">Wishlist</a></li>
-                    <li><a href="#">Gallery</a></li>
-                </ul>
-            </div>
-            <div class="col-md-2 col-sm-3">
-                <h3>Settings</h3>
-                <div class="styled-select">
-                    <select class="form-control" name="lang" id="lang">
-                        <option value="English" selected>English</option>
-                        <option value="French">Japanese</option>
-                    </select>
-                </div>
-            </div>
-        </div><!-- End row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div id="social_footer">
-                    <ul>
-                        <li><a href="#"><i class="icon-facebook"></i></a></li>
-                        <li><a href="#"><i class="icon-twitter"></i></a></li>
-                        <li><a href="#"><i class="icon-google"></i></a></li>
-                        <li><a href="#"><i class="icon-instagram"></i></a></li>
-                        <li><a href="#"><i class="icon-pinterest"></i></a></li>
-                        <li><a href="#"><i class="icon-vimeo"></i></a></li>
-                        <li><a href="#"><i class="icon-youtube-play"></i></a></li>
-                        <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                    </ul>
-                    <p>© Japanival 2017</p>
-                </div>
-            </div>
-        </div><!-- End row -->
-    </div><!-- End container -->
-</footer><!-- End footer -->
+    <!-- フッター呼び出し -->
+    <?php require('footer.php'); ?>
 
-<div id="toTop"></div><!-- Back to top button -->
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
 
-<!-- Search Menu -->
-<div class="search-overlay-menu">
-    <span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
-    <form role="search" id="searchform" method="get">
-        <input value="" name="q" type="search" placeholder="Search..." />
-        <button type="submit"><i class="icon_set_1_icon-78"></i>
-        </button>
-    </form>
-</div><!-- End Search Menu -->
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
 
-<!-- Modal Review -->
-<div class="modal fade" id="myReview" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myReviewLabel">Write your review</h4>
-            </div>
-            <div class="modal-body">
-                <div id="message-review">
-                </div>
-                <form method="post" action="assets/review_tour.php" name="review_tour" id="review_tour">
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
 
-                    <!-- End row -->
-                    
-                    <!-- End row -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Position</label>
-                                <select class="form-control" name="position_review" id="position_review">
-                                    <option value="">Please review</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End row -->
-
-                    <!-- End row -->
-                    <div class="form-group">
-                        <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"><?php echo 'hogehoge'; ?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <input type="button" name="picture" value=写真の選択>
-                    </div>
+<div id="toTop"></div>
+<!-- Back to top button -->
 
 
-    <footer class="revealed">
-        <div class="container">
-            <div class="row">
-            ※requireで呼び出し
-            </div>
-        </div>
-    </div>
-    <!-- End modal review -->
+<!-- Common scripts -->
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="js/common_scripts_min.js"></script>
+<script src="js/functions.js"></script>
 
-    <!-- Common scripts -->
-    <script src="js/jquery-2.2.4.min.js"></script>
-    <script src="js/common_scripts_min.js"></script>
-    <script src="js/functions.js"></script>
-
-    <!-- Specific scripts -->
-    <script src="js/icheck.js"></script>
-    <script>
+<!-- Specific scripts -->
+<script src="js/icheck.js"></script>
+<script>
     $('input').iCheck({
-    checkboxClass: 'icheckbox_square-grey',
-    radioClass: 'iradio_square-grey'
+        checkboxClass: 'icheckbox_square-grey',
+        radioClass: 'iradio_square-grey'
     });
-    </script>
-    <!-- Date and time pickers -->
-    <script src="js/jquery.sliderPro.min.js"></script>
-    <script type="text/javascript">
+</script>
+<!-- Date and time pickers -->
+<script src="js/jquery.sliderPro.min.js"></script>
+<script type="text/javascript">
     $(document).ready(function ($) {
-    $('#Img_carousel').sliderPro({
-    width: 960,
-    height: 500,
-    fade: true,
-    arrows: true,
-    buttons: false,
-    fullScreen: false,
-    smallSize: 500,
-    startSlide: 0,
-    mediumSize: 1000,
-    largeSize: 3000,
-    thumbnailArrows: true,
-    autoplay: false
+        $('#Img_carousel').sliderPro({
+            width: 960,
+            height: 500,
+            fade: true,
+            arrows: true,
+            buttons: false,
+            fullScreen: false,
+            smallSize: 500,
+            startSlide: 0,
+            mediumSize: 1000,
+            largeSize: 3000,
+            thumbnailArrows: true,
+            autoplay: false
+        });
     });
-    });
-    </script>
+</script>
 
-    <!-- Date and time pickers -->
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/bootstrap-timepicker.js"></script>
-    <script>
+<!-- Date and time pickers -->
+<script src="js/bootstrap-datepicker.js"></script>
+<script src="js/bootstrap-timepicker.js"></script>
+<script>
     $('input.date-pick').datepicker('setDate', 'today');
     $('input.time-pick').timepicker({
-    minuteStep: 15,
-    showInpunts: false
+        minuteStep: 15,
+        showInpunts: false
     })
-    </script>
+</script>
 
-    <!--Review modal validation -->
-    <script src="assets/validate.js"></script>
+<!--Review modal validation -->
+<script src="assets/validate.js"></script>
 
-    <!-- Map -->
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/infobox.js"></script>
+<!-- Map -->
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script src="js/map.js"></script>
+<script src="js/infobox.js"></script>
 
 <script src="js/modal_login_ajax.js"></script>
 <script src="js/modal_register_user_ajax.js"></script>
 <script src="js/modal_register_organizer_ajax.js"></script>
 <!-- 自作のJS -->
 <script src="js/custom.js"></script>
+
 
 </body>
 </html>

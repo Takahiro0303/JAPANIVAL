@@ -75,7 +75,7 @@
                                 <a href="javascript:void(0);" class="show-submenu">About us ORGANIZER<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
-                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_organizer">Make An Event<i class="icon-down-open-mini"></i></a>
+                                <a href="event_input.php">Make An Event<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_login">Sing in<i class="icon-down-open-mini"></i></a>
