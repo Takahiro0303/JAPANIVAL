@@ -383,7 +383,7 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                             <div class="ribbon_3 popular"><span>New</span></div>
                             <div class="img_container">
                                 <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                    <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image">
+                                    <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 300px;">
                                     <div class="short_info">
                                         <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>
                                     </div>

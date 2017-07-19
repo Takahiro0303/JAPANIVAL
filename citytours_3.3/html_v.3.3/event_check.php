@@ -21,16 +21,16 @@ if(!isset($_SESSION['event'])){
     exit();
 }
 
-  echo '<pre>';
-  var_dump($_POST);
-  echo '</pre>';
+  // echo '<pre>';
+  // var_dump($_POST);
+  // echo '</pre>';
 
 //会員登録ボタンが押された際の処理
 if(!empty($_POST)){
 
-  echo '<pre>';
-  var_dump($_SESSION['event']);
-  echo '</pre>';
+  // echo '<pre>';
+  // var_dump($_SESSION['event']);
+  // echo '</pre>';
     $sql = 'INSERT INTO events
     SET     e_name = ?,
             e_start_date = ?,
