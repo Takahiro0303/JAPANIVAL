@@ -3,22 +3,21 @@ session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php'); //関数ファイル読み込み
 require('request.php');
-// require('header.php'); // ヘッダー読み込み・表示
-// require('footer.php'); // フッター読み込み・表示
 
-// クリックされたイベントデータを一件を取得
+// $login_user = get_login_user($dbh);
+
+// 【○】クリックされたイベントデータを一件を取得 * ログイン不要
 $event_id = $_REQUEST['event_id'];
 
-// イベントデータ取得
+// 【○】イベントデータ取得 * ログイン不要
 $sql = 'SELECT * FROM events WHERE event_id=?';
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
 // v($event_data);
 
-// イベント写真データ取得
+// 【○】イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
@@ -26,10 +25,17 @@ $stmt->execute($data);
 while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_pics[] = $event_pic;
 }
-
 // v($event_pics);
 
-// newsテーブルからぜ全データ取得
+// 【○】お気に入り数の取得 * ログイン不要
+$sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+$data = [$_REQUEST['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+// v($like_count);
+
+// 【○】newsテーブルから全データ取得 *ログイン不要
 $sql = 'SELECT * FROM news WHERE event_id=?';
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
@@ -37,9 +43,9 @@ $stmt->execute($data);
 while ($notification = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $notifications[] = $notification;
 }
-
 // v($notifications);
-// reviews&usersテーブルから全データ取得
+
+// 【○】reviews&usersテーブルから全データ取得 * ログイン不要
 $sql ='SELECT r.*, u.* FROM reviews r, users u WHERE r.user_id=u.user_id AND r.event_id=?';
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
@@ -48,17 +54,18 @@ $reviews = [];
 while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $reviews[] = $review;
 }
-// v($reviews);
-
 $count = count($reviews);
+// v($reviews);
 // v($count);
 
 // v($event_pics[0]['e_pic_path']);
 
-// もしログインしていた場合、マッチング情報の表示
-// requestsテーブルから全データ取得
-if (isset($_SESSION['id'])){
-    $sql ='SELECT * FROM requests WHERE event_id=?';
+// マッチング情報＆リクエストボタンの表示 ※ログイン必須
+
+// ○requestsテーブルから全データ取得
+// if (isset($_SESSION[''])){
+// user_flag != 0 // 管理者ではない場合、
+    $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
@@ -66,21 +73,53 @@ if (isset($_SESSION['id'])){
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
+// }
+v($requests[1]['nickname']);
+
+// リクエストボタンを押した際の登録処理
+if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
+        if ($request = $_POST['request_category_id']) {
+        $sql = 'INSERT INTO requests
+                    SET request_id=?,
+                        user_id=?,
+                        event_id=?,
+                        request_category_id=?,
+                        created=NOW()';
+        $data = array($requst_id, $login_user['user_id'],$_REQUST['event_id']);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+        // 更新後、イベント詳細ページに戻す
+        header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
+        exit();
+        }
 }
 
-// v($requests);
+// ③いいねロジック実装
+if (!empty($_POST['like_data'])) {
+    // $_POST['like_data']の値がlikeかunlikeかで条件分岐
+    if ($_POST['like_data'] == 'like') {
+        // いいね！ボタンが押されたとき（likesテーブルにデータ追加）
+        $sql = 'INSERT INTO likes SET member_id=?, tweet_id=?';
+        $data = [$login_user['member_id'] , $record['tweet_id']];
+    } else {
+        // いいね！取り消しボタンが押されたとき（likesテーブルからデータ削除）
+        $sql = 'DELETE FROM likes WHERE member_id=? AND tweet_id=?';
+        $data = [$login_user['member_id'] , $record['tweet_id']];
+    }
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
 
-// お気に入り数の取得
-$sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+    header('Location: view.php?tweet_id=' . $record['tweet_id']);
+    exit();
+}
+
+//　マッチング希望者数カウント・表示
+$sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
 $data = [$_REQUEST['event_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
-
-$like_count = $stmt->fetch(PDO::FETCH_ASSOC);
-
-v($like_count);
-
-// リクエスト送信
+$request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -118,7 +157,7 @@ v($like_count);
 <body>
 
     <header>
-    <!-- require('../../common/functions.php'); -->
+    <!-- require('../../common/header.php'); -->
     </header>
 
     <!-- 【○トップ】画像表示-->
@@ -158,7 +197,7 @@ v($like_count);
             <div class="row">
                 <div class="col-md-8" id="single_tour_desc">
                     <!-- イベント写真データ表示 -->
-                    <div id="Img_carousel" class="slider-pro">
+                    <div id="Img_carousel" class="slider-pro" align="center">
                         <div class="sp-slides">
                             <?php  foreach($event_pics as $event_pic){ ?>
                                 <div class="sp-slides">
@@ -409,15 +448,50 @@ v($like_count);
 
                             <hr>
 
-                            <div class="eve_tomo" class="scr">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                    <!-- 一旦放置 -->
-                                </div>
-                            </div><!-- eve_tomos -->
-                        
-                        </div> <!-- eve_tomo -->
-                    </div> <!-- col-md-6 col-sm-6 -->
+                             <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                    <div style="text-align: center">
+                                        <img src="../../users_pic/<?php echo($requests[0]['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
+                                    </div>
+                                    <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($requests[0]['nickname']); ?></h4>
+                                    <div style="text-align: center">
+                                        <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                        <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                    </div>
+                                </div><!-- col-md-6 col-sm-6 -->
+                                <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                    <div class="button">
+                                        <!-- 個人詳細ページに遷移 -->
+                                        <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                            <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+                                        </div>
+                                        <!-- チャットページに遷移 -->
+                                        <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                            <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                <div class="panel-heading" style="padding : 10px; ">
+                                                    <div style="margin-bottom: 5px;">
+                                                        Request Category
+                                                    </div>
+                                                    <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                        <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                            <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
+                                        </div>
+                                    </div> <!-- button -->
+                                </div> <!-- col-md-6 col-sm-6 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <input type="button" name="request" value="REQUEST" style="width:360px; height: 50px;" class="btn btn-danger" >
+                    </div>
+
                 </aside> <!-- class="col-md-4" -->
             </div> <!-- row -->
         </div><!--End container -->
@@ -485,4 +559,8 @@ v($like_count);
     <script src="js/map.js"></script>
     <script src="js/infobox.js"></script>
 </body>
+
+<footer>
+    <!-- require('../../common/footer.php'); -->
+</footer>
 </html>
