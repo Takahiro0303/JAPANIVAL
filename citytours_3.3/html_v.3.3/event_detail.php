@@ -14,18 +14,18 @@ if(!isset($_SESSION['event'])){
 // require('header.php');
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦他でも使うようなら復活させる
 // $_REQUEST['event_id'] = 1;
+
 $event_id = $_REQUEST['event_id'];
 
-// イベントデータ取得
+// 【○】イベントデータ取得 * ログイン不要
 $sql = 'SELECT * FROM events WHERE event_id=?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
 // v($event_data);
 
-// イベント写真データ取得
+// 【○】イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
 
 $data = [$event_id];
@@ -34,6 +34,7 @@ $stmt->execute($data);
 while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_pics[] = $event_pic;
 }
+
 
   // echo '<pre>';
   // var_dump($event_pics);
@@ -62,9 +63,72 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 // $count = count($reviews);
+
 // v($count);
 
 // v($event_pics[0]['e_pic_path']);
+
+// マッチング情報＆リクエストボタンの表示 ※ログイン必須
+
+// ○requestsテーブルから全データ取得
+// if (isset($_SESSION[''])){
+// user_flag != 0 // 管理者ではない場合、
+    $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
+    $data = [$_REQUEST['event_id']];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $requests = [];
+    while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $requests[] = $request;
+    }
+// }
+v($requests[1]['nickname']);
+
+// リクエストボタンを押した際の登録処理
+if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
+        if ($request = $_POST['request_category_id']) {
+        $sql = 'INSERT INTO requests
+                    SET request_id=?,
+                        user_id=?,
+                        event_id=?,
+                        request_category_id=?,
+                        created=NOW()';
+        $data = array($requst_id, $login_user['user_id'],$_REQUST['event_id']);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
+
+        // 更新後、イベント詳細ページに戻す
+        header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
+        exit();
+        }
+}
+
+// ③いいねロジック実装
+if (!empty($_POST['like_data'])) {
+    // $_POST['like_data']の値がlikeかunlikeかで条件分岐
+    if ($_POST['like_data'] == 'like') {
+        // いいね！ボタンが押されたとき（likesテーブルにデータ追加）
+        $sql = 'INSERT INTO likes SET member_id=?, tweet_id=?';
+        $data = [$login_user['member_id'] , $record['tweet_id']];
+    } else {
+        // いいね！取り消しボタンが押されたとき（likesテーブルからデータ削除）
+        $sql = 'DELETE FROM likes WHERE member_id=? AND tweet_id=?';
+        $data = [$login_user['member_id'] , $record['tweet_id']];
+    }
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    header('Location: view.php?tweet_id=' . $record['tweet_id']);
+    exit();
+}
+
+//　マッチング希望者数カウント・表示
+$sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
+$data = [$_REQUEST['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$request_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -109,6 +173,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 
+
     <div class="layer"></div>
     <!-- Mobile menu overlay mask -->
 
@@ -123,9 +188,11 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
+
                     <div class="col-md-7 col-sm-7">
                         <h1><?php echo $event_data['e_name']; ?></h1> <!-- イベント名表示 -->
                         <span><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
+
                     </div>
                     <div class="col-md-5 col-sm-5" style="font-size: 60px;">
                         <span><h1><?php echo $event_data['e_start_date'] . '〜'. $event_data['e_end_date']; ?></h1></span> <!-- 曜日・開催日時を表示 -->
@@ -138,6 +205,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     </section>
     <!-- End section -->
 
+
     <main>
 
         <div class="collapse" id="collapseMap">
@@ -148,10 +216,12 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         <div class="container margin_60">
             <div class="row">
+
                 <div class="col-md-8">
                     <!-- Map button for tablets/mobiles -->
 
                     <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
+
                         <div class="sp-slides">
 
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
@@ -340,19 +410,8 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 </div>
                 <!--End  single_tour_desc-->
 
-
                 <!-- event_aside挿入 -->
                 <?php require('event_aside.php');  ?>
-
-
-
-
-
-
-
-
-
-
 
             </div>
         </div>
@@ -440,4 +499,8 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 </body>
+
+<footer>
+    <!-- require('../../common/footer.php'); -->
+</footer>
 </html>
