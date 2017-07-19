@@ -78,15 +78,11 @@ h3{ font-size:22px;}
 h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 
 /*大澤　追加　インフォメーション機能のデザイン*/
-<<<<<<< HEAD
-/*.box_style_1{
-	height: 300px";
-}*/
-=======
+
 .box_style_1{
 	height: 300px";
 }
->>>>>>> shoji_umetani
+
 
 .box_style_1 h3.inner{ 
 	margin:-30px -30px 20px -30px; 
@@ -104,10 +100,10 @@ h2 span, h3 span, h4 span, h5 span, h6 span{color:#e04f67;}
 }
 
 /*大澤　【追加】イベトモ機能のデザイン追加*/
-.eve_tomo{
+/*.eve_tomo{
 	margin: auto;
 	padding: 20px;
-}
+}*/
 
 .purpose{
 	font-size: 20px;
