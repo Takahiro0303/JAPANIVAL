@@ -4,6 +4,7 @@ require('../../common/dbconnect.php');
 require('../../common/functions.php');
 $login_user = get_login_user($dbh);
 
+/*session-5*/
 $o_name = $login_user['o_name'];
 $o_f_name = $login_user['o_f_name'];
 $o_postal = $login_user['o_postal'];
@@ -129,22 +130,48 @@ if (!empty($_POST)) {
         exit();
     }    
 }
+/*session-5 End*/
 
-
-$e_sql = 'SELECT e.*, e.e_name,e.e_start_date FROM events e,organizers o WHERE e.o_id=o.o_id ORDER BY e.e_start_date ASC'; /*DESCの逆を使う*/
-$e_stmt = $dbh->prepare($e_sql);
-$e_stmt->execute();
+/*session-1*/
+$word = '';
+if (isset($_GET['search_word']) && !empty($_GET['search_word'])) {
+  
+  $word = $_GET['search_word'];
+  
+  $e_sql = sprintf('SELECT * FROM events WHERE o_id=%s AND e_name LIKE "%%%s%%" ORDER BY e_start_date ASC', $login_user['o_id'], $word);
+  
+  $e_stmt = $dbh->prepare($e_sql);
+  $e_stmt->execute();
+} else {
+  $e_sql = 'SELECT * FROM events WHERE o_id=? ORDER BY e_start_date ASC';
+  $e_data = [$login_user['o_id']];
+  $e_stmt = $dbh->prepare($e_sql);
+  $e_stmt->execute($e_data);
+} 
 
 $events = array();
 
 while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
   $events[] = $e_record;
 }
-    
-/*var_dump($events);*/
-
 $count = count($events);
+/*session-1 End*/
 
+/*session-3*/
+$past_sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.o_id=? AND events.e_end_date < CURDATE()';
+$past_date = [$login_user['o_id']];
+$past_stmt = $dbh->prepare($past_sql);
+$past_stmt->execute($past_date);
+
+$past_events = array();
+
+while ($past_record = $past_stmt->fetch(PDO::FETCH_ASSOC)) {
+  $past_events[] = $past_record; 
+}
+$past_count = count($past_events);
+
+var_dump($login_user['o_id']);
+/*session-3 End*/
 
 ?>
 
@@ -212,30 +239,24 @@ $count = count($events);
   <?php require('header.php');  ?>  
   <!-- End Header -->
 
-  <section class="parallax-window" data-parallax="scroll" data-image-src="img/admin_top.jpg" data-natural-width="1400" data-natural-height="470">
-    <div class="parallax-content-1">
-      <div class="animated fadeInDown">
-        <h1>Hello Clara!</h1>
-        <p>Ridiculus sociosqu cursus neque cursus curae ante scelerisque vehicula.</p>
-      </div>
-    </div>
+  <section class="parallax-window" data-parallax="scroll" data-image-src="img/admin_top.jpg" data-natural-width="1400" data-natural-height="470">    
   </section>
   <!-- End section -->
 
   <main>
-    <div id="position">
-      <div class="container">
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Category</a></li>
-          <li>Page active</li>
-        </ul>
-      </div>
-    </div>
+      <!-- <div id="position">
+        <div class="container">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Category</a></li>
+            <li>Page active</li>
+          </ul>
+        </div>
+      </div> -->
     <!-- End Position -->
 
     <div class="margin_60 container">      
-      <h1 class="welcom">Welcome!</h1><br>      
+      <h1 class="welcom" style="text-align:center;">Welcome!&nbsp&nbsp<?php echo htmlspecialchars($login_user['o_name']); ?>様</h1><br>      
       <div id="tabs" class="tabs">
         <nav>
           <ul>
@@ -243,11 +264,9 @@ $count = count($events);
             </li>
             <li><a href="#section-2" class="icon-wishlist"><span>イベント登録</span></a>
             </li>
-            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント① </span></a>
+            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント </span></a>
             </li>
-            <li><a href="#section-3-2" class="icon-back-in-time"><span>実施済みイベント② </span></a>
-            </li>
-            <!-- <li><a href="#section-4" class="icon-hourglass"><span>Join the Past</span></a>
+            <!-- <li><a href="#section-3-2" class="icon-back-in-time"><span>実施済みイベント② </span></a>
             </li> -->
             <li><a href="#section-5" class="icon-profile"><span>Profile</span></a>
             </li>
@@ -257,18 +276,20 @@ $count = count($events);
         <div class="content">
           <section id="section-1">
             <div id="tools" class="col-md-12">
-              <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                  <div class="styled-select-filters">
-                    <select name="sort_type" id="sort_type">
-                      <option value="" selected>イベント実施日 </option>
-                      <option value="hotels">イベント登録</option>
-                    </select>
-                  </div>
-                </div>                
-              </div>
+              <form method="GET" action="">
+                <div class="row">
+                  <div class="col-md-3 col-sm-3 col-xs-6">
+                    <div> 
+                      <span class="input-group">
+                      <input type="text" name="search_word" placeholder="イベント名"　value="<?php echo htmlspecialchars($word); ?>">
+                      <button class="btn btn-default" type="submit" style="margin-left:0;"><i class="icon-search"></i></button>
+                      </span>
+                    </div>                                   
+                  </div>                
+                </div>
+              </form>
             </div>
-            <!--/tools -->
+          <!--/tools -->
 
             <div class="strip_booking col-md-12">
               <?php for ($i=0; $i <$count ; $i++) { ?>
@@ -300,8 +321,8 @@ $count = count($events);
                       <div class="col-lg-2 col-md-2 col-sm-2">
                         <div class="price_list">
                           <div>
-                            <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
-                            <p><a href="event_input.php" class="btn_1">編集</a></p> <!-- Ume待ち -->
+                            <p><a href="#0" class="btn_1">詳細</a></p><br>
+                            <p><a href="event_input.php" class="btn_1">編集</a></p> 
                           </div>
                         </div>
                       </div>
@@ -317,248 +338,69 @@ $count = count($events);
 
 
           <section id="section-2">
-         
           </section>
           <!-- End section 2 -->
 
+          <!-- 過去のFMT(不要) -->
+          
+          
           <section id="section-3">
-            <!-- 実施済みイベント一覧 -->
-            <div class="container row col-md-12">
+          <div id="tools" class="col-md-12">
+            <form method="GET" action="">
               <div class="row">
-                <!-- イベント名一覧 -->
-                <aside class="col-lg-3 col-md-3">
-                  <div class="box_style_cat">
-                    <ul id="cat_nav">
-                      <li><strong>イベント一覧①</strong></li>
-
-                      <?php for ($i=0; $i <$count ; $i++) { ?>
-                      <li><a href="admin_organizer.php?o_id=idの変数&パラメータ=(値)"><?php echo htmlspecialchars($events[$i]['e_name']); ?> </a>
-                      </li>
-                      <?php } ?>
-
-                    </ul>
-                  </div>
-                <!--End filters col-->
-                </aside>
-                <!-- イベント名一覧終わり -->
-
-                <!-- イベント詳細・レビュー -->
-                <!-- イベント名が押されたら該当イベントの詳細を表示  -->
-                <div class="col-md-9 col-sm-9 col-xs-6">
-                  <?php for ($i=0; $i <$count ; $i++) { ?>
-                  <div class="row">
-                    <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-                      <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-4">
-                          <div class="ribbon_3 popular">
-                            <span>Popular</span>
-                          </div>
-                          <div class="wishlist">
-                            <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                          </div>
-                          <div class="img_list" >
-                            <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                            <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                            </a>
-                          </div>
-                        </div>
-                        <div class="clearfix visible-xs-block"></div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                          <div class="tour_list_desc">
-                            <div class="rating"></div>
-                              <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
-                              <p><?php echo htmlspecialchars($events[$i]['explanation']); ?></p>
-                              <p><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></p>
-                          </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-2">
-                          <div class="price_list">
-                            <div>
-                              <p><a href="#0" class="btn_1">詳細</a></p><br> <!-- Takuya待ち -->
-                              <p><a href="event_input.php" class="btn_1">編集</a></p> <!-- Ume待ち -->
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <?php } ?>                  
+                <div class="col-md-3 col-sm-3 col-xs-6">
+                  <div> 
+                    <span class="input-group">
+                    <input type="text" name="search_word" placeholder="イベント名"　value="<?php echo htmlspecialchars($word); ?>">
+                    <button class="btn btn-default" type="submit" style="margin-left:0;"><i class="icon-search"></i></button>
+                    </span>
+                  </div>                                   
                 </div>                
-              </div>  
-            <!-- End row -->
-            </div>
-          </section>
-          <!-- End section 3 -->
+              </div>
+            </form>
+          </div>
 
-<!-- 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
-          <section id="section-3-2">
-            <div class="strip_booking col-md-12">
-              <?php for ($i=0; $i <$count ; $i++) { ?>
-                <div class="row">
-                  <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-                    <div class="row">
-                      <div class="col-lg-4 col-md-4 col-sm-4">
-                        <div class="ribbon_3 popular">
-                          <span>Popular</span>
-                        </div>
-                        <div class="wishlist">
-                          <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                        </div>
-                        <div class="img_list" >
-                          <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                          <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                          </a>
-                        </div>
-                      </div>
-                      <div class="clearfix visible-xs-block"></div>
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="tour_list_desc">
-                          <div class="rating"></div>
-                            <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
-                            <p><?php echo htmlspecialchars($events[$i]['explanation']); ?></p>
-                            <p><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></p>
-                        </div>  
-                      </div>
-                      <div class="col-lg-2 col-md-2 col-sm-2">
-                        <div class="price_list">
-                          <div>
-                            <p><a href="review_modal.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_1">レビューを見る</a></p><br>
-                          </div>
-                        </div>
-                      </div>
+
+          <?php for ($i=0; $i <$past_count ; $i++) { ?>              
+          <div class="row">
+            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+              <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                  <div class="ribbon_3 popular">
+                    <span>Popular</span>
+                  </div>
+                  <div class="wishlist">
+                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                  </div>
+                  <div class="img_list" >
+                    <a href="review_modal.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>"><img src="../../o_pic/<?php echo htmlspecialchars($past_events[$i]['e_pic_path']) ?>" alt="Image">
+                    <!-- <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div> -->
+                    </a>
+                  </div>
+                </div>
+                <div class="clearfix visible-xs-block"></div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                  <div class="tour_list_desc">
+                    <div class="rating"></div>
+                      <h3><strong><?php echo htmlspecialchars($past_events[$i]['e_name']); ?></strong></h3>
+                      <p><?php echo htmlspecialchars($past_events[$i]['explanation']); ?></p>
+                      <p><?php echo htmlspecialchars($past_events[$i]['e_start_date']); ?></p>
+                  </div>  
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                  <div class="price_list">
+                    <div>
+                      <p><a href="review_modal.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>" class="btn_1">レビューを見る</a></p><br>
                     </div>
                   </div>
                 </div>
-              <?php } ?>
-              <!-- End row -->              
-            </div>     
+              </div>
+            </div>
+          </div>
+          <?php } ?>               
+          <!-- End row --> 
           </section>
           <!-- End section 3 -->
-<!-- 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 -->
-
-          <!-- <section id="section-4">
-            <div class="row">
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your password</h4>
-                <div class="form-group">
-                  <label>Old password</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New password</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new password</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Password</button>
-              </div>
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your email</h4>
-                <div class="form-group">
-                  <label>Old email</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New email</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new email</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Email</button>
-              </div>
-            </div>
-            <!-- End row -->
-
-            <!--<hr>
-            <br>
-            <div class="row">
-              <div class="col-md-6 col-sm-6">
-                <h4>Notification settings</h4>
-                <table class="table table-striped options_cart">
-                  <tbody>
-                    <tr>
-                      <td style="width:10%">
-                        <i class="icon_set_1_icon-33"></i>
-                      </td>
-                      <td style="width:60%">
-                        New Citytours Tours
-                      </td>
-                      <td style="width:35%">
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_1" id="option_1" checked value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-6"></i>
-                      </td>
-                      <td>
-                        New Citytours Hotels
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_2" id="option_2" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-26"></i>
-                      </td>
-                      <td>
-                        New Citytours Transfers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_3" id="option_3" value="" checked>
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-81"></i>
-                      </td>
-                      <td>
-                        New Citytours special offers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_4" id="option_4" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button type="submit" class="btn_1 green">Update notifications settings</button>
-              </div>
-            </div>
-          </section> -->
-          <!-- End section 4 -->
 
           <section id="section-5">
             <div class="row">
@@ -580,23 +422,55 @@ $count = count($events);
                   <li>自己紹介<span><?php echo htmlspecialchars($o_intro);?></span>
                   </li>
                 </ul>
+                <div>
+                  <button class="btn_1 green" onclick="obj=document.getElementById('open').style; obj.display=(obj.display=='none')?'block':'none';">編集</button>
+                </div>
               </div>
               <div class="col-md-5 col-sm-5">
                 <img src="../../o_pic/<?php echo htmlspecialchars($login_user['o_pic']); ?>" width="300" alt="Image" class="img-responsive styled profile_pic"><!-- フォルダ名/データ名 -->
               </div>
             </div>
             <!-- End row -->
-<form method="POST" action="" enctype="multipart/form-data">
-            <div class="divider"></div>
-            <div class="row">section
+            <form method="POST" action="" enctype="multipart/form-data">
+              <div class="divider"></div> <!-- 線 -->
+              <div id="open" style="display:none;clear:both;" >
+                <div class="row">
+              <div class="col-md-12">
+                <h4 id="edit_profile">現在のパスワードを入力してください</h4>
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <table class="table table-bordered">
+                  <thead>
+                    <tbody>
+                      <tr>
+                        <th class="col-md-3 col-sm-3">現在のパスワード </th>
+                        <td>
+                          <input type="password" class="form-control" name="o_current_password" id="o_current_password" type="password">
+                        </td>
+                        <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
+                          <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
+                        <?php } ?>
+                      </tr> 
+                    </tbody>
+                  </thead>
+                </table>
+                <div>
+                  <a class="btn_1 green" onclick="obj=document.getElementById('open1').style; obj.display=(obj.display=='none')?'block':'none';">確認</a>
+                </div>
+                <div class="divider"></div> <!-- 線 -->
+
+                <div id="open1" style="display:none;clear:both;" >
+
+
+
+            <div class="row">
               <div class="col-md-12">
                 <h4 id="edit_profile">Edit profile</h4>
               </div>
               <div class="col-md-12 col-sm-12">
                 <table class="table table-bordered">
                   <thead>
-                    <tbody>
-                      
+                    <tbody>                      
                         <tr>
                           <th class="col-md-3 col-sm-3">団体名</th>
                           <td>
@@ -627,7 +501,7 @@ $count = count($events);
                             <?php } ?>
                           </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                           <th>現在のパスワード</th>
                             <td>
                               <input type="password" class="form-control" name="o_current_password" id="o_current_password" type="password">
@@ -635,7 +509,7 @@ $count = count($events);
                             <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
                               <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
                             <?php } ?>
-                        </tr>
+                        </tr> -->
                         <tr>
                           <th>新しいパスワード</th>
                             <td>
@@ -696,7 +570,9 @@ $count = count($events);
                 </table>
               </div> 
             </div>
-            <!-- End row -->      
+
+
+            <!-- End row -->          
        
             <h4>Upload profile photo</h4>
             <div class="form-inline upload_1">
@@ -708,8 +584,14 @@ $count = count($events);
               </div>
             </div>
 
-            <hr>
-            <a href="#a1"><button type="submit" class="btn_1 green">Update Profile</button></a>
+ 
+
+
+            <a href="#a1"><button type="submit" class="btn_1 green">更新</button></a>
+            <div id="open2" style="display:none;clear:both;">
+  
+    </div>
+    </div> 
 <!-- ★</form>   -->          
           </section>
           <!-- End section 5 -->
@@ -870,6 +752,14 @@ $count = count($events);
 
   <!-- 郵便番号 -->
   <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+
+
+  <script>
+    function dropsort() {
+    var browser = document.sort_form.sort.value;
+    location.href = browser
+}
+  </script>
 
 </body>
 
