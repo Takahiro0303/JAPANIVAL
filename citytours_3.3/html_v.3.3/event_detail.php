@@ -1,23 +1,19 @@
 <?php
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
-require('../../common/functions.php');
+require('../../common/functions.php'); //関数呼び出し
 
 $login_user = get_login_user($dbh);
 
-// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移
-if(!isset($_SESSION['event'])){
-    header('Location: edit_index.php');
-    exit();
-}
-
-// require('header.php');
-// require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦他でも使うようなら復活させる
-// $_REQUEST['event_id'] = 1;
+// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移 ⇦ ※なぜREQUESTではなくてSESSIONなのかs/大澤
+// if(!isset($_SESSION['event'])){
+//     header('Location: edit_index.php');
+//     exit();
+// }
 
 $event_id = $_REQUEST['event_id'];
 
-// 【○】イベントデータ取得 * ログイン不要
+// ○イベントデータ取得 * ログイン不要
 $sql = 'SELECT * FROM events WHERE event_id=?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
@@ -25,7 +21,7 @@ $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 // v($event_data);
 
-// 【○】イベント写真データ取得 * ログイン不要
+// ○イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
 
 $data = [$event_id];
@@ -35,44 +31,28 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_pics[] = $event_pic;
 }
 
+// ○reviews&usersテーブルから全データ取得
+$sql ='SELECT r.*, u.*
+        FROM reviews r, users u
+        WHERE r.user_id=u.user_id AND r.event_id=?';
+        // -- ORDER BY r.created
+        // -- DESC LIMIT %d, 3
+ $data = [$event_id];   
+ $stmt = $dbh->prepare($sql);
+ $stmt->execute($data);
+$reviews = [];
 
-  // echo '<pre>';
-  // var_dump($event_pics);
-  // echo '</pre>';
-  // echo $event_id;
-
-// v($event_pics);
-
-
-
-// reviews&usersテーブルから全データ取得
-// $sql ='SELECT r.*, u.*
-//         FROM reviews r, users u
-//         WHERE r.user_id=u.user_id AND r.event_id=?';
-//         // -- ORDER BY r.created
-//         // -- DESC LIMIT %d, 3
-//  $data = [$event_id];   
-//  $stmt = $dbh->prepare($sql);
-//  $stmt->execute($data);
-// $reviews = [];
-
-// while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $reviews[] = $review;
-// }
+while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $reviews[] = $review;
+}
 // v($reviews);
-
-
-// $count = count($reviews);
-
-// v($count);
 
 // v($event_pics[0]['e_pic_path']);
 
 // マッチング情報＆リクエストボタンの表示 ※ログイン必須
 
 // ○requestsテーブルから全データ取得
-// if (isset($_SESSION[''])){
-// user_flag != 0 // 管理者ではない場合、
+if (isset($_SESSION[''])){
     $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
@@ -170,9 +150,6 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 </head>
 
 <body>
-
-
-
 
     <div class="layer"></div>
     <!-- Mobile menu overlay mask -->
