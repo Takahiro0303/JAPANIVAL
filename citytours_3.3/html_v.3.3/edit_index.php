@@ -22,28 +22,8 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
     } else{
         $past[] = $record;
     }
-    echo date('Y-m-d');
-    echo $record['e_start_date'];
+
 }
-
-// $count = count($future);
-// while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     if (strtotime(date('Y-m-d')) < strtotime($future['e_start_date'])){
-//         $future[] = $record;
-//     } else{
-//         $past[] = $record;
-//     }
-// }
-
-
-
-
-  // echo '<pre>';
-  // var_dump($future);
-  // echo '</pre>';
-  // echo '<pre>';
-  // var_dump($past);
-  // echo '</pre>';
 
 ?>
 
@@ -347,11 +327,23 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <?php for($i=0;$i < count($future); $i++) { ?>
                     <?php
                         // 窓に表示する写真の取得
-                        $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                        $data = [$future[$i]['event_id']];
-                        $stmt = $dbh->prepare($sql);
-                        $stmt->execute($data);
-                        $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
+                        // $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+                        // $data = [$future[$i]['event_id']];
+                        // $stmt = $dbh->prepare($sql);
+                        // $stmt->execute($data);
+                        // $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+$data = [$future[$i]['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+// $event_pics[] = $event_pic;
+// echo $event_pic['e_pic_path'];
+//   echo '<pre>';
+//   var_dump($event_pics);
+//   echo '</pre>';
 
                           // echo '<pre>';
                           // var_dump($e_pic_path);
@@ -391,7 +383,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             <div class="ribbon_3 popular"><span>New</span></div>
                             <div class="img_container">
                                 <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                    <img src="../../event_pictures/<?php echo htmlspecialchars($e_pic_path['e_pic_path']); ?>" class="img-responsive" alt="Image">
+                                    <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 300px;">
                                     <div class="short_info">
                                         <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>
                                     </div>
@@ -402,7 +394,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                 <div><?php echo $duration; ?></div>
                                 <!-- end rating -->
                                 <div class="wishlist">
-                                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);"  style="display: block;">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                                 </div>
                                 <!-- End wish list-->
                             </div>
@@ -945,44 +937,21 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <!-- /content -->
                 </div>
 
+    <!-- フッター呼び出し -->
+    <?php require('footer.php'); ?>
 
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
 
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
 
-
-
-	
-	<footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10 col-sm-10">
-                    <h3>User Policy</h3>
-                    <h3>Notation based on the Specified Commercial Transaction Act</h3>
-                    <h3>Inquiry</h3>
-                    <h3>Privacy Policy</h3>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                    <h3>Settings</h3>
-                    <div class="styled-select">
-                        <select class="form-control" name="lang" id="lang">
-                            <option value="English" selected>English</option>
-                            <option value="Japanese">Japanese</option>
-                        </select>
-                    </div>
-                </div>
-            </div><!-- End row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="social_footer">
-
-                        <p>© Japanival 2017</p>
-                    </div>
-                </div>
-            </div><!-- End row -->
-        </div><!-- End container -->
-    </footer><!-- End footer -->
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
 
 	<div id="toTop"></div><!-- Back to top button -->
 	
+
 
 
 <!-- searchbar側のJS -->
@@ -1003,8 +972,6 @@ $("#searchDropdownBox").change(function(){
 });
 </script>
 
-    <!-- 自作のJS -->
-    <script src="js/custom.js"></script>
 
     <!-- tabs側のJS -->
     <!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
@@ -1145,6 +1112,12 @@ $("#searchDropdownBox").change(function(){
         </script>
     
     <script src="js/notify_func.js"></script>
+    <script src="js/modal_login_ajax.js"></script>
+    <script src="js/modal_register_user_ajax.js"></script>
+    <script src="js/modal_register_organizer_ajax.js"></script>
+    <!-- 自作のJS -->
+    <script src="js/custom.js"></script>
+
 
 
 

@@ -69,3 +69,42 @@
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 }
+
+#modal_login {
+  margin: 0px 0px 0px;
+  color: #333;
+  text-align: left;
+/*  background-color: #fff;*/
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 0 5 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  padding: 30px;
+  border-radius: 6px;
+}
+
+#modal_register_user {
+  margin: 0px 0px 0px;
+  color: #333;
+  text-align: left;
+/*  background-color: #fff;*/
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 0 5 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  padding: 30px;
+  border-radius: 6px;
+}
+
+#modal_register_organizer {
+  margin: 0px 0px 0px;
+  color: #333;
+  text-align: left;
+/*  background-color: #fff;*/
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 0 5 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  padding: 30px;
+  border-radius: 6px;
+}
+
+
+

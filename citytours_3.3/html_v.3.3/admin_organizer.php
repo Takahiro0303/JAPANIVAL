@@ -4,7 +4,14 @@ require('../../common/dbconnect.php');
 require('../../common/functions.php');
 $login_user = get_login_user($dbh);
 
-/*session-5*/
+
+
+echo 'flag' . $_SESSION['flag'];
+echo '<br>';
+echo 'id' . $_SESSION['id'];
+
+
+
 $o_name = $login_user['o_name'];
 $o_f_name = $login_user['o_f_name'];
 $o_postal = $login_user['o_postal'];

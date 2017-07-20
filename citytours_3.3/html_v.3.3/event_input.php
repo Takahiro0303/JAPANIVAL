@@ -6,19 +6,24 @@ require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
+if ($_SESSION['id'] == '' && $_SESSION['flag'] == '') {
+    header('Location: edit_index.php');
+    exit();//ここでこのファイルの読み込みを強制終了
+} elseif ($_SESSION['flag'] == '1') {
+    header('Location: edit_index.php');
+    exit();//ここでこのファイルの読み込みを強制終了
+}
+
+
+
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'rewrite') {
-//$_REQUEST, $_GET, $_POST, $_FILEの情報全てを持つスーパーグローバル変数
-//$_REQUESTと$_GETの使い分け
-//formのGET送信に対してのみ$_GETを使用
+    //$_REQUEST, $_GET, $_POST, $_FILEの情報全てを持つスーパーグローバル変数
+    //$_REQUESTと$_GETの使い分け
+    //formのGET送信に対してのみ$_GETを使用
 
-// $_POST = $_SESSION['event'];
-// $errors['rewrite'] = true;
-// echo 'aaaaaaaaaaaaa';
-//   echo '<pre>';
-//   var_dump($_POST);
-//   echo '</pre>';
-
+    $_POST = $_SESSION['event'];
+    $errors['rewrite'] = true;
 
 }
 
@@ -56,103 +61,100 @@ if (!empty($_POST)) {
     $year_pp          = $_POST['year_pp'];
     $year_ppp         = $_POST['year_ppp'];
     $official_url     = $_POST['official_url'];
-    $news_comment     = $_POST['news_comment'];
 
-//イベント名の空チェック
+
+    //イベント名の空チェック
     if ($e_name == '') {
         $errors['e_name'] = 'blank';
     }
 
-//イベント日程（開始日）の空チェック
+    //イベント日程（開始日）の空チェック
     if ($e_start_date == '') {
         $errors['e_start_date'] = 'blank';
     }
 
-//イベント日程（終了日）の空チェック
+    //イベント日程（終了日）の空チェック
     if ($e_end_date == '') {
         $errors['e_end_date'] = 'blank';
     }
 
-//都道府県の空チェック
+    //都道府県の空チェック
     if ($e_prefecture == '') {
         $errors['e_prefecture'] = 'blank';
     }
 
-//会場の空チェック
+    //会場の空チェック
     if ($e_venue == '') {
         $errors['e_venue'] = 'blank';
     }
 
-//accessの空チェック
+    //accessの空チェック
     if ($e_access == '') {
         $errors['e_access'] = 'blank';
     }
 
-//説明文の空チェック
+    //説明文の空チェック
     if ($explanation == '') {
         $errors['explanation'] = 'blank';
     }
 
-//書き直しなら$file_nameにfile_pathを入れない。つまり、書き直しの場合はあえて
+    //書き直しなら$file_nameにfile_pathを入れない。つまり、書き直しの場合はあえて
     if (!isset($_REQUEST['action'])) {
         $file_name = $_FILES['e_pic_path']['name'];
     }
-      // echo '<pre>';
-      // var_dump($file_name);
-      // echo '</pre>';
+          // echo '<pre>';
+          // var_dump($file_name);
+          // echo '</pre>';
 
 
 
-if (empty($errors)) {
-    //送信データを$_SESSIONに登録
-    $_SESSION['event'] = $_POST;
-//Notice: Undefined index: picture_path
-//画像データの拡張子チェック
-//$_POST['name属性値']
-//$_FILES['name属性値']['各データへのキー']
-if (!empty($file_name)) { //画像が選択されていれば
-    for ($i = 0; $i< count($file_name); $i++) {
-        $ext = substr($file_name[$i], -3);
-        $ext = strtolower($ext);
-        if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
-            $errors['picture_path'] = 'type';
-        }   
+    if (empty($errors)) {
+        //送信データを$_SESSIONに登録
+        $_SESSION['event'] = $_POST;
+        //Notice: Undefined index: picture_path
+        //画像データの拡張子チェック
+        //$_POST['name属性値']
+        //$_FILES['name属性値']['各データへのキー']
+        if (!empty($file_name)) { //画像が選択されていれば
+            for ($i = 0; $i< count($file_name); $i++) {
+                $ext = substr($file_name[$i], -3);
+                $ext = strtolower($ext);
+                if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
+                    $errors['picture_path'] = 'type';
+                }   
 
-        if (is_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i])) {
-            $fileName = "../../event_pictures/".date("YmdHis").$_FILES["e_pic_path"]["name"][$i];
-            $_SESSION['event']['e_pic_path'][$i] = $fileName;
-            // echo $_SESSION['event']['e_pic_path'][$i];
-            if (file_exists($fileName)===false) {
-                if (move_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i],$fileName)) {
-                    chmod($fileName, 0644);
+                if (is_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i])) {
+                    $fileName = "../../event_pictures/".date("YmdHis").$_FILES["e_pic_path"]["name"][$i];
+                    $_SESSION['event']['e_pic_path'][$i] = $fileName;
+                    // echo $_SESSION['event']['e_pic_path'][$i];
+                    if (file_exists($fileName)===false) {
+                        if (move_uploaded_file($_FILES["e_pic_path"]["tmp_name"][$i],$fileName)) {
+                            chmod($fileName, 0644);
 
+                        } else {
+                            echo "アップロードエラー";
+                            $errors['picture_path'] = 'upload_error';
+                        }
+                    } else {
+                        echo "既にファイルが存在します。少し時間をおいてやり直してください。";
+                        $errors['picture_path'] = 'exist_already';
+                    }
                 } else {
-                    echo "アップロードエラー";
-                    $errors['picture_path'] = 'upload_error';
+                    echo "ファイルが選択されていません";
+                    $errors['picture_path'] = 'blank1';
                 }
-            } else {
-                echo "既にファイルが存在します。少し時間をおいてやり直してください。";
-                $errors['picture_path'] = 'exist_already';
             }
-        } else {
-            echo "ファイルが選択されていません";
-            $errors['picture_path'] = 'blank1';
+        }else{
+            //画像データ未選択の場合
+            $errors['picture_path'] = 'blank2';
+        }
+
+        if ($_REQUEST['action'] != 'rewrite') {
+            //次のページへ遷移
+            header('Location: event_check.php');
+            exit();//ここでこのファイルの読み込みを強制終了
         }
     }
-}else{
-    //画像データ未選択の場合
-    $errors['picture_path'] = 'blank2';
-}
-
-
-
-
-
-
-    //次のページへ遷移
-    header('Location: event_check.php');
-    exit();//ここでこのファイルの読み込みを強制終了
-}
 }
 ?>
 
@@ -234,16 +236,16 @@ if (!empty($file_name)) { //画像が選択されていれば
 
 
     <form method="POST" action="event_input.php" enctype="multipart/form-data">
-        <div class="collapse" id="collapseMap">
+<!--         <div class="collapse" id="collapseMap">
             <div id="map" class="map"></div>
-        </div>
+        </div> -->
         <!-- End Map -->
 
         <div class="container margin_60">
             <div class="row">
                 <div class="col-md-8">
-                    <p class="visible-sm visible-xs"><a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
-                    </p>
+<!--                     <p class="visible-sm visible-xs"><a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
+                    </p> -->
                     <!-- Map button for tablets/mobiles -->
 
 
@@ -641,65 +643,19 @@ if (!empty($file_name)) { //画像が選択されていれば
 </main>
 <!-- End main -->
 
-    <footer><!-- //TODO!:元はclass名revealed -->
+    <!-- フッター呼び出し -->
+    <?php require('footer.php'); ?>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-sm-3">
-                    <h3>Need help?</h3>
-                    <a href="tel://004542344599" id="phone">+45 423 445 99</a>
-                    <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <h3>About</h3>
-                    <ul>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Register</a></li>
-                        <li><a href="#">Terms and condition</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <h3>Discover</h3>
-                    <ul>
-                        <li><a href="#">Community blog</a></li>
-                        <li><a href="#">Tour guide</a></li>
-                        <li><a href="#">Wishlist</a></li>
-                        <li><a href="#">Gallery</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                    <h3>Settings</h3>
-                    <div class="styled-select">
-                        <select class="form-control" name="lang" id="lang">
-                            <option value="English" selected>English</option>
-                            <option value="French">Japanese</option>
-                        </select>
-                    </div>
-                </div>
-            </div><!-- End row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="social_footer">
-                        <ul>
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-google"></i></a></li>
-                            <li><a href="#"><i class="icon-instagram"></i></a></li>
-                            <li><a href="#"><i class="icon-pinterest"></i></a></li>
-                            <li><a href="#"><i class="icon-vimeo"></i></a></li>
-                            <li><a href="#"><i class="icon-youtube-play"></i></a></li>
-                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        </ul>
-                        <p>© Japanival 2017</p>
-                    </div>
-                </div>
-            </div><!-- End row -->
-        </div><!-- End container -->
-    </footer><!-- End footer -->
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
 
-<<<<<<< HEAD
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
+
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
+
+
 <div id="toTop"></div><!-- Back to top button -->
 
 <!-- Search Menu -->
@@ -877,9 +833,11 @@ if (!empty($file_name)) { //画像が選択されていれば
 <script src="js/map.js"></script>
 <script src="js/infobox.js"></script>
 
-
+<script src="js/modal_login_ajax.js"></script>
+<script src="js/modal_register_user_ajax.js"></script>
+<script src="js/modal_register_organizer_ajax.js"></script>
+<!-- 自作のJS -->
 <script src="js/custom.js"></script>
-
 
 
 </body>
