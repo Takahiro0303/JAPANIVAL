@@ -85,7 +85,7 @@ if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指�
                         event_id=?,
                         request_category_id=?,
                         created=NOW()';
-        $data = array($requst_id, $login_user['user_id'],$_REQUST['event_id']);
+        $data = array($requst_id, $login_user['user_id'],$_REQUST['event_id'],$_POST['request_category_id']);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
@@ -488,9 +488,13 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <div>
-                        <input type="button" name="request" value="REQUEST" style="width:360px; height: 50px;" class="btn btn-danger" >
-                    </div>
+                    <!-- <div>
+                        <input type="button"  value="REQUEST" style="width:360px; height: 50px;" class="btn btn-danger" >
+                    </div> -->
+                    <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
+                    <p>
+                        <a class="btn_map" name="request" data-toggle="collapse" href="" data-text-swap="Cancel" data-text-original="Confirm to eve tomo">Confirm to eve tomo</a>
+                    </p>
 
                 </aside> <!-- class="col-md-4" -->
             </div> <!-- row -->
@@ -501,6 +505,229 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="container">
             <div class="row">
             ※requireで呼び出し
+            </div>
+        </div>
+    </footer>
+
+<!-- Modal Review -->
+    <div class="modal fade" id="myReview" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myReviewLabel">Write your review</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="message-review">
+                    </div>
+                    <form method="post" action="assets/review_restaurant.php" name="review_restaurant" id="review_restaurant">
+                        <input name="restaurant_name" id="restaurant_name" type="hidden" value="Mexican Taco Mex">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input name="name_review" id="name_review" type="text" placeholder="Your name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input name="lastname_review" id="lastname_review" type="text" placeholder="Your last name" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input name="email_review" id="email_review" type="email" placeholder="Your email" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Position</label>
+                                    <select class="form-control" name="position_review" id="position_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Service</label>
+                                    <select class="form-control" name="service_review" id="service_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <select class="form-control" name="price_review" id="price_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Quality</label>
+                                    <select class="form-control" name="quality_review" id="quality_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <div class="form-group">
+                            <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="verify_review" class=" form-control" placeholder="Are you human? 3 + 1 =">
+                        </div>
+                        <input type="submit" value="Submit" class="btn_1" id="submit-review">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End modal review -->
+
+    <!-- Modal Request form -->
+    <div class="modal fade" id="myReview" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myReviewLabel">Write your review</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="message-review">
+                    </div>
+                    <form method="post" action="assets/review_restaurant.php" name="review_restaurant" id="review_restaurant">
+                        <input name="restaurant_name" id="restaurant_name" type="hidden" value="Mexican Taco Mex">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input name="name_review" id="name_review" type="text" placeholder="Your name" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input name="lastname_review" id="lastname_review" type="text" placeholder="Your last name" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input name="email_review" id="email_review" type="email" placeholder="Your email" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Position</label>
+                                    <select class="form-control" name="position_review" id="position_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Service</label>
+                                    <select class="form-control" name="service_review" id="service_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <select class="form-control" name="price_review" id="price_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Quality</label>
+                                    <select class="form-control" name="quality_review" id="quality_review">
+                                        <option value="">Please review</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Sufficient">Sufficient</option>
+                                        <option value="Good">Good</option>
+                                        <option value="Excellent">Excellent</option>
+                                        <option value="Superb">Super</option>
+                                        <option value="Not rated">I don't know</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End row -->
+                        <div class="form-group">
+                            <textarea name="review_text" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="verify_review" class=" form-control" placeholder="Are you human? 3 + 1 =">
+                        </div>
+                        <input type="submit" value="Submit" class="btn_1" id="submit-review">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -559,8 +786,4 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
     <script src="js/map.js"></script>
     <script src="js/infobox.js"></script>
 </body>
-
-<footer>
-    <!-- require('../../common/footer.php'); -->
-</footer>
 </html>

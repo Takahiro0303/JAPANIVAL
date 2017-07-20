@@ -151,16 +151,26 @@ v($chat_rooms);
 <body>
     <div class='container'>
         <div class="row">
-            <!-- チャット全件表示 -->
-            <div class="col-md-3">
-                
+
+            <!-- チャット全件表示s -->
+            <div class="col-md-3">    
             </div>
+
+            <!-- チャット個別チャット表示 -->
+            <div class="col-md-6">
+
+                <form method="POST" action="chat_user.php?">
+                    <textarea name="message" cols="30" rows="5"></textarea>
+                    <input type="submit" value="送信">
+                </form> 
+            </div>
+
+            <!-- イベント詳細・ユーザー詳細表示 -->
+            <div class="col-md-3">    
+            </div>
+
         </div><!-- row -->
     </div> <!-- container -->
-    <!-- <form method="POST" action="chat_user.php?">
-        <textarea name="message" cols="30" rows="5"></textarea>
-        <input type="submit" value="送信">
-    </form> -->
 
 </body>
 </html>
