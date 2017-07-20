@@ -58,13 +58,19 @@ $count = count($reviews);
 // v($reviews);
 // v($count);
 
-// v($event_pics[0]['e_pic_path']);
+//　【○】マッチング希望者数カウント・表示 ※　ログイン不要
+$sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
+$data = [$_REQUEST['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$request_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 
 // マッチング情報＆リクエストボタンの表示 ※ログイン必須
 
 // ○requestsテーブルから全データ取得
-// if (isset($_SESSION[''])){
-// user_flag != 0 // 管理者ではない場合、
+if (isset($_SESSION['id'])){
     $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
@@ -73,10 +79,9 @@ $count = count($reviews);
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
-// }
-v($requests[1]['nickname']);
+}
 
-// リクエストボタンを押した際の登録処理
+// リクエストボタンを押した際の登録処理 
 if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
         if ($request = $_POST['request_category_id']) {
         $sql = 'INSERT INTO requests
@@ -113,13 +118,6 @@ if (!empty($_POST['like_data'])) {
     header('Location: view.php?tweet_id=' . $record['tweet_id']);
     exit();
 }
-
-//　マッチング希望者数カウント・表示
-$sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
