@@ -1,11 +1,12 @@
 <?php
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
-require('../../common/functions.php'); //関数呼び出し
+require('../../common/functions.php');
+require('request.php'); // パラメータがなければ、edit_index.phpに遷移
 
 $login_user = get_login_user($dbh);
 
-// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移 ⇦ ※なぜREQUESTではなくてSESSIONなのかs/大澤
+// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移 ⇦ request.phpで処理済み、またなぜREQUESTではなくSESSIONなのか/大澤
 // if(!isset($_SESSION['event'])){
 //     header('Location: edit_index.php');
 //     exit();
@@ -13,15 +14,14 @@ $login_user = get_login_user($dbh);
 
 $event_id = $_REQUEST['event_id'];
 
-// ○イベントデータ取得 * ログイン不要
+// 【○】イベントデータ取得 * ログイン不要
 $sql = 'SELECT * FROM events WHERE event_id=?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-// v($event_data);
 
-// ○イベント写真データ取得 * ログイン不要
+// 【○】イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
 
 $data = [$event_id];
@@ -45,9 +45,8 @@ $reviews = [];
 while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $reviews[] = $review;
 }
-// v($reviews);
-
-// v($event_pics[0]['e_pic_path']);
+$count = count($reviews);
+// v($count);
 
 // マッチング情報＆リクエストボタンの表示 ※ログイン必須
 
@@ -61,10 +60,10 @@ if (isset($_SESSION[''])){
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
-// }
-v($requests[1]['nickname']);
+}
+// v($requests[1]['nickname']);
 
-// リクエストボタンを押した際の登録処理
+// ○リクエストボタンを押した際の登録処理
 if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
         if ($request = $_POST['request_category_id']) {
         $sql = 'INSERT INTO requests
@@ -102,12 +101,12 @@ if (!empty($_POST['like_data'])) {
     exit();
 }
 
-//　マッチング希望者数カウント・表示
-$sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$request_count = $stmt->fetch(PDO::FETCH_ASSOC);
+//　マッチング希望者数カウント・表示　⇦ 提案・リクエスト欄に記載させるのは？
+// $sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
+// $data = [$_REQUEST['event_id']];
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute($data);
+// $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -150,6 +149,9 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 </head>
 
 <body>
+
+
+
 
     <div class="layer"></div>
     <!-- Mobile menu overlay mask -->
@@ -410,6 +412,9 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <!-- モーダル・主催者登録 -->
     <?php require('modal_register_organizer.php'); ?>
+
+    <!-- モーダル・レビュー登録 -->
+    <?php require('modal_leave_review.php'); ?>
 
 <div id="toTop"></div>
 <!-- Back to top button -->

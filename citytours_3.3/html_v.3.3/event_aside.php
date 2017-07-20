@@ -2,9 +2,7 @@
 
 //イベントID初期化
 
-
-
-if (isset($event_id)) {
+if (isset($event_id)) {　// event_idがセットされているか...この処理はいらないのでは？ イベント詳細ページ以外でも使うなら別ですが、他のページでも使うようであればその都度requireでrequest.phpを呼び出せば不要かと/大澤
     $sql = 'SELECT * FROM news WHERE event_id=?';
     $data = [$event_id];
     $stmt = $dbh->prepare($sql);
@@ -28,7 +26,7 @@ if (isset($event_id)) {
             <div>
             <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == ''): ?>
             <!--主催者 -->
-                <?php if (isset($_REQUEST['event_id'])):?><!-- //イベントデータがあれば、紐づくニュースを表示 -->
+                <?php if (isset($_REQUEST['event_id'])):?><!-- //イベントデータがあれば、紐づくニュースを表示 --> 
                     <!-- オーガナイザーイベント修正 -->
                     <input type="button" id="news_register_button" class="btn_full" value="News Register">
 
