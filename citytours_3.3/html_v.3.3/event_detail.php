@@ -6,6 +6,8 @@ require('request.php'); // パラメータがなければ、edit_index.phpに遷
 
 $login_user = get_login_user($dbh);
 
+v($_SESSION['id']);
+
 // sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移 ⇦ request.phpで処理済み、またなぜREQUESTではなくSESSIONなのか/大澤
 // if(!isset($_SESSION['event'])){
 //     header('Location: edit_index.php');
@@ -14,14 +16,14 @@ $login_user = get_login_user($dbh);
 
 $event_id = $_REQUEST['event_id'];
 
-// 【○】イベントデータ取得 * ログイン不要
+// ○イベントデータ取得 * ログイン不要
 $sql = 'SELECT * FROM events WHERE event_id=?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// 【○】イベント写真データ取得 * ログイン不要
+// ○イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
 
 $data = [$event_id];
@@ -41,17 +43,23 @@ $sql ='SELECT r.*, u.*
  $stmt = $dbh->prepare($sql);
  $stmt->execute($data);
 $reviews = [];
-
 while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $reviews[] = $review;
 }
 $count = count($reviews);
 // v($count);
 
-// マッチング情報＆リクエストボタンの表示 ※ログイン必須
+// ○newsテーブルから全データ取得 *ログイン不要
+$sql = 'SELECT * FROM news WHERE event_id=?';
+$data = [$_REQUEST['event_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+    while ($new = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $news[] = $new;
+    }
 
-// ○requestsテーブルから全データ取得
-if (isset($_SESSION[''])){
+// ○requestsテーブルから全データ取得　※ログイン必須
+if (isset($_SESSION['id'])){
     $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
@@ -61,18 +69,54 @@ if (isset($_SESSION[''])){
     $requests[] = $request;
     }
 }
-// v($requests[1]['nickname']);
+v(count($requests));
+
+// reviewDB登録
+$review_rating = '';
+$review_comment = '';
+
+if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
+  $review_rating = $_POST['review_rating'];
+  $review_comment = $_POST['review_comment'];
+
+  $review_sql = 'INSERT INTO reviews SET event_id = ?, user_id = ?, rating = ?, comment = ?, created = NOW()';
+  $review = [$_POST['event_id'],$login_user['user_id'],$_POST['review_rating'],$_POST['review_comment']];
+  $review_stmt = $dbh->prepare($review_sql);
+  $review_stmt->execute($review);
+
+}
+    
+// $file_review = $_FILES['review_pic_path']['name'];
+//         //もし画像がセットされていれば画像アップデート処理
+//         if (!empty($file_review)) {
+//             $date_str = date('YmdHis');
+//             $submit_file_name = $date_str . $_FILES['review_pic_path']['name'];
+//             move_uploaded_file($_FILES['review_pic_path']['tmp_name'], '../../review_photos/' . $submit_file_name);
+
+//                 $sql = 'SELECT review_id FROM reviews ORDER BY review_id desc limit 1';
+//                 $review_stmt = $dbh->prepare($sql);
+//                 $review_stmt->execute();
+//                 $review_id = $review_stmt->fetch(PDO::FETCH_ASSOC);
+
+
+//             $sql = 'INSERT INTO review_photos SET review_id = ?, review_pic_path = ?';
+//             $data = [$review_id['review_id'],$submit_file_name];
+//             $stmt = $dbh->prepare($sql);
+//             $stmt->execute($data);
+//         }
+// v($_FILES['review_pic_path']);
 
 // ○リクエストボタンを押した際の登録処理
-if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
-        if ($request = $_POST['request_category_id']) {
+// v($request['user_id']);
+// if ($requests['user_id'] != $login_user){
+    if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
         $sql = 'INSERT INTO requests
-                    SET request_id=?,
-                        user_id=?,
-                        event_id=?,
-                        request_category_id=?,
-                        created=NOW()';
-        $data = array($requst_id, $login_user['user_id'],$_REQUST['event_id']);
+                        SET request_id=?,
+                            user_id=?,
+                            event_id=?,
+                            request_category_id=?,
+                            created=NOW()';
+        $data = [$_POST['request_id'],$login_user,$_REQUEST['event_id'],$_POST['request_category_id']];
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
@@ -80,28 +124,9 @@ if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指�
         header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
         exit();
         }
-}
+// }
 
-// ③いいねロジック実装
-if (!empty($_POST['like_data'])) {
-    // $_POST['like_data']の値がlikeかunlikeかで条件分岐
-    if ($_POST['like_data'] == 'like') {
-        // いいね！ボタンが押されたとき（likesテーブルにデータ追加）
-        $sql = 'INSERT INTO likes SET member_id=?, tweet_id=?';
-        $data = [$login_user['member_id'] , $record['tweet_id']];
-    } else {
-        // いいね！取り消しボタンが押されたとき（likesテーブルからデータ削除）
-        $sql = 'DELETE FROM likes WHERE member_id=? AND tweet_id=?';
-        $data = [$login_user['member_id'] , $record['tweet_id']];
-    }
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-
-    header('Location: view.php?tweet_id=' . $record['tweet_id']);
-    exit();
-}
-
-//　マッチング希望者数カウント・表示　⇦ 提案・リクエスト欄に記載させるのは？
+//　マッチング希望者数カウント・表示　⇦ リクエスト欄に記載させるか要相談
 // $sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
 // $data = [$_REQUEST['event_id']];
 // $stmt = $dbh->prepare($sql);
@@ -111,8 +136,6 @@ if (!empty($_POST['like_data'])) {
 ?>
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="ie ie8"> <![endif]-->
-<!--[if IE 9]><html class="ie ie9"> <![endif]-->
 <html lang="en">
 
 <head>
@@ -163,7 +186,7 @@ if (!empty($_POST['like_data'])) {
 
     <!-- End Header -->
 
-    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $event_pics[0]['e_pic_path'];?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $event_pic['e_pic_path'];?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
@@ -238,7 +261,7 @@ if (!empty($_POST['like_data'])) {
                                 <?php echo $event_data['explanation'] ?>
                             </div>
                         </div>
-                    </div> 
+                    </div>
 
                     <!-- End row  -->
 
@@ -320,7 +343,7 @@ if (!empty($_POST['like_data'])) {
                                                 Acces
                                             </td>
                                             <td>
-                                                <?php echo $event_data['e_access']; ?>
+                                                <?php echo $event_data['e_venue']; ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -379,18 +402,271 @@ if (!empty($_POST['like_data'])) {
                             <h3>Map</h3>
                         </div>
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="450px" height="400px">
                         </div>
                     </div>
 
                     <hr>
 
+                    <div class="row"><!-- レビュー表示 -->
+                        <div class="col-md-3">
+                            <h3>Reviews </h3> 
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div id="general_rating" class="rating">
+                                    <div class="col-md-7">
+                                        <span><?php echo($count); ?></span> Reviews <!-- レビュー件数表示 -->            
+                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i> 
+                                    </div>
+                                    <div class="col-md-5">
+                                        <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
+                                    </div>
+                                </div> <!-- general_rating -->     
+                            </div> 
+
+                            <hr>
+
+                            <?php foreach ($reviews as $review){ ?>
+                                <div class="review_strip_single">
+                                    <img src="../../users_pic/<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
+
+                                    <!--　レビュー作成日表示 -->
+                                    <small><?php echo($review['created']);?></small>
+
+                                    <!-- ユーザー名表示 -->
+                                    <h4><?php echo($review['nickname']); ?></h4>
+
+                                    <!-- レビュー評価表示機能 -->
+                                    <?php if ($review['rating'] == 1){ ?>
+                                        <?php v($review); ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star"></i>
+                                            <i class="icon-star"></i>
+                                            <i class="icon-star"></i>
+                                            <i class="icon-star"></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 2){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star "></i>
+                                            <i class="icon-star "></i>
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 3){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star "></i>
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 4){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 5){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                        </div>
+                                    <?php }; ?>
+
+                                    <!-- レビュー本文表示 -->
+                                    <p><?php echo($review['comment']) ; ?></p>
+
+
+                                </div> <!-- End review strip -->
+
+                            <?php }; ?>
+                        
+                            <div align="center">
+                                <a href="" class="btn_1 add_bottom_30">See all review</a>
+                            </div>
+
+
+                        </div> <!-- col-md-9 -->
+                    </div> <!-- row -->
                     
                 </div>
                 <!--End  single_tour_desc-->
 
-                <!-- event_aside挿入 -->
-                <?php require('event_aside.php');  ?>
+                <!-- event_aside挿入 --> 
+                <?php //require('event_aside.php');  ?>
+
+                <aside class="col-md-4">
+                    <div class="box_style_1 expose">
+                        <h3 class="inner">EVENT NEWS</h3>
+                        <!-- ニュース表示 -->
+                        <div id="scroll" class="news">
+
+                            <?php if (isset($news)): ?>
+                            <!-- ニュースデータがある場合はfor文で表示 -->
+                                <?php foreach ($news as $new) { ?> 
+                                    <p style="margin-bottom: 0px; color: black; font-weight: 600; text-decoration: underline;"><?php echo $new['news_title'];?></p>
+                                    <p style="margin-bottom: 0px; color: black;"><?php echo $new['news_comment'];?></p>      
+                                    <p style="margin-bottom: 0px; font-style:oblique;">登録日<?php echo $new['created'];?></p>
+                                    <?php if ($new['created'] != $new['modified']): ?>
+                                        <p style="margin-bottom: 0px; font-style:oblique;">変更日<?php echo $new['modified'];?></p>
+                                    <?php endif; ?>
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <?php } ?>
+                            <?php else: ?>
+                            <!-- ニュースデータがない場合 -->
+                            お知らせはありません。
+                            <?php endif; ?>
+                        </div>
+
+
+                    </div> <!-- box_style_1 expose -->
+
+                    <div class="box_style_1 expose">
+                        <h3 class="inner">Eve tomo</h3>
+                        <div class="eve_tomo">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label><i class="icon-globe"></i>Nationality</label>
+                                        <div class="styled-select">
+                                            <select class="form-control" name="currency" id="currency">
+                                                <option value="not specified" selected>not specified</option>
+                                                <option value="Japan">Japan</option>
+                                                <option value="Philippine">Philippine</option>
+                                                <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Albanie">Albanie</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label><i class=" icon-language"></i>Language</label>
+                                        <div class="styled-select">
+                                            <select class="form-control" name="currency" id="currency">
+                                                <option value="not specified" selected>not specified</option>
+                                                <option value="Japanese">Japanese</option>
+                                                <option value="Tagalog">Tagalog</option>
+                                                <option value="English">English</option>
+                                                <option value="Tagalog">Tagalog</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- row -->
+
+                            <hr>
+                            <div style="overflow: scroll; height: 1400px">
+                            <?php v(count($requests)) ?>
+                                <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == '1'): ?>
+                                    <?php foreach ($requests as $request){ ?>
+                                     <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                        <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                            <div style="text-align: center">
+                                                <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
+                                            </div>
+                                            <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
+                                            <div style="text-align: center">
+                                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                            </div>
+                                        </div><!-- col-md-6 col-sm-6 -->
+                                        <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                            <div class="button">
+                                                <!-- 個人詳細ページに遷移 -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+                                                </div>
+                                                <!-- チャットページに遷移 -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 10px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                            </div>
+                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
+                                                </div>
+                                            </div> <!-- button -->
+                                        </div> <!-- col-md-6 col-sm-6 -->
+                                    </div>
+                                    <?php } ?>
+                                <?php elseif ($_SESSION['id'] != '' && $_SESSION['flag'] == ''): ?>
+                                    <?php foreach ($requests as $request){ ?>
+                                     <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                        <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                            <div style="text-align: center">
+                                                <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
+                                            </div>
+                                            <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
+                                            <div style="text-align: center">
+                                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                            </div>
+                                        </div><!-- col-md-6 col-sm-6 -->
+                                        <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                            <div class="button">
+                                                <!-- 個人詳細ページに遷移 -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+                                                </div>
+                                                <!-- チャットページに遷移 -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 10px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                            </div>
+                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
+                                                </div>
+                                            </div> <!-- button -->
+                                        </div> <!-- col-md-6 col-sm-6 -->
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            <?php elseif ($_SESSION['id'] == '' && $_SESSION['flag'] == ''): ?>
+
+
+                            <?php elseif ($_SESSION['id'] == '1' && $_SESSION['flag'] == '0'): ?>
+
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- <div>
+                        <input type="button"  value="REQUEST" style="width:360px; height: 50px;" class="btn btn-danger" >
+                    </div> -->
+                   <!--  -->
+                
+                        <p>
+                            <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest">Request to eve tomo</a>
+                        </p>
+                    
+
+                </aside> <!-- class="col-md-4" -->
 
             </div>
         </div>
@@ -415,6 +691,9 @@ if (!empty($_POST['like_data'])) {
 
     <!-- モーダル・レビュー登録 -->
     <?php require('modal_leave_review.php'); ?>
+
+    <!-- モーダル・リクエスト登録 -->
+    <?php require('modal_register_request.php'); ?>
 
 <div id="toTop"></div>
 <!-- Back to top button -->
