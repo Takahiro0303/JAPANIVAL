@@ -25,7 +25,6 @@ $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // ○イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
@@ -51,7 +50,7 @@ $count = count($reviews);
 
 // ○newsテーブルから全データ取得 *ログイン不要
 $sql = 'SELECT * FROM news WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
     while ($new = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -69,7 +68,7 @@ if (isset($_SESSION['id'])){
     $requests[] = $request;
     }
 }
-v(count($requests));
+// v(count($requests));
 
 // reviewDB登録
 $review_rating = '';
@@ -186,7 +185,7 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 
     <!-- End Header -->
 
-    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $event_pic['e_pic_path'];?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $event_pics[0]['e_pic_path'];?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
@@ -225,21 +224,16 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
                     <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
 
                         <div class="sp-slides">
-
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
-                                <?php echo '<div class="sp-slide">' ?>
-                                    <?php echo '<img' ?>    
-                                    <?php echo 'alt="Image"'  ?> 
-                                    <?php echo 'class="sp-image"'  ?> 
-                                    <?php echo 'src="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-src="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-small="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-medium="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-large="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-retina="' . $event_pics[$j]['e_pic_path'] . '">'  ?> 
-                                <?php echo '</div>'  ?>
+                                <div class="sp-slide">
+                                    <img alt="Image" class="sp-image" src="<?php $event_pics[$j]['e_pic_path'];?>" >
+                                    <data-src="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-small="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-medium="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-large="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-retina="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                </div>
                             <?php } ?>
-
                         </div>
                         <div class="sp-thumbnails">
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
@@ -565,7 +559,7 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 
                             <hr>
                             <div style="overflow: scroll; height: 1400px">
-                            <?php v(count($requests)) ?>
+                            <?php //v($_SESSION['flag']); ?>
                                 <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == '1'): ?>
                                     <?php foreach ($requests as $request){ ?>
                                      <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
@@ -606,73 +600,102 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
                                         </div> <!-- col-md-6 col-sm-6 -->
                                     </div>
                                     <?php } ?>
-                                <?php elseif ($_SESSION['id'] != '' && $_SESSION['flag'] == ''): ?>
+
+                                <?php elseif ($_SESSION['flag'] == ''): ?>
+                                   
+                                     <h3>ログインしてね！</h3>
+                    
+                                <?php elseif ($_SESSION['flag'] == '0'): ?>
+                                    <h3>マッチング希望者一覧</h3>
                                     <?php foreach ($requests as $request){ ?>
-                                     <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
-                                        <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
-                                            <div style="text-align: center">
-                                                <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
-                                            </div>
-                                            <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
-                                            <div style="text-align: center">
-                                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                                                <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
-                                            </div>
-                                        </div><!-- col-md-6 col-sm-6 -->
-                                        <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
-                                            <div class="button">
-                                                <!-- 個人詳細ページに遷移 -->
-                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                    <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+                                         <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                            <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                                <div style="text-align: center">
+                                                    <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
                                                 </div>
-                                                <!-- チャットページに遷移 -->
-                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
-                                                        <div class="panel-heading" style="padding : 10px; ">
-                                                            <div style="margin-bottom: 5px;">
+                                                <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
+                                                <div style="text-align: center">
+                                                    <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                    <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                                </div>
+                                            </div><!-- col-md-6 col-sm-6 -->
+                                            <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                                <div class="button">
+                                                    <!-- 個人詳細ページに遷移 -->
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                        <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+                                                    </div>
+                                                    <!-- チャットページに遷移 -->
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                        <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                            <div class="panel-heading" style="padding : 10px; ">
+                                                                <div style="margin-bottom: 5px;">
                                                                 Request Category
-                                                            </div>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                </div>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
                                                                 <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                    <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
-                                                </div>
-                                            </div> <!-- button -->
-                                        </div> <!-- col-md-6 col-sm-6 -->
-                                    </div>
+                                                </div> <!-- button -->
+                                            </div> <!-- col-md-6 col-sm-6 -->
+                                        </div>
                                     <?php } ?>
-                                </div>
-                            <?php elseif ($_SESSION['id'] == '' && $_SESSION['flag'] == ''): ?>
+                                <?php elseif ($_SESSION['flag'] == '1'): ?>
+                                    <?php foreach ($requests as $request){ ?>
+                                         <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                            <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                                <div style="text-align: center">
+                                                    <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
+                                                </div>
+                                                <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
+                                                <div style="text-align: center">
+                                                    <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                    <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                                </div>
+                                            </div><!-- col-md-6 col-sm-6 -->
+                                            <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                                <div class="button">
+                                                    <!-- 個人詳細ページに遷移 -->
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                        <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+                                                    </div>
+                                                    <!-- チャットページに遷移 -->
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                        <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                            <div class="panel-heading" style="padding : 10px; ">
+                                                                <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                                </div>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
+                                                    </div>
+                                                </div> <!-- button -->
+                                            </div> <!-- col-md-6 col-sm-6 -->
+                                        </div>
+                                    <?php } ?>
+               
+                                    <p>
+                                        <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest">Request to eve tomo</a>
+                                    </p>
 
-                            <?php elseif ($_SESSION['id'] == '1' && $_SESSION['flag'] == '0'): ?>
+                                <?php elseif ($_SESSION['flag'] == '2'): ?>
 
-                            <?php endif; ?>
+                                <?php endif; ?>
                         </div>
-                    </div>
-
-                    <!-- <div>
-                        <input type="button"  value="REQUEST" style="width:360px; height: 50px;" class="btn btn-danger" >
-                    </div> -->
-                   <!--  -->
-                
-                        <p>
-                            <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest">Request to eve tomo</a>
-                        </p>
-                    
-
+                    </div>                        
                 </aside> <!-- class="col-md-4" -->
 
             </div>
         </div>
-        <!--End container -->
-        <div id="overlay"></div>
-        <!-- Mask on input focus -->
     </div>
 </main>
 <!-- End main -->
