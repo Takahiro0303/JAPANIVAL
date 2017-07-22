@@ -6,34 +6,43 @@ require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
-  // echo '<pre>';
-  // var_dump($login_user);
-  // echo '</pre>';
-
-// SELECT 銀行名, 顧客名, 残高
-// FROM 口座 a, 銀行 b,  顧客 c
-// WHERE a.銀行No = b.銀行No
-//         AND a.顧客No = c.顧客No
-//         AND 残高>=20000
-$sql = 'SELECT * FROM events, event_connects, event_categories 
-        WHERE   events.event_id = event_connects.event_id
-        AND     event_connects.e_category_id = event_categories.e_category_id';
+$sql = 'SELECT * FROM events WHERE 1 ORDER BY e_start_date DESC;';
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
-// $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
-
 while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    // $future[] = $record;
-    if (strtotime(date('Y-m-d')) < strtotime($record['e_start_date'])){
-        $future[] = $record;
-    } else{
-        $past[] = $record;
-    }
+   $records[] = $record;
 }
 
-  // echo '<pre>';
-  // var_dump($future);
-  // echo '</pre>';
+//全イベント数のカウント
+$sql = 'SELECT COUNT(*) AS total FROM events WHERE 1';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$all_event_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+//event_categoriesのカラム数をカウント
+$sql = 'SELECT COUNT(*) AS total FROM event_categories WHERE 1';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$event_category_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+for ($i=1; $i <= $event_category_count['total']; $i++) { 
+    $sql = 'SELECT COUNT(*) AS total FROM event_connects WHERE e_category_id=?';
+    $data = [$i];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $category_count_total[$i] = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
+// $sql = 'SELECT * FROM events, event_connects, event_categories 
+//         WHERE   events.event_id = event_connects.event_id
+//         AND     event_connects.e_category_id = event_categories.e_category_id';
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute();
+// while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//    $records[] = $record;
+// }
+
 
 ?>
 
@@ -336,19 +345,19 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             <div class="row">
 
-                <?php for($i=0;$i < count($future); $i++) { ?>
+                <?php for($i=0;$i < count($records); $i++) { ?>
                     <?php
 
 
                         $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
 
-                        $data = [$future[$i]['event_id']];
+                        $data = [$records[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
                         $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        $starts = explode('-', $future[$i]['e_start_date']);
-                        $ends = explode('-', $future[$i]['e_end_date']);
+                        $starts = explode('-', $records[$i]['e_start_date']);
+                        $ends = explode('-', $records[$i]['e_end_date']);
 
                         if ($starts[0] != $ends[0]) {
                             $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
@@ -363,44 +372,49 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                         //join数カウント
                         $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
-                        $data = [$future[$i]['event_id']];
+                        $data = [$records[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
                         $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
 
                         //like数カウント
                         $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
-                        $data = [$future[$i]['event_id']];
+                        $data = [$records[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
                         $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
                     
                         //join済み判定の為のSQL
-                        $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=? AND user_id=?';
-                        $data = [$future[$i]['event_id'], $login_user['user_id']];
-                        $stmt = $dbh->prepare($sql);
-                        $stmt->execute($data);
-                        $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if (isset($login_user['user_id'])) {
+                            $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=? AND user_id=?';
+                            $data = [$records[$i]['event_id'], $login_user['user_id']];
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute($data);
+                            $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        //like済み判定の為のSQL
-                        $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=? AND user_id=?';
-                        $data = [$future[$i]['event_id'], $login_user['user_id']];
-                        $stmt = $dbh->prepare($sql);
-                        $stmt->execute($data);
-                        $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
-
+                            //like済み判定の為のSQL
+                            $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=? AND user_id=?';
+                            $data = [$records[$i]['event_id'], $login_user['user_id']];
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute($data);
+                            $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                        }
                     ?>
 
                     <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.1s">
                         <div class="tour_container">
-                            <div class="ribbon_3 popular"><span>New</span></div>
+                            <?php if (strtotime(date('Y-m-d')) > strtotime($records[$i]['e_end_date'])){ ?>
+                                <div class="ribbon_3"><span>Past</span></div>
+                            <?php } else if(strtotime(date('Y-m-d', strtotime('-2 day') )) < strtotime($records[$i]['created'])){ ?>
+                                <div class="ribbon_3 popular"><span>New</span></div>
+                            <?php }  ?>
                             <div class="img_container">
-                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
+                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
                                     <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 270px;">
                                     <div class="short_info">
-                                        <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($future[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
+                                        <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
                                                                         
-                                        <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($future[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+                                        <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
                                      
 
                                     </div>
@@ -409,44 +423,45 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px;">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-8 col-xs-8" style="margin-top: 5px;">
-                                        <h3><strong><?php echo htmlspecialchars($future[$i]['e_name']); ?></strong></h3>
+                                        <h3><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>
                                         <div><?php echo $duration; ?></div>
                                     </div>
                                     <!-- end rating -->
                                     <div  class="col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 2px; margin-left: -2px;">
-
-                                        <?php if ($join_count['total'] == '1'): ?>
-                                        <div class="join_button_color error" >           
-                                            <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
-                                            <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                            <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                            <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($future[$i]['event_id']); ?>" name="user_id" value="join">
-                                        <?php else: ?>
-                                        <div class="join_button_color" >  
-                                            <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
-                                            <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                            <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                            <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($future[$i]['event_id']); ?>" name="user_id" value="unjoin">
+                                        <?php if (isset($login_user['user_id'])): ?>
+                                            <?php if ($join_count['total'] == '1'): ?>
+                                            <div class="join_button_color error" >           
+                                                <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="join">
+                                            <?php else: ?>
+                                            <div class="join_button_color" >  
+                                                <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unjoin">
+                                            <?php endif; ?>
+                                            </div>
                                         <?php endif; ?>
-
-                                        </div>
                                     </div>
                                     <div  class="col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 5px; margin-left: -1px;">
-                                        <?php if ($like_count['total'] == '1'): ?>
-                                        <div class="like_button_color error" >           
-                                            <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
-                                            <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                            <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                            <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($future[$i]['event_id']); ?>" name="user_id" value="like">
-                                        <?php else: ?>
-                                        <div class="like_button_color" >  
-                                            <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
-                                            <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                            <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                            <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($future[$i]['event_id']); ?>" name="user_id" value="unlike">
+                                        <?php if (isset($login_user['user_id'])): ?>
+                                            <?php if ($like_count['total'] == '1'): ?>
+                                            <div class="like_button_color error" >           
+                                                <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="like">
+                                            <?php else: ?>
+                                            <div class="like_button_color" >  
+                                                <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unlike">
+                                            <?php endif; ?>
+                                            </div>
                                         <?php endif; ?>
-                                        
-                                        </div>
                                     </div>
                                     <!-- End wish list-->
                                 </div>
@@ -457,9 +472,9 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <?php } ?>
             </div>
             <!-- End row -->
-
+<!-- 
             <p class="text-center nopadding"> <a href="#" class="btn_1 medium">View all tours (144) </a>
-            </p>
+            </p> -->
         </section>
         <!-- End section -->
 
@@ -498,29 +513,29 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         <div class="box_style_cat">
                                         <div class="cta filter">
                                             <ul id="cat_nav">
-                                                <li><a class="all active" data-filter="all" href="#" role="button"><i class="icon_set_1_icon-51"></i>All festivals <span>(141)</span></a>
+                                                <li><a class="all active" data-filter="all" href="#" role="button"><i class="icon_set_1_icon-51"></i>All festivals <span>(<?php echo $all_event_count['total']; ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="spring" href="#" role="button"><i class="icon_set_1_icon-3"></i>Spring<span>(20)</span></a>
+                                                <li><a data-filter="spring" href="#" role="button"><i class="icon_set_1_icon-3"></i>Spring<span>(<?php echo $category_count_total[1]['total']; ?>)</span></a>                                                                                                                    
                                                 </li>
-                                                <li><a data-filter="summer" href="#" role="button"><i class="icon_set_1_icon-4"></i>Summer<span>(16)</span></a>
+                                                <li><a data-filter="summer" href="#" role="button"><i class="icon_set_2_icon-110"></i>Summer<span>(<?php echo htmlspecialchars($category_count_total[2]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="fall" href="#" role="button"><i class="icon_set_1_icon-44"></i>Fall<span>(12)</span></a>
+                                                <li><a data-filter="fall" href="#" role="button"><i class="icon-feather-1"></i>Fall<span>(<?php echo htmlspecialchars($category_count_total[3]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="winter" href="#" role="button"><i class="icon_set_1_icon-37"></i>Winter<span>(11)</span></a>
+                                                <li><a data-filter="winter" href="#" role="button"><i class="icon-asterisk"></i>Winter<span>(<?php echo htmlspecialchars($category_count_total[4]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="flower" href="#" role="button"><i class="icon_set_1_icon-14"></i>Flower<span>(20)</span></a>
+                                                <li><a data-filter="flower" href="#" role="button"><i class="icon-garden"></i>Flower<span>(<?php echo htmlspecialchars($category_count_total[5]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="sakura" href="#" role="button"><i class="icon_set_1_icon-43"></i>Sakura<span>(08)</span></a>
+                                                <li><a data-filter="sakura" href="#" role="button"><i class="icon-leaf-1"></i>Sakura<span>(<?php echo htmlspecialchars($category_count_total[6]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="food_drink" href="#" role="button"><i class="icon_set_1_icon-28"></i>Food/Drink<span>(11)</span></a>
+                                                <li><a data-filter="food_drink" href="#" role="button"><i class="icon_set_3_restaurant-10"></i>Food/Drink<span>(<?php echo htmlspecialchars($category_count_total[7]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="alcohol" href="#" role="button"><i class="icon_set_1_icon-28"></i>Alcohol<span>(11)</span></a>
+                                                <li><a data-filter="alcohol" href="#" role="button"><i class="icon_set_1_icon-15"></i>Alcohol<span>(<?php echo htmlspecialchars($category_count_total[8]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="strange_festival" href="#" role="button"><i class="icon_set_1_icon-28"></i>Alcohol<span>(11)</span></a>
+                                                <li><a data-filter="strange_festival" href="#" role="button"><i class="icon-question"></i>Strange Festival<span>(<?php echo htmlspecialchars($category_count_total[9]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="50years_lasting" href="#" role="button"><i class="icon_set_1_icon-28"></i>Alcohol<span>(11)</span></a>
+                                                <li><a data-filter="50years_lasting" href="#" role="button"><i class="icon-angle-right"></i>50years Lasting<span>(<?php echo htmlspecialchars($category_count_total[10]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a data-filter="100years_lasting" href="#" role="button"><i class="icon_set_1_icon-28"></i>Alcohol<span>(11)</span></a>
+                                                <li><a data-filter="100years_lasting" href="#" role="button"><i class="icon-angle-double-right"></i>100years lasting<span>(<?php echo htmlspecialchars($category_count_total[11]['total']); ?>)</span></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -621,18 +636,17 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
 
                                     <div class="col-lg-9 col-md-9 boxes">
-                                        <?php for($i=0;$i < count($future); $i++) { ?>
+                                        <?php for($i=0;$i < count($records); $i++) { ?>
                                             <?php
 
                                                 $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                                                $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                                                $data = [$future[$i]['event_id']];
+                                                $data = [$records[$i]['event_id']];
                                                 $stmt = $dbh->prepare($sql);
                                                 $stmt->execute($data);
                                                 $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                                $starts = explode('-', $future[$i]['e_start_date']);
-                                                $ends = explode('-', $future[$i]['e_end_date']);
+                                                $starts = explode('-', $records[$i]['e_start_date']);
+                                                $ends = explode('-', $records[$i]['e_end_date']);
 
                                                 if ($starts[0] != $ends[0]) {
                                                     $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
@@ -647,46 +661,51 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                                                 //join数カウント
                                                 $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
-                                                $data = [$future[$i]['event_id']];
+                                                $data = [$records[$i]['event_id']];
                                                 $stmt = $dbh->prepare($sql);
                                                 $stmt->execute($data);
                                                 $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
 
                                                 //like数カウント
                                                 $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
-                                                $data = [$future[$i]['event_id']];
+                                                $data = [$records[$i]['event_id']];
                                                 $stmt = $dbh->prepare($sql);
                                                 $stmt->execute($data);
                                                 $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
-                                            
-                                                //join済み判定の為のSQL
-                                                $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=? AND user_id=?';
-                                                $data = [$future[$i]['event_id'], $login_user['user_id']];
-                                                $stmt = $dbh->prepare($sql);
-                                                $stmt->execute($data);
-                                                $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                
+                                                if (isset($login_user['user_id'])) {
+                                                    //join済み判定の為のSQL
+                                                    $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=? AND user_id=?';
+                                                    $data = [$records[$i]['event_id'], $login_user['user_id']];
+                                                    $stmt = $dbh->prepare($sql);
+                                                    $stmt->execute($data);
+                                                    $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                                //like済み判定の為のSQL
-                                                $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=? AND user_id=?';
-                                                $data = [$future[$i]['event_id'], $login_user['user_id']];
-                                                $stmt = $dbh->prepare($sql);
-                                                $stmt->execute($data);
-                                                $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                    //like済み判定の為のSQL
+                                                    $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=? AND user_id=?';
+                                                    $data = [$records[$i]['event_id'], $login_user['user_id']];
+                                                    $stmt = $dbh->prepare($sql);
+                                                    $stmt->execute($data);
+                                                    $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                }
 
                                                 //explanationの文字数制限
-                                                $explanation_p = mb_strimwidth( $future[$i]['explanation'], 0, 200, "...", "UTF-8" );
+                                                $explanation_p = mb_strimwidth( $records[$i]['explanation'], 0, 200, "...", "UTF-8" );
 
                                                 //イベントカテゴリー取得
-                                                // $sql = 'SELECT * FROM event_categories WHERE event_id=? limit 1';
-                                                // $data = [$future[$i]['event_id']];
-                                                // $stmt = $dbh->prepare($sql);
-                                                // $stmt->execute($data);
-                                                // $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
+                                                $sql = 'SELECT * FROM event_connects, event_categories
+                                                        WHERE  event_connects.e_category_id = event_categories.e_category_id
+                                                        AND event_connects.event_id=?';
+                                                $data = [$records[$i]['event_id']];
+                                                $stmt = $dbh->prepare($sql);
+                                                $stmt->execute($data);
+                                                $event_categories = '';
+                                                while($event_category = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                                    $event_categories[] = $event_category; 
+                                                }
                                             ?>
 
-                                            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s" data-category="<?php echo htmlspecialchars($future[$i]['e_category']); ?>" href="#">
+                                            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s" data-category="<?php echo htmlspecialchars($event_categories[0]['e_category']); ?>" href="#">
                                                 <div class="row">
                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                         <div class="ribbon_3 popular"><span>Popular</span>
@@ -695,7 +714,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                             <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                                                         </div>
                                                         <div class="img_list">
-                                                            <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>"><img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" alt="Image">                                    
+                                                            <a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" alt="Image">                                    
                                                                 <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
                                                             </a>
                                                         </div>
@@ -706,7 +725,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                         <div class="tour_list_desc" style="display: table-cell; vertical-align: middle;width: 100%;">
                                            <!--                  <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
                                                             </div> -->
-                                                            <h3 style="margin-bottom: 5px;"><strong><?php echo htmlspecialchars($future[$i]['e_name']); ?></strong></h3>
+                                                            <h3 style="margin-bottom: 5px;"><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>
                                                             <p style="margin-bottom: 5px;"><?php echo htmlspecialchars($duration); ?></p>
                                                             <p style="margin-bottom: 8px;"><?php echo htmlspecialchars($explanation_p); ?></p>
                                                             <ul class="add_info">
@@ -728,9 +747,9 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-41"></i></span>
                                                                         <div class="tooltip-content">
                                                                             <h4>Address</h4>
-                                                                            <strong>Address: </strong><?php echo htmlspecialchars($future[$i]['e_postal']); ?><?php echo htmlspecialchars($future[$i]['e_prefecture']); ?><?php echo htmlspecialchars($future[$i]['e_address']); ?>
+                                                                            <strong>Address: </strong><?php echo htmlspecialchars($records[$i]['e_postal']); ?><?php echo htmlspecialchars($records[$i]['e_prefecture']); ?><?php echo htmlspecialchars($records[$i]['e_address']); ?>
                                                                             <br>
-                                                                            <strong>Venue: </strong><?php echo htmlspecialchars($future[$i]['e_venue']); ?>
+                                                                            <strong>Venue: </strong><?php echo htmlspecialchars($records[$i]['e_venue']); ?>
                                                                             <br>
                                                                         </div>
                                                                     </div>
@@ -759,7 +778,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-25"></i></span>
                                                                         <div class="tooltip-content">
                                                                             <h4>Transport/Access</h4>
-                                                                            <?php echo htmlspecialchars($future[$i]['e_access']); ?>
+                                                                            <?php echo htmlspecialchars($records[$i]['e_access']); ?>
                                                                             
                                                                         </div>
                                                                     </div>
@@ -770,7 +789,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                     <div class="col-lg-2 col-md-2 col-sm-2">
                                                         <div class="price_list">
                                                             <div><!-- sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small> -->
-                                                                <p><a href="single_tour.html" class="btn_1">Details</a>
+                                                                <p><a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>" class="btn_1">Details</a>
                                                                 </p>
                                                             </div>
 
@@ -787,7 +806,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                                         <!--End strip -->
 
-                                        <hr>
+<!--                                         <hr>
 
                                         <div class="text-center">
                                             <ul class="pagination">
@@ -806,7 +825,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                 <li><a href="#">Next</a>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
                                         <!-- end pagination-->
 
                                     </div>
