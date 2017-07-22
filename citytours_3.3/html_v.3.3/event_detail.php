@@ -146,6 +146,16 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$sql = 'SELECT e_Lat,e_Lng FROM events WHERE event_id=?';
+$data = [$event_id];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$e_lat = $record['e_Lat'];
+$e_lng = $record['e_Lng'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -179,6 +189,39 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
     <link href="css/slider-pro.min.css" rel="stylesheet">
     <link href="css/date_time_picker.css" rel="stylesheet">
 
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+
+    <script src="js/jquery-2.2.4.min.js"></script>
+
+    <!-- Google Maps APIを読み込む -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzo1nDw_k6yNjo48_6UCYjLOwqF_QxEWE"></script>
+
+    <!-- initialize()関数を定義 -->
+    <script type="text/javascript">
+      function initialize() {
+        var lat = $('#keido').text();
+        var lng = $('#ido').text();
+        console.log(lat);
+        console.log(lng);
+
+        // 地図を表示する際のオプションを設定
+        var map = new google.maps.Map( document.getElementById( 'map_canvas' ), {
+          zoom: 15 ,  // ズーム値
+          center: new google.maps.LatLng(lat , lng) , // 中心の位置座標
+        } ) ;
+
+        var marker = new google.maps.Marker( {
+          map: map ,  // 地図
+          position: new google.maps.LatLng(lat , lng) , // 位置座標
+        } ) ;
+      }
+    </script>
+
+
 <!--[if lt IE 9]>
 <script src="js/html5shiv.min.js"></script>
 <script src="js/respond.min.js"></script>
@@ -186,7 +229,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
 </head>
 
-<body>
+<body onload="initialize()">
 
 
 
@@ -420,8 +463,20 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                         <div class="col-md-3">
                             <h3>Map</h3>
                         </div>
+                        <div id="keido" style="display: none;">
+                        <?php echo htmlspecialchars($e_lat);?>
+                         </div>
+
+                         <div id="ido" style="display: none;">
+                         <?php echo htmlspecialchars($e_lng);?>
+                         </div>
+
+                         <div id="address" style="display: none;">
+                         <?php echo htmlspecialchars($e_address);?>
+                         </div>
+
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+                            <div id="map_canvas" style="width:600px; height:500px"></div>
                         </div>
                     </div>
 
@@ -508,7 +563,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 <script src="assets/validate.js"></script>
 
 <!-- Map -->
-<script src="http://maps.googleapis.com/maps/api/js"></script>
+<!-- <script src="http://maps.googleapis.com/maps/api/js"></script> -->
 <script src="js/map.js"></script>
 <script src="js/infobox.js"></script>
 
