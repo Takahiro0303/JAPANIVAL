@@ -78,6 +78,7 @@ if(!empty($_POST)){
         $event_pics_stmt->execute($data);
     } 
 
+
 // echo '<pre>';
 // var_dump($_SESSION['event']['e_pic_path']);
 // echo '</pre>';
@@ -124,6 +125,7 @@ if(!empty($_POST)){
     <link href="css/slider-pro.min.css" rel="stylesheet">
     <link href="css/date_time_picker.css" rel="stylesheet">
 
+
 <!--[if lt IE 9]>
 <script src="js/html5shiv.min.js"></script>
 <script src="js/respond.min.js"></script>
@@ -131,7 +133,7 @@ if(!empty($_POST)){
 
 </head>
 
-<body>
+<body onload="initialize()">
 
 
 
@@ -254,6 +256,8 @@ if(!empty($_POST)){
                                             <td>
                                                 <div style="margin-bottom: 10px;">
                                                     イベント日程（開始日）（必須）<br>
+                                                <?php v($event_id_register);?>
+                                                <?php v($record);?>
                                                     <?php echo $_SESSION['event']['e_start_date']; ?>
                                                 </div>
                                                 <div>
@@ -364,8 +368,20 @@ if(!empty($_POST)){
                         <div class="col-md-3">
                             <h3>Map</h3>
                         </div>
+                        <div id="keido" style="display: none;">
+                        <?php echo htmlspecialchars($e_lat);?>
+                         </div>
+
+                         <div id="ido" style="display: none;">
+                         <?php echo htmlspecialchars($e_lng);?>
+                         </div>
+
+                         <div id="address" style="display: none;">
+                         <?php echo htmlspecialchars($e_address);?>
+                         </div>
+
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+                            <div id="map_canvas" style="width:600px; height:500px"></div>
                         </div>
                     </div>
 
