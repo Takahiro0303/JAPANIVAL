@@ -6,10 +6,10 @@ require('../../common/functions.php');
 $login_user = get_login_user($dbh);
 
 // sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移
-if(!isset($_SESSION['event'])){
-    header('Location: edit_index.php');
-    exit();
-}
+// if(!isset($_SESSION['event'])){
+//     header('Location: edit_index.php');
+//     exit();
+// }
 
 // require('header.php');
 // require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦他でも使うようなら復活させる
@@ -24,6 +24,23 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 // v($event_data);
+
+$starts = explode('-', $event_data['e_start_date']);
+$ends = explode('-', $event_data['e_end_date']);
+
+if ($starts[0] != $ends[0]) {
+    $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+} elseif($starts[1] != $ends[1]){
+    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+} elseif($starts[2] != $ends[2]){
+    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+} else{
+    $duration = date('F d, Y', strtotime(implode('-', $starts)));
+}
+
+// date('F d, Y', strtotime(implode('-', $starts)));
+
+
 
 // 【○】イベント写真データ取得 * ログイン不要
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
@@ -82,7 +99,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
 // }
-v($requests[1]['nickname']);
+
 
 // リクエストボタンを押した際の登録処理
 if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
@@ -191,11 +208,15 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     <div class="col-md-7 col-sm-7">
                         <h1><?php echo $event_data['e_name']; ?></h1> <!-- イベント名表示 -->
-                        <span><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
+                        <span style="display:block; font-size: 17px;margin-bottom:6px; margin-top: 2px;"><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
 
                     </div>
-                    <div class="col-md-5 col-sm-5" style="font-size: 60px;">
-                        <span><h1><?php echo $event_data['e_start_date'] . '〜'. $event_data['e_end_date']; ?></h1></span> <!-- 曜日・開催日時を表示 -->
+                    <div class="col-md-5 col-sm-5" style="text-align: center;">
+
+                        <span><h1 style="font-size: 32px; padding-top: 15px; "><?php echo $duration; ?></h1></span>
+                      <!--             date('F d, Y', strtotime($event_data['e_start_date'])) -->
+
+                         <!-- 曜日・開催日時を表示 -->
                         <!-- <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
                         <!--                         <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a> -->
                     </div>
@@ -222,7 +243,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
 
-                        <div class="sp-slides">
+                        <div class="sp-slides" style="margin-top:2px;">
 
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
                                 <?php echo '<div class="sp-slide">' ?>
@@ -255,7 +276,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <div style="word-wrap: break-word; width:99%; height:300px;">
+                            <div style="word-wrap: break-word; width:99%; height:300px; overflow: auto;">
                                 <?php echo $event_data['explanation'] ?>
                             </div>
                         </div>
@@ -298,11 +319,11 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                                             <td>
                                                 <div style="margin-bottom: 10px;">
                                                     イベント日程（開始日）（必須）<br>
-                                                    <?php echo $event_data['e_start_date']; ?>
+                                                    <?php echo date('F d, Y', strtotime(implode('-', $starts))); ?>
                                                 </div>
                                                 <div>
                                                     イベント日程（終了日）（必須）<br>
-                                                    <?php echo $event_data['e_start_date']; ?>
+                                                    <?php echo date('F d, Y', strtotime(implode('-', $ends))); ?>
                                                 </div>
                                             </td>
                                         </tr>
