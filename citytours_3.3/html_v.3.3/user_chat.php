@@ -2,30 +2,34 @@
 session_start();
 require('../../common/dbconnect.php'); // データベースへ接続
 require('../../common/functions.php'); // 関数ファイル読み込み
-require('../../common/auth.php'); // ログイン判定
+// require('../../common/auth.php'); // ログイン判定
 
 $login_user = get_login_user($dbh);
 
-if (empty($_REQUEST['user_id'])) {
-    header('Location: top.php');
-    exit();
-}
+// chat_room_idが指定されてなければ、user_chat画面に遷移
+// if (empty($_REQUEST['chat_room_id'])) {
+//     header('Location: user_chat.php');
+//     exit();
+// }
 
 // ○クリックされたユーザーのIDを一件取得
-$chat_room_id = $_REQUEST['user_id'];
+$chat_room_id = $_REQUEST['chat_room_id'];
 
-
-
-if($login_user_id == $request_id || $login_user_id == $accept_id){
-
-    // チャットルームのデータを呼び出し
-    $sql ='SELECT chat_rooms
-           FROM *
+// ○バリデーションのためにrequest_idとaccept_user_idを取得
+$sql ='SELECT request_id,accept_user_id
+           FROM caht_rooms
            WHERE chat_room_id=?';
-    $data = [$chat_room_id];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
+$data = [$chat_room_id];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$chat_check=$stmt->fetch(PDO::FETCH_ASSOC);
+  
+$request_id = $chat_check['request_id'];
+$accept_user_id = $chat_check['accept_user_id'];
 
+// ○もし、ログインユーザーのidがchat_roomsテーブルのaccept_idかaccept_user_idと合えばメッセージ読み込み。そうでなければ、user_chat.php(チャットトップ)へ繊維
+if($_SESSION['id'] == $request_id || $_SESSION['id'] == $accept_user_id){
+    // ○チャットルームのデータを呼び出し
     $sql ='SELECT m.*,u.*
            FROM messages m,users u
            WHERE m.user_id=u.user_id
@@ -36,81 +40,47 @@ if($login_user_id == $request_id || $login_user_id == $accept_id){
     $messages = [];
     while ($message = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $messages[] = $message;
-        $cnt = count($messages);
     }
 
-    if(!empty($_POST['message'])){
-    $massage = $_POST['massage'];
-        if ($massage != '') {
-            // DBへの登録処理
-            $sql = 'INSERT INTO messages SET message = ?,
-                                            chat_room_id=?,
-                                            user_id = ?,
-                                            created = NOW()';
+    if (isset($chat_room_id)) {
+      // ○イベントデータ取得
+      $sql = 'SELECT * FROM caht_rooms WHERE chat_room_id=?';
+      $data = [$chat_room_id];
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute($data);
+      $chat_room_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $data = array($_POST['message'],$chat_room_id, $_SESSION['login_user_id']);
-            $stmt = $dbh->prepare($sql);
-            $stmt->execute($data);
-
-            header('Location: user_chat.php=?'. $_REQUEST['chat_room_id']);
-            exit();
-        }
-    // イベントデータ取得
-    $sql = 'SELECT * FROM events WHERE event_id=? ';
-    $data = $;
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // クリックされたチャット情報をchatrooms&messagesから
-    $sql ='SELECT m.*, c.chat_room_id ,c.event_id 
-           FROM messages m ,chat_rooms c
-           WHERE m.chat_room_id=c.chat_room_id 
-           AND m.chat_room_id=?';
-    $data = ;
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $chat_rooms = [];
-    while ($chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $chat_rooms[] = $chat_room;
-}
+      $sql = 'SELECT * FROM events WHERE event_id=?';
+      $data = [$chat_room_data['event_id']];
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute($data);
+      $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+}else{
+  // ログインユーザーidがrequest_user_idまたは、accept_user_idにも当てはまらない場合はuser_chat.php(チャットトップ)に遷移
+  // header('Location: user_chat.php');
+  //   exit();
 }
 
-// chat_room_idをもとにチャットルームの情報を取得
-// $sql ='SELECT c.*,m.*
-//        FROM chat_rooms c,messages m
-//        WHERE c.chat_room_id=m.chat_room_id
-//        AND c.chat_room_id=?';
-// $data = [$_REQUEST['chat_room_id']];
-// $stmt = $dbh->prepare($sql);
-// $stmt->execute($data);
-// $chat_rooms = [];
-// while ($chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $chat_rooms[] = $chat_room;
-// }
+// ○メッセージをデータベースへ登録処理
+if (!empty($_POST['message'])) {
+    $message = $_POST['message'];
+    if ($message != '') {
+        // DBへの登録処理
+        $sql = 'INSERT INTO messages SET chat_room_id=?,
+                                        message = ?,     
+                                        user_id = ?,
+                                        created = NOW()';
+        $data = array($_REQUEST['chat_room_id'],$_POST['message'],$login_user['user_id']);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute($data);
 
-// if($_SESSION['id'] == );
+        header('Location: user_chat.php?chat_room_id='. $_REQUEST['chat_room_id']);
+        exit();
+    }
+  }
 
-// if (!empty($_POST['message'])) {
-//     // データベースへ登録 tweetsテーブルに
-//     $message = $_POST['message'];
-//     if ($message != '') {
-//         $sql = 'INSERT INTO messages
-//                        SET message=?,
-//                            user_id=?,
-//                            chat_room_id=?,
-//                            created=NOW()';
-//         $data = array($message, $login_user['user_id'],$chat_room_id);
-//         $stmt = $dbh->prepare($sql);
-//         $stmt->execute($data);
 
-//         // 'UPDATE chat_rooms SET chat_room_id=?, updated=NOW()';
-
-//         // POST送信をGET送信で上書き
-//         header('Location: user_chat.php');
-//         exit();
-//     }
-// }
 
 
 // $sql = 'SELECT t.*, m.nick_name, m.picture_path FROM tweets t, members m WHERE t.member_id=m.member_id ORDER BY t.created';
@@ -123,9 +93,6 @@ if($login_user_id == $request_id || $login_user_id == $accept_id){
 // while ($message = $stmt->fetch(PDO::FETCH_ASSOC)) {
 //     $messages[] = $message;
 // }
-
-
-
 
 
 
@@ -175,104 +142,111 @@ if($login_user_id == $request_id || $login_user_id == $accept_id){
 <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
-<div class="main_section">
-    <div class='container'>
-        <div class="row">
-            <!-- チャット全件表示 -->
-            <aside class="col-md-3">
-                <div class="row">
-                    <h2>チャット一覧</h2>
-                </div>
-            </aside>
 
-            <!-- 個人間チャット表示 -->
-            <div class="col-md-6">
-                <div class="row">
-                  <h2 class="page-header">チャット</h2>
-                  <div id="messages" style="overflow-y: auto; width: 100%; height: 500px;">
-                  <?php for ($i=0; $i < $cnt ; $i++): ?>
-                    <section class="comment-list">
-                      <!-- チャット相手からのメッセージ -->
-                      <?php if ($messages[$i]['user_id'] != $_SESSION['user_id']) { ; ?>
-                        <article class="row">
-                          <div class="col-md-2 col-sm-2 hidden-xs">
-                            <figure class="thumbnail">
-                              <img class="img-responsive" src="../../users_pic/<?php echo $messages[$i]['picture_path']; ?>" />
-                            </figure>
-                          </div>
-                          <div class="col-md-10 col-sm-10">
-                            <div class="panel panel-default arrow left">
-                              <div class="panel-body">
-                                <header class="text-left" style="background-color: white;font-stretch: ">
-                                  <div class="comment-user"><i class="fa fa-user"></i>
-                                    <?php echo $messages[$i]['nickname'];?>
+  <header>
+    <!-- チャット全件表示 -->
+    <aside class="col-md-3">
+      <h2 class="page-header">チャット一覧</h2>
+    </aside>
+    <!-- 個人間チャット表示 -->
+    <div class="col-md-6">
+      <h2 class="page-header">チャット</h2>
+    </div>
+    <!-- チャット全件表示 -->
+    <aside class="col-md-3">
+      <h2 class="page-header">イベント詳細</h2>
+    </aside>
+  </header>
+
+  <div class="main_section" style="padding-top: 100px; ">
+      <div class='container'>
+          <div class="row">
+              <!-- チャット全件表示 -->
+              <aside class="col-md-3">
+                  <div class="row">
+                  
+                  </div>
+              </aside>
+              
+              <!-- 個人間チャット表示 -->
+              <div class="col-md-6">
+                  <div class="row">
+                    <div id="messages" style="overflow-y: auto; width: 100%; height: 500px;">
+
+                    <?php foreach($messages as $message){ ?>
+                      <section class="comment-list">
+                        <!-- チャット相手からのメッセージ -->
+                        <?php if ($message['user_id'] != $_SESSION['id']) { ?>
+                          <article class="row">
+                            <div class="col-md-2 col-sm-2 hidden-xs">
+                              <figure class="thumbnail">
+                                <img class="img-responsive" src="../../users_pic/<?php echo $message['pic_path']; ?>" />
+                              </figure>
+                            </div>
+                            <div class="col-md-10 col-sm-10">
+                              <div class="panel panel-default arrow left">
+                                <div class="panel-body">
+                                  <div class="comment-post">
+                                    <p>
+                                      <?php echo $message['message']; ?>
+                                    </p>
                                   </div>
-                                  <time class="comment-date" datetime="<?php echo $messages[$i]['created']; ?>"><i class="fa fa-clock-o"></i>
-                                    <?php echo $messages[$i]['created']; ?>
-                                  </time>
-                                </header>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        <?php }elseif($message['user_id'] == $_SESSION['id']){ ?>
+                        <!-- 自分が送ったメッセージ -->
+                        <article class="row">
+                          <div class="col-md-10 col-sm-10">
+                            <div class="panel panel-default arrow right">
+                              <div class="panel-body">
                                 <div class="comment-post">
                                   <p>
-                                    <?php echo $messages[$i]['message']; ?>
+                                    <?php echo $message['message']; ?>
                                   </p>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </article>
-                      <?php }elseif($messages[$i]['user_id'] == $_SESSION['login_user_id']){; ?>
-                      <!-- 自分が送ったメッセージ -->
-                      <article class="row">
-                        <div class="col-md-10 col-sm-10">
-                          <div class="panel panel-default arrow right">
-                            <div class="panel-body">
-                              <header class="text-right" style="background-color: white;">
-                                <time class="comment-date" datetime="<?php echo $messages[$i]['created']; ?>"><i class="fa fa-clock-o"></i>
-                                  <?php echo $messages[$i]['created']; ?>
-                                </time>
-                              </header>
-                              <div class="comment-post">
-                                <p>
-                                  <?php echo $messages[$i]['message']; ?>
-                                </p>
-                              </div>
-                            </div>
+                          <div class="col-md-2 col-sm-2 hidden-xs">
+                            <figure class="thumbnail">
+                              <img class="img-responsive" src="../../users_pic/<?php echo $login_user['pic_path']; ?>" />
+                            </figure>
                           </div>
-                        </div>
-                        <div class="col-md-2 col-sm-2 hidden-xs">
-                          <figure class="thumbnail">
-                            <img class="img-responsive" src="../../users_pic/<?php echo $login_user['pic_path']; ?>" />
-                          </figure>
-                        </div>
-                      </article>
-                      <?php }; ?>
-                    </section>
-                  <?php endfor; ?>
-                  </div>
-                    <form method="POST" action="">
-                      <div class="panel-footer">
-                        <div class="input-group">
+                        </article>
+                        <?php }; ?>
+                      </section>
+                    <?php } ?>
+                    </div>
+                      <form method="POST" action="">
+                        <div class="panel-footer">
                           <input id="btn-input" type="text" name='message' class="form-control input-sm chat_input" placeholder="type a message">
-                          <input type="hidden" name="user_id" value="<?php echo $_SESSION['login_user_id']; ?>" class="btn btn-primary btn-sm" id="btn-chat">
-                          <input type="submit" value="Send" class="btn btn-danger" id="btn-chat">
+                          <input type="hidden" name="user_id" value="<?php echo $_SESSION['login_user_id']; ?>">
+                          <p  align="right">
+                              <input type="submit" value="Send" class="btn btn-danger" id="btn-chat">
+                          </p>
                         </div>
-                      </div>
-                    </form>
-                </div>
-            </div>
+                      </form>
+                  </div>
+              </div>
 
-            <!-- チャット全件表示 -->
-            <aside class="col-md-3">
-                <div class="row">
-                    <h2>イベント詳細</h2>
-                    <h2>ユーザー詳細</h2>
-                </div>
-            </aside>
-        </div><!-- row -->
-    </div> <!-- container -->
-</div><!-- main_section -->
+              <!--　イベント詳細&ユーザー詳細　表示 -->
+              <aside class="col-md-3">
+                  <div class="row">
+
+                      
+                  </div>
+              </aside>
+          </div><!-- row -->
+      </div> <!-- container -->
+  </div><!-- main_section -->
 
 </body>
 </html>
