@@ -6,24 +6,43 @@ require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
-  // echo '<pre>';
-  // var_dump($login_user);
-  // echo '</pre>';
-
-$sql = 'SELECT * FROM events WHERE 1';
+$sql = 'SELECT * FROM events WHERE 1 ORDER BY e_start_date DESC;';
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
-// $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
-
 while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    // $future[] = $record;
-    if (strtotime(date('Y-m-d')) < strtotime($record['e_start_date'])){
-        $future[] = $record;
-    } else{
-        $past[] = $record;
-    }
-
+   $records[] = $record;
 }
+
+//全イベント数のカウント
+$sql = 'SELECT COUNT(*) AS total FROM events WHERE 1';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$all_event_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+//event_categoriesのカラム数をカウント
+$sql = 'SELECT COUNT(*) AS total FROM event_categories WHERE 1';
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$event_category_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+for ($i=1; $i <= $event_category_count['total']; $i++) { 
+    $sql = 'SELECT COUNT(*) AS total FROM event_connects WHERE e_category_id=?';
+    $data = [$i];
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+    $category_count_total[$i] = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
+// $sql = 'SELECT * FROM events, event_connects, event_categories 
+//         WHERE   events.event_id = event_connects.event_id
+//         AND     event_connects.e_category_id = event_categories.e_category_id';
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute();
+// while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//    $records[] = $record;
+// }
+
 
 ?>
 
@@ -96,7 +115,7 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
             color: rgba(255, 255, 255, 1.00);
             font-size: 15px;
             line-height: 24px;
-            font-weight: 300;
+            font-weight: 700;
             font-style: normal;
             font-family: Roboto Slab;
             text-decoration: none;
@@ -197,17 +216,18 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <!-- SLIDE  -->
                     <li data-index="rs-30" data-transition="slideoverhorizontal" data-slotamount="7" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="1500" data-thumb="rev-slider-files/assets/100x50_newspaper_bg1.jpg" data-rotate="0" data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off" data-title="Discover" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
                         <!-- MAIN IMAGE -->
-                        <img src="rev-slider-files/assets/newspaper_bg1.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                        <img src="rev-slider-files/assets/nebuta.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                        <!-- <img src="rev-slider-files/assets/newspaper_bg1.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina> -->
                         <!-- LAYERS -->
 
                         <!-- LAYER NR. 1 -->
-                        <div class="tp-caption News-Title   tp-resizeme" id="slide-30-layer-1" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['450','450','274','274']" data-fontsize="['65','65','50','50']" data-lineheight="['60','60','50','50']" data-width="364" data-height="133" data-whitespace="normal" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 364px; max-width: 364px; max-width: 133px; max-width: 133px; white-space: normal; font-size: 65px;font-family:Montserrat;">DISCOVER THE WILD </div>
+                        <div class="tp-caption News-Title   tp-resizeme" id="slide-30-layer-1" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['450','450','274','274']" data-fontsize="['65','65','50','50']" data-lineheight="['60','60','50','50']" data-width="364" data-height="133" data-whitespace="normal" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 364px; max-width: 364px; max-width: 133px; max-width: 133px; white-space: normal; font-size: 65px;font-family:Montserrat;">Nebuta Matsuri </div>
 
                         <!-- LAYER NR. 2 -->
                         <div class="tp-caption   tp-resizeme" id="slide-30-layer-2" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['587','587','382','382']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="image" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"x:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power3.easeInOut"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 6;"><img src="rev-slider-files/assets/bluebar.png" alt="" data-ww="['350px','350px','350px','350px']" data-hh="['4px','4px','4px','4px']" data-no-retina> </div>
 
                         <!-- LAYER NR. 3 -->
-                        <div class="tp-caption News-Subtitle   tp-resizeme" id="slide-30-layer-3" data-x="['left','left','left','left']" data-hoffset="['81','81','41','41']" data-y="['top','top','top','top']" data-voffset="['605','605','401','401']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"},{"frame":"hover","speed":"300","ease":"Power3.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(255, 255, 255, 0.65);br:0 0 0px 0;"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 7; white-space: nowrap;cursor:pointer;">Learn how to balance your city job with nature </div>
+                        <div class="tp-caption News-Subtitle   tp-resizeme" id="slide-30-layer-3" data-x="['left','left','left','left']" data-hoffset="['81','81','41','41']" data-y="['top','top','top','top']" data-voffset="['605','605','401','401']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"},{"frame":"hover","speed":"300","ease":"Power3.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(255, 255, 255, 0.65);br:0 0 0px 0;"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 7; white-space: nowrap;cursor:pointer;">@Aomori</div>
 
                         <!-- LAYER NR. 4 -->
                         <div class="tp-caption -   tp-resizeme" id="slide-30-layer-4" data-x="['left','left','left','left']" data-hoffset="['423','423','383','383']" data-y="['top','top','top','top']" data-voffset="['607','607','403','403']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"x:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power3.easeInOut"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 8; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: rgba(0,210,255,1);"><!-- <i class="fa-icon-caret-right"></i> --> </div>
@@ -215,18 +235,19 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <!-- SLIDE  -->
                     <li data-index="rs-31" data-transition="slideoverhorizontal" data-slotamount="7" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="1500" data-thumb="assets/100x50_newspaper_bg3.jpg" data-rotate="0" data-saveperformance="off" data-title="Beach" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
                         <!-- MAIN IMAGE -->
-                        <img src="rev-slider-files/assets/newspaper_bg3.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                        <img src="rev-slider-files/assets/awaodori.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                        <!-- <img src="rev-slider-files/assets/newspaper_bg3.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina> -->
                         <!-- LAYERS -->
 
                         <!-- LAYER NR. 5 -->
-                        <div class="tp-caption News-Title   tp-resizeme" id="slide-31-layer-1" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['450','450','270','270']" data-fontsize="['70','70','50','50']" data-lineheight="['60','60','50','50']" data-width="['397','397','297','297']" data-height="none" data-whitespace="normal" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 397px; max-width: 397px; white-space: normal; color: rgba(0,0,0,1);font-family:Montserrat;">BEACH
-                            <br>LIFE </div>
+                        <div class="tp-caption News-Title   tp-resizeme" id="slide-31-layer-1" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['450','450','270','270']" data-fontsize="['70','70','50','50']" data-lineheight="['60','60','50','50']" data-width="['397','397','297','297']" data-height="none" data-whitespace="normal" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 397px; max-width: 397px; white-space: normal; color: #FF6666;font-family:Montserrat;">Awa
+                            <br>Odori</div>
 
                         <!-- LAYER NR. 6 -->
                         <div class="tp-caption   tp-resizeme" id="slide-31-layer-2" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['587','587','382','382']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="image" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"x:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power3.easeInOut"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 6;"><img src="rev-slider-files/assets/bluebar.png" alt="" data-ww="" data-hh="" data-no-retina> </div>
 
                         <!-- LAYER NR. 7 -->
-                        <div class="tp-caption News-Subtitle   tp-resizeme" id="slide-31-layer-3" data-x="['left','left','left','left']" data-hoffset="['81','81','41','41']" data-y="['top','top','top','top']" data-voffset="['605','605','401','401']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"},{"frame":"hover","speed":"300","ease":"Power3.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 0.65);br:0 0 0px 0;"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 7; white-space: nowrap; color: rgba(0,0,0,1);cursor:pointer;">Summer, sun and endless fun at the beach </div>
+                        <div class="tp-caption News-Subtitle   tp-resizeme" id="slide-31-layer-3" data-x="['left','left','left','left']" data-hoffset="['81','81','41','41']" data-y="['top','top','top','top']" data-voffset="['605','605','401','401']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"},{"frame":"hover","speed":"300","ease":"Power3.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(0, 0, 0, 0.65);br:0 0 0px 0;"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 7; white-space: nowrap; color: #FF6666;cursor:pointer;">@Tokushima</div>
 
                         <!-- LAYER NR. 8 -->
                         <div class="tp-caption -   tp-resizeme" id="slide-31-layer-4" data-x="['left','left','left','left']" data-hoffset="['423','423','383','383']" data-y="['top','top','top','top']" data-voffset="['607','607','403','403']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"x:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power3.easeInOut"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 8; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: rgba(0,210,255,1);"><!-- <i class="fa-icon-caret-right"></i> --> </div>
@@ -234,17 +255,17 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     <!-- SLIDE  -->
                     <li data-index="rs-32" data-transition="slideoverhorizontal" data-slotamount="7" data-hideafterloop="0" data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="1500" data-thumb="assets/100x50_newspaper_bg2.jpg" data-rotate="0" data-saveperformance="off" data-title="Trip" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
                         <!-- MAIN IMAGE -->
-                        <img src="rev-slider-files/assets/newspaper_bg2.jpg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                        <img src="rev-slider-files/assets/kokuragion.jpeg" alt="" data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
                         <!-- LAYERS -->
 
                         <!-- LAYER NR. 9 -->
-                        <div class="tp-caption News-Title   tp-resizeme" id="slide-32-layer-1" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['450','450','269','269']" data-fontsize="['70','70','50','50']" data-lineheight="['60','60','50','50']" data-width="364" data-height="133" data-whitespace="normal" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 364px; max-width: 364px; max-width: 133px; max-width: 133px; white-space: normal;font-family:Montserrat;">JUST GO HIKING </div>
+                        <div class="tp-caption News-Title   tp-resizeme" id="slide-32-layer-1" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['450','450','269','269']" data-fontsize="['70','70','50','50']" data-lineheight="['60','60','50','50']" data-width="364" data-height="133" data-whitespace="normal" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 5; min-width: 364px; max-width: 364px; max-width: 133px; max-width: 133px; white-space: normal;font-family:Montserrat;">Kokura Gion</div>
 
                         <!-- LAYER NR. 10 -->
                         <div class="tp-caption   tp-resizeme" id="slide-32-layer-2" data-x="['left','left','left','left']" data-hoffset="['80','80','40','40']" data-y="['top','top','top','top']" data-voffset="['587','587','382','382']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="image" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"x:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power3.easeInOut"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 6;"><img src="rev-slider-files/assets/bluebar.png" alt="" data-ww="" data-hh="" data-no-retina> </div>
 
                         <!-- LAYER NR. 11 -->
-                        <div class="tp-caption News-Subtitle   tp-resizeme" id="slide-32-layer-3" data-x="['left','left','left','left']" data-hoffset="['81','81','41','41']" data-y="['top','top','top','top']" data-voffset="['605','605','401','401']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"},{"frame":"hover","speed":"300","ease":"Power3.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(255, 255, 255, 0.65);br:0 0 0px 0;"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 7; white-space: nowrap;cursor:pointer;">Go and discover unknown, mysterious places </div>
+                        <div class="tp-caption News-Subtitle   tp-resizeme" id="slide-32-layer-3" data-x="['left','left','left','left']" data-hoffset="['81','81','41','41']" data-y="['top','top','top','top']" data-voffset="['605','605','401','401']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"y:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"nothing"},{"frame":"hover","speed":"300","ease":"Power3.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(255, 255, 255, 0.65);br:0 0 0px 0;"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 7; white-space: nowrap;cursor:pointer;">@Fukuoka</div>
 
                         <!-- LAYER NR. 12 -->
                         <div class="tp-caption -   tp-resizeme" id="slide-32-layer-4" data-x="['left','left','left','left']" data-hoffset="['423','423','383','383']" data-y="['top','top','top','top']" data-voffset="['607','607','403','403']" data-width="none" data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on" data-frames='[{"delay":500,"speed":1500,"frame":"0","from":"x:[-100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:0px;y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":1000,"frame":"999","to":"x:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power3.easeInOut"}]' data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]" data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]" data-paddingleft="[0,0,0,0]" style="z-index: 8; white-space: nowrap; font-size: 20px; line-height: 22px; font-weight: 400; color: rgba(0,210,255,1);"><!-- <i class="fa-icon-caret-right"></i> --> </div>
@@ -324,79 +345,126 @@ while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             <div class="row">
 
-                <?php for($i=0;$i < count($future); $i++) { ?>
+                <?php for($i=0;$i < count($records); $i++) { ?>
                     <?php
-                        // 窓に表示する写真の取得
-                        // $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                        // $data = [$future[$i]['event_id']];
-                        // $stmt = $dbh->prepare($sql);
-                        // $stmt->execute($data);
-                        // $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
 
-$data = [$future[$i]['event_id']];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
-// $event_pics[] = $event_pic;
-// echo $event_pic['e_pic_path'];
-//   echo '<pre>';
-//   var_dump($event_pics);
-//   echo '</pre>';
+                        $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
 
-                          // echo '<pre>';
-                          // var_dump($e_pic_path);
-                          // echo '</pre>';
-
-                        //like数カウント
-                        $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
-                        $data = [$future[$i]['event_id']];
+                        $data = [$records[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
-                        $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                        $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        $starts = explode('-', $records[$i]['e_start_date']);
+                        $ends = explode('-', $records[$i]['e_end_date']);
+
+                        if ($starts[0] != $ends[0]) {
+                            $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+                        } elseif($starts[1] != $ends[1]){
+                            $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+                        } elseif($starts[2] != $ends[2]){
+                            $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+                        } else{
+                            $duration = date('F d, Y', strtotime(implode('-', $starts)));
+                        }
+
 
                         //join数カウント
                         $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
-                        $data = [$future[$i]['event_id']];
+                        $data = [$records[$i]['event_id']];
                         $stmt = $dbh->prepare($sql);
                         $stmt->execute($data);
-                        $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                        $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        //like数カウント
+                        $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+                        $data = [$records[$i]['event_id']];
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->execute($data);
+                        $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
                     
+                        //join済み判定の為のSQL
+                        if (isset($login_user['user_id'])) {
+                            $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=? AND user_id=?';
+                            $data = [$records[$i]['event_id'], $login_user['user_id']];
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute($data);
+                            $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        // join数カウント
-                        // $sql = 'SELECT * FROM likes WHERE member_id=? AND tweet_id=?';
-                        // $data = [$login_user['member_id'], $tweets[$i]['tweet_id']];
-                        // $stmt = $dbh->prepare($sql);
-                        // $stmt->execute($data);
-                        // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
-                        if ($future[$i]['e_start_date'] == $future[$i]['e_end_date']) {
-                            $duration = $future[$i]['e_start_date'];
-                        } else{
-                            $duration = $future[$i]['e_start_date'] . ' - ' . $future[$i]['e_end_date'];
+                            //like済み判定の為のSQL
+                            $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=? AND user_id=?';
+                            $data = [$records[$i]['event_id'], $login_user['user_id']];
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute($data);
+                            $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
                         }
-
                     ?>
 
                     <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.1s">
                         <div class="tour_container">
-                            <div class="ribbon_3 popular"><span>New</span></div>
+                            <?php if (strtotime(date('Y-m-d')) > strtotime($records[$i]['e_end_date'])){ ?>
+                                <div class="ribbon_3"><span>Past</span></div>
+                            <?php } else if(strtotime(date('Y-m-d', strtotime('-2 day') )) < strtotime($records[$i]['created'])){ ?>
+                                <div class="ribbon_3 popular"><span>New</span></div>
+                            <?php }  ?>
                             <div class="img_container">
-                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($future[$i]['event_id']); ?>">
-                                    <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 300px;">
+                                <a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                    <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 270px;">
                                     <div class="short_info">
-                                        <span class="like_count">Like:<?php echo $like_count['total'] ?></span><span class="join_count">Join:<?php echo $join_count['total'] ?></span>
+                                        <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
+                                                                        
+                                        <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+                                     
+
                                     </div>
                                 </a>
                             </div>
-                            <div class="tour_title">
-                                <h3><strong><?php echo htmlspecialchars($future[$i]['e_name']); ?></strong></h3>
-                                <div><?php echo $duration; ?></div>
-                                <!-- end rating -->
-                                <div class="wishlist">
-                                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);"  style="display: block;">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
+                            <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px;">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-8 col-xs-8" style="margin-top: 5px;">
+                                        <h3><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>
+                                        <div><?php echo $duration; ?></div>
+                                    </div>
+                                    <!-- end rating -->
+                                    <div  class="col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 2px; margin-left: -2px;">
+                                        <?php if (isset($login_user['user_id'])): ?>
+                                            <?php if ($join_count['total'] == '1'): ?>
+                                            <div class="join_button_color error" >           
+                                                <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="join">
+                                            <?php else: ?>
+                                            <div class="join_button_color" >  
+                                                <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unjoin">
+                                            <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div  class="col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 5px; margin-left: -1px;">
+                                        <?php if (isset($login_user['user_id'])): ?>
+                                            <?php if ($like_count['total'] == '1'): ?>
+                                            <div class="like_button_color error" >           
+                                                <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="like">
+                                            <?php else: ?>
+                                            <div class="like_button_color" >  
+                                                <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
+                                                <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unlike">
+                                            <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <!-- End wish list-->
                                 </div>
-                                <!-- End wish list-->
                             </div>
                         </div>
                         <!-- End box tour -->
@@ -404,9 +472,9 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                 <?php } ?>
             </div>
             <!-- End row -->
-
-            <p class="text-center nopadding"> <a href="#" class="btn_1 medium"><i class="icon-eye-7"></i>View all tours (144) </a>
-            </p>
+<!-- 
+            <p class="text-center nopadding"> <a href="#" class="btn_1 medium">View all tours (144) </a>
+            </p> -->
         </section>
         <!-- End section -->
 
@@ -443,24 +511,34 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                         </p>
 
                                         <div class="box_style_cat">
+                                        <div class="cta filter">
                                             <ul id="cat_nav">
-                                                <li><a href="#" id="active"><i class="icon_set_1_icon-51"></i>All tours <span>(141)</span></a>
+                                                <li><a class="all active" data-filter="all" href="#" role="button"><i class="icon_set_1_icon-51"></i>All festivals <span>(<?php echo $all_event_count['total']; ?>)</span></a>
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-3"></i>City sightseeing <span>(20)</span></a>
+                                                <li><a data-filter="spring" href="#" role="button"><i class="icon_set_1_icon-3"></i>Spring<span>(<?php echo $category_count_total[1]['total']; ?>)</span></a>                                                                                                                    
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-4"></i>Museum tours <span>(16)</span></a>
+                                                <li><a data-filter="summer" href="#" role="button"><i class="icon_set_2_icon-110"></i>Summer<span>(<?php echo htmlspecialchars($category_count_total[2]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-44"></i>Historic Buildings <span>(12)</span></a>
+                                                <li><a data-filter="fall" href="#" role="button"><i class="icon-feather-1"></i>Fall<span>(<?php echo htmlspecialchars($category_count_total[3]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-37"></i>Walking tours <span>(11)</span></a>
+                                                <li><a data-filter="winter" href="#" role="button"><i class="icon-asterisk"></i>Winter<span>(<?php echo htmlspecialchars($category_count_total[4]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-14"></i>Eat & Drink <span>(20)</span></a>
+                                                <li><a data-filter="flower" href="#" role="button"><i class="icon-garden"></i>Flower<span>(<?php echo htmlspecialchars($category_count_total[5]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-43"></i>Churces <span>(08)</span></a>
+                                                <li><a data-filter="sakura" href="#" role="button"><i class="icon-leaf-1"></i>Sakura<span>(<?php echo htmlspecialchars($category_count_total[6]['total']); ?>)</span></a>
                                                 </li>
-                                                <li><a href="#"><i class="icon_set_1_icon-28"></i>Skyline tours <span>(11)</span></a>
+                                                <li><a data-filter="food_drink" href="#" role="button"><i class="icon_set_3_restaurant-10"></i>Food/Drink<span>(<?php echo htmlspecialchars($category_count_total[7]['total']); ?>)</span></a>
+                                                </li>
+                                                <li><a data-filter="alcohol" href="#" role="button"><i class="icon_set_1_icon-15"></i>Alcohol<span>(<?php echo htmlspecialchars($category_count_total[8]['total']); ?>)</span></a>
+                                                </li>
+                                                <li><a data-filter="strange_festival" href="#" role="button"><i class="icon-question"></i>Strange Festival<span>(<?php echo htmlspecialchars($category_count_total[9]['total']); ?>)</span></a>
+                                                </li>
+                                                <li><a data-filter="50years_lasting" href="#" role="button"><i class="icon-angle-right"></i>50years Lasting<span>(<?php echo htmlspecialchars($category_count_total[10]['total']); ?>)</span></a>
+                                                </li>
+                                                <li><a data-filter="100years_lasting" href="#" role="button"><i class="icon-angle-double-right"></i>100years lasting<span>(<?php echo htmlspecialchars($category_count_total[11]['total']); ?>)</span></a>
                                                 </li>
                                             </ul>
+                                        </div>
                                         </div>
 
                                         <div id="filters_col">
@@ -535,12 +613,6 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                             <!--End collapse -->
                                         </div>
                                         <!--End filters col-->
-                                        <div class="box_style_2">
-                                            <i class="icon_set_1_icon-57"></i>
-                                            <h4>Need <span>Help?</span></h4>
-                                            <a href="tel://004542344599" class="phone">+45 423 445 99</a>
-                                            <small>Monday to Friday 9.00am - 7.30pm</small>
-                                        </div>
                                     </aside>
                                     <!--End aside -->
 
@@ -563,49 +635,77 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
 
-                                    <div class="col-lg-9 col-md-9">
-                                        <?php for($i=0;$i < count($future); $i++) { ?>
+                                    <div class="col-lg-9 col-md-9 boxes">
+                                        <?php for($i=0;$i < count($records); $i++) { ?>
                                             <?php
-                                                // 窓に表示する写真の取得
+
                                                 $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-                                                $data = [$future[$i]['event_id']];
+                                                $data = [$records[$i]['event_id']];
                                                 $stmt = $dbh->prepare($sql);
                                                 $stmt->execute($data);
-                                                $e_pic_path = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                                  // echo '<pre>';
-                                                  // var_dump($e_pic_path);
-                                                  // echo '</pre>';
+                                                $starts = explode('-', $records[$i]['e_start_date']);
+                                                $ends = explode('-', $records[$i]['e_end_date']);
 
-                                                //like数カウント
-                                                $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
-                                                $data = [$future[$i]['event_id']];
-                                                $stmt = $dbh->prepare($sql);
-                                                $stmt->execute($data);
-                                                $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                if ($starts[0] != $ends[0]) {
+                                                    $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+                                                } elseif($starts[1] != $ends[1]){
+                                                    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+                                                } elseif($starts[2] != $ends[2]){
+                                                    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+                                                } else{
+                                                    $duration = date('F d, Y', strtotime(implode('-', $starts)));
+                                                }
+
 
                                                 //join数カウント
                                                 $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
-                                                $data = [$future[$i]['event_id']];
+                                                $data = [$records[$i]['event_id']];
                                                 $stmt = $dbh->prepare($sql);
                                                 $stmt->execute($data);
-                                                $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
-                                            
+                                                $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                                // join数カウント
-                                                // $sql = 'SELECT * FROM likes WHERE member_id=? AND tweet_id=?';
-                                                // $data = [$login_user['member_id'], $tweets[$i]['tweet_id']];
-                                                // $stmt = $dbh->prepare($sql);
-                                                // $stmt->execute($data);
-                                                // $is_like = $stmt->fetch(PDO::FETCH_ASSOC);
-                                                if ($future[$i]['e_start_date'] == $future[$i]['e_end_date']) {
-                                                    $duration = $future[$i]['e_start_date'];
-                                                } else{
-                                                    $duration = $future[$i]['e_start_date'] . ' - ' . $future[$i]['e_end_date'];
+                                                //like数カウント
+                                                $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+                                                $data = [$records[$i]['event_id']];
+                                                $stmt = $dbh->prepare($sql);
+                                                $stmt->execute($data);
+                                                $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+                                                
+                                                if (isset($login_user['user_id'])) {
+                                                    //join済み判定の為のSQL
+                                                    $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=? AND user_id=?';
+                                                    $data = [$records[$i]['event_id'], $login_user['user_id']];
+                                                    $stmt = $dbh->prepare($sql);
+                                                    $stmt->execute($data);
+                                                    $join_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                                                    //like済み判定の為のSQL
+                                                    $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=? AND user_id=?';
+                                                    $data = [$records[$i]['event_id'], $login_user['user_id']];
+                                                    $stmt = $dbh->prepare($sql);
+                                                    $stmt->execute($data);
+                                                    $like_count = $stmt->fetch(PDO::FETCH_ASSOC);
                                                 }
 
+                                                //explanationの文字数制限
+                                                $explanation_p = mb_strimwidth( $records[$i]['explanation'], 0, 200, "...", "UTF-8" );
+
+                                                //イベントカテゴリー取得
+                                                $sql = 'SELECT * FROM event_connects, event_categories
+                                                        WHERE  event_connects.e_category_id = event_categories.e_category_id
+                                                        AND event_connects.event_id=?';
+                                                $data = [$records[$i]['event_id']];
+                                                $stmt = $dbh->prepare($sql);
+                                                $stmt->execute($data);
+                                                $event_categories = '';
+                                                while($event_category = $stmt->fetch(PDO::FETCH_ASSOC)){
+                                                    $event_categories[] = $event_category; 
+                                                }
                                             ?>
-                                            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
+
+                                            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s" data-category="<?php echo htmlspecialchars($event_categories[0]['e_category']); ?>" href="#">
                                                 <div class="row">
                                                     <div class="col-lg-4 col-md-4 col-sm-4">
                                                         <div class="ribbon_3 popular"><span>Popular</span>
@@ -614,21 +714,22 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                                             <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                                                         </div>
                                                         <div class="img_list">
-                                                            <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
+                                                            <a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" alt="Image">                                    
                                                                 <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
                                                             </a>
                                                         </div>
                                                     </div>
                                                     <div class="clearfix visible-xs-block"></div>
-                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                         <?php  ?>
-                                                        <div class="tour_list_desc">
-                                                            <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
-                                                            </div>
-                                                            <h3><strong>Arch Triomphe</strong> tour</h3>
-                                                            <p>Lorem ipsum dolor sit amet, quem convenire interesset ut vix, ad dicat sanctus detracto vis. Eos modus dolorum ex, qui adipisci maiestatis inciderint no, eos in elit dicat.....</p>
+                                                        <div class="tour_list_desc" style="display: table-cell; vertical-align: middle;width: 100%;">
+                                           <!--                  <div class="rating"><i class="icon-smile voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile  voted"></i><i class="icon-smile"></i><small>(75)</small>
+                                                            </div> -->
+                                                            <h3 style="margin-bottom: 5px;"><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>
+                                                            <p style="margin-bottom: 5px;"><?php echo htmlspecialchars($duration); ?></p>
+                                                            <p style="margin-bottom: 8px;"><?php echo htmlspecialchars($explanation_p); ?></p>
                                                             <ul class="add_info">
-                                                                <li>
+<!--                                                                 <li>
                                                                     <div class="tooltip_styled tooltip-effect-4">
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-83"></i></span>
                                                                         <div class="tooltip-content">
@@ -640,25 +741,28 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                                                             <strong>Sunday</strong> <span class="label label-danger">Closed</span>
                                                                         </div>
                                                                     </div>
-                                                                </li>
+                                                                </li> -->
                                                                 <li>
                                                                     <div class="tooltip_styled tooltip-effect-4">
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-41"></i></span>
                                                                         <div class="tooltip-content">
-                                                                            <h4>Address</h4> Musée du Louvre, 75058 Paris - France
+                                                                            <h4>Address</h4>
+                                                                            <strong>Address: </strong><?php echo htmlspecialchars($records[$i]['e_postal']); ?><?php echo htmlspecialchars($records[$i]['e_prefecture']); ?><?php echo htmlspecialchars($records[$i]['e_address']); ?>
+                                                                            <br>
+                                                                            <strong>Venue: </strong><?php echo htmlspecialchars($records[$i]['e_venue']); ?>
                                                                             <br>
                                                                         </div>
                                                                     </div>
                                                                 </li>
-                                                                <li>
+<!--                                                                 <li>
                                                                     <div class="tooltip_styled tooltip-effect-4">
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-97"></i></span>
                                                                         <div class="tooltip-content">
                                                                             <h4>Languages</h4> English - French - Chinese - Russian - Italian
                                                                         </div>
                                                                     </div>
-                                                                </li>
-                                                                <li>
+                                                                </li> -->
+<!--                                                                 <li>
                                                                     <div class="tooltip_styled tooltip-effect-4">
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-27"></i></span>
                                                                         <div class="tooltip-content">
@@ -668,16 +772,14 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                                                             <br>
                                                                         </div>
                                                                     </div>
-                                                                </li>
+                                                                </li> -->
                                                                 <li>
                                                                     <div class="tooltip_styled tooltip-effect-4">
                                                                         <span class="tooltip-item"><i class="icon_set_1_icon-25"></i></span>
                                                                         <div class="tooltip-content">
-                                                                            <h4>Transport</h4>
-                                                                            <strong>Metro: </strong>Musée du Louvre station (line 1)
-                                                                            <br>
-                                                                            <strong>Bus:</strong> 21, 24, 27, 39, 48, 68, 69, 72, 81, 95
-                                                                            <br>
+                                                                            <h4>Transport/Access</h4>
+                                                                            <?php echo htmlspecialchars($records[$i]['e_access']); ?>
+                                                                            
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -686,8 +788,8 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                                     </div>
                                                     <div class="col-lg-2 col-md-2 col-sm-2">
                                                         <div class="price_list">
-                                                            <div><sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small>
-                                                                <p><a href="single_tour.html" class="btn_1">Details</a>
+                                                            <div><!-- sup>$</sup>39*<span class="normal_price_list">$99</span><small>*Per person</small> -->
+                                                                <p><a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>" class="btn_1">Details</a>
                                                                 </p>
                                                             </div>
 
@@ -704,7 +806,7 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
                                         <!--End strip -->
 
-                                        <hr>
+<!--                                         <hr>
 
                                         <div class="text-center">
                                             <ul class="pagination">
@@ -723,7 +825,7 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
                                                 <li><a href="#">Next</a>
                                                 </li>
                                             </ul>
-                                        </div>
+                                        </div> -->
                                         <!-- end pagination-->
 
                                     </div>
@@ -1115,8 +1217,12 @@ $("#searchDropdownBox").change(function(){
     <script src="js/modal_login_ajax.js"></script>
     <script src="js/modal_register_user_ajax.js"></script>
     <script src="js/modal_register_organizer_ajax.js"></script>
+    <script src="js/join_ajax.js"></script>
+    <script src="js/like_ajax.js"></script>
+    <script src="js/refine_search.js"></script>
     <!-- 自作のJS -->
     <script src="js/custom.js"></script>
+<!--     <script src="js/bootstrap.js"></script> -->
 
 
 

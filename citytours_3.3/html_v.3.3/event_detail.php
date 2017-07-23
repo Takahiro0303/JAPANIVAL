@@ -6,14 +6,6 @@ require('request.php'); // パラメータがなければ、edit_index.phpに遷
 
 $login_user = get_login_user($dbh);
 
-v($login_user);
-
-// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移 ⇦ request.phpで処理済み、またなぜREQUESTではなくSESSIONなのか/大澤
-// if(!isset($_SESSION['event'])){
-//     header('Location: edit_index.php');
-//     exit();
-// }
-
 $event_id = $_REQUEST['event_id'];
 
 // ○イベントデータ取得 * ログイン不要
@@ -23,7 +15,20 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// ○イベント写真データ取得 * ログイン不要
+$starts = explode('-', $event_data['e_start_date']);
+$ends = explode('-', $event_data['e_end_date']);
+
+if ($starts[0] != $ends[0]) {
+    $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+} elseif($starts[1] != $ends[1]){
+    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+} elseif($starts[2] != $ends[2]){
+    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+} else{
+    $duration = date('F d, Y', strtotime(implode('-', $starts)));
+}
+
+
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
@@ -67,8 +72,9 @@ if (isset($_SESSION['id'])){
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
-}
-// v(count($requests));
+
+// }
+
 
 // reviewDB登録
 $review_rating = '';
@@ -132,6 +138,16 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 // $stmt->execute($data);
 // $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
+$sql = 'SELECT e_Lat,e_Lng FROM events WHERE event_id=?';
+$data = [$event_id];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$e_lat = $record['e_Lat'];
+$e_lng = $record['e_Lng'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -163,6 +179,39 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
     <link href="css/slider-pro.min.css" rel="stylesheet">
     <link href="css/date_time_picker.css" rel="stylesheet">
 
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+
+    <script src="js/jquery-2.2.4.min.js"></script>
+
+    <!-- Google Maps APIを読み込む -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzo1nDw_k6yNjo48_6UCYjLOwqF_QxEWE"></script>
+
+    <!-- initialize()関数を定義 -->
+    <script type="text/javascript">
+      function initialize() {
+        var lat = $('#keido').text();
+        var lng = $('#ido').text();
+        console.log(lat);
+        console.log(lng);
+
+        // 地図を表示する際のオプションを設定
+        var map = new google.maps.Map( document.getElementById( 'map_canvas' ), {
+          zoom: 15 ,  // ズーム値
+          center: new google.maps.LatLng(lat , lng) , // 中心の位置座標
+        } ) ;
+
+        var marker = new google.maps.Marker( {
+          map: map ,  // 地図
+          position: new google.maps.LatLng(lat , lng) , // 位置座標
+        } ) ;
+      }
+    </script>
+
+
 <!--[if lt IE 9]>
 <script src="js/html5shiv.min.js"></script>
 <script src="js/respond.min.js"></script>
@@ -170,7 +219,7 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 
 </head>
 
-<body>
+<body onload="initialize()">
 
 
 
@@ -192,11 +241,15 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 
                     <div class="col-md-7 col-sm-7">
                         <h1><?php echo $event_data['e_name']; ?></h1> <!-- イベント名表示 -->
-                        <span><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
+                        <span style="display:block; font-size: 17px;margin-bottom:6px; margin-top: 2px;"><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
 
                     </div>
-                    <div class="col-md-5 col-sm-5" style="font-size: 60px;">
-                        <span><h1><?php echo $event_data['e_start_date'] . '〜'. $event_data['e_end_date']; ?></h1></span> <!-- 曜日・開催日時を表示 -->
+                    <div class="col-md-5 col-sm-5" style="text-align: center;">
+
+                        <span><h1 style="font-size: 32px; padding-top: 15px; "><?php echo $duration; ?></h1></span>
+                      <!--             date('F d, Y', strtotime($event_data['e_start_date'])) -->
+
+                         <!-- 曜日・開催日時を表示 -->
                         <!-- <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
                         <!--                         <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a> -->
                     </div>
@@ -223,7 +276,8 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 
                     <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
 
-                        <div class="sp-slides">
+                        <div class="sp-slides" style="margin-top:2px;">
+
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
                                 <div class="sp-slide">
                                     <img alt="Image" class="sp-image" src="<?php $event_pics[$j]['e_pic_path'];?>" >
@@ -251,7 +305,7 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <div style="word-wrap: break-word; width:99%; height:300px;">
+                            <div style="word-wrap: break-word; width:99%; height:300px; overflow: auto;">
                                 <?php echo $event_data['explanation'] ?>
                             </div>
                         </div>
@@ -294,11 +348,11 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
                                             <td>
                                                 <div style="margin-bottom: 10px;">
                                                     イベント日程（開始日）（必須）<br>
-                                                    <?php echo $event_data['e_start_date']; ?>
+                                                    <?php echo date('F d, Y', strtotime(implode('-', $starts))); ?>
                                                 </div>
                                                 <div>
                                                     イベント日程（終了日）（必須）<br>
-                                                    <?php echo $event_data['e_start_date']; ?>
+                                                    <?php echo date('F d, Y', strtotime(implode('-', $ends))); ?>
                                                 </div>
                                             </td>
                                         </tr>
@@ -395,8 +449,22 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
                         <div class="col-md-3">
                             <h3>Map</h3>
                         </div>
+                        <div id="keido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lat);?>
+                        </div>
+
+                        <div id="ido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lng);?>
+                        </div>
+
+                        <div id="address" style="display: none;">
+                            <?php echo htmlspecialchars($e_address);?>
+                        </div>
+
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="450px" height="400px">
+
+                            <div id="map_canvas" style="width:600px; height:500px"></div>
+
                         </div>
                     </div>
 
@@ -773,7 +841,7 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 <script src="assets/validate.js"></script>
 
 <!-- Map -->
-<script src="http://maps.googleapis.com/maps/api/js"></script>
+<!-- <script src="http://maps.googleapis.com/maps/api/js"></script> -->
 <script src="js/map.js"></script>
 <script src="js/infobox.js"></script>
 
