@@ -121,41 +121,33 @@ if (!empty($_POST)) {
     }
 }
 
-// 参加予定イベントページ
-$sql = 'SELECT * FROM joins WHERE user_id=?';
+//参加予定（未来日）イベントデータ
+$sql = 'SELECT * FROM joins, events WHERE joins.event_id = events.event_id
+                                    AND   events.e_end_date > CURDATE()
+                                    AND   joins.user_id=?';
 $data = [$login_user['user_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
-
-while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $records[] = $record;
+while ($f_event = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $f_events[] = $f_event;
 }
 
-  echo '<pre>';
-  var_dump($records);
-  echo '</pre>';
+//参加済み（過去日）イベントデータ
+$sql = 'SELECT * FROM joins, events WHERE joins.event_id = events.event_id
+                                    AND   events.e_end_date < CURDATE()
+                                    AND   joins.user_id=?';
+$data = [$login_user['user_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+while ($p_event = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $p_events[] = $p_event;
+}
 
 
 
-for ($i=0; $i < count($records) ; $i++) {
-    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date > CURDATE()';
-    $event_data =  [$records[$i]['event_id']];
-    $event_stmt = $dbh->prepare($sql);
-    $event_stmt->execute($event_data);
-    while ($event = $event_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $events[] = $event;
-    }
-    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date < CURDATE()';
-    $event_end_data =  [$records[$i]['event_id']];
-    $event_end_stmt = $dbh->prepare($sql);
-    $event_end_stmt->execute($event_end_data);
-    while ($event_end = $event_end_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $events_end[] = $event_end;
-    }
-
-  echo '<pre>';
-  var_dump($events);
-  echo '</pre>';
+  // echo '<pre>';
+  // var_dump($events);
+  // echo '</pre>';
 
    // echo $record[$i]['event_id'] . "iあり";
     // echo "<br>";
@@ -168,8 +160,6 @@ for ($i=0; $i < count($records) ; $i++) {
    //  while ($pic = $pic_stmt->fetch(PDO::FETCH_ASSOC)) {
    //      $pics[] = $pic;
    //  }
-
-}
 
 // v($events);
 // v($pics);
@@ -187,29 +177,6 @@ while ($like = $like_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // v($likes);
 
-
-for ($i=0; $i < count($likes) ; $i++) {
-    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date > CURDATE()';
-    $event_like_data =  [$likes[$i]['event_id']];
-    $event_like_stmt = $dbh->prepare($sql);
-    $event_like_stmt->execute($event_like_data);
-    while ($event_like = $event_like_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $event_likes[] = $event_like;
-    }
-
-   // echo $record[$i]['event_id'] . "iあり";
-    // echo "<br>";
-    // echo $record['event_id'] . "iなし";
-
-    // $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-    // $like_data =  [$likes[$i]['event_id']];
-    // $pic_like_stmt = $dbh->prepare($sql);
-    // $pic_like_stmt->execute($like_data);
-    // while ($pic_like = $pic_like_stmt->fetch(PDO::FETCH_ASSOC)) {
-    //     $pics_like[] = $pic_like;
-    // }
-
-}
 
 // reviewDB登録
 $review_rating = '';
@@ -332,31 +299,56 @@ $file_review = $_FILES['review_pic_path']['name'];
         </nav>
         <div class="content">
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##         ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##        ###    
+ ##     ##    ##      ##     ##  ##  ## ### ##         ##    
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##    
+     ## ##    ##      ##     ##  ##  ## ## ###         ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##         ##    
+   ###  ###### ####   ##   ###### ####  ##  ##       ######  
 
+ ##   ## ###### ##     ##        ##### #### ###### ##  ##  
+ ##   ##   ##   ##     ##          ## ##  ##  ##   ##  ##  
+ ## # ##   ##   ##     ##          ## ##  ##  ##   ### ##  
+ ## # ##   ##   ##     ##          ## ##  ##  ##   ######  
+ #######   ##   ##     ##          ## ##  ##  ##   ## ###  
+ ### ###   ##   ##     ##       ## ## ##  ##  ##   ##  ##  
+ ##   ## ###### ###### ######    ###   #### ###### ##  ##  
 
+ -->
           <section id="section-1">
-          <?php if (isset($events)): ?>
-            <?php for ($i=0; $i < count($events) ; $i++) { ?>
+          <?php if (isset($f_events)): ?>
+            <?php for ($i=0; $i < count($f_events) ; $i++) { ?>
+              <?php
+                $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+                $data = [$record[$i]['event_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+               ?>
               <div class="strip_booking">
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
                     <div class="date">
                       <!-- <span class="month">Dec</span> -->
-                      <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($events[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
+                      <span class="day"><img src="<?php echo htmlspecialchars($f_events[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-5">
-                    <h3 class="tours_booking"><?php echo htmlspecialchars($events[$i]['e_name']); ?><span><?php echo htmlspecialchars($events[$i]['e_prefecture']); ?></span></h3>
+                    <h3 class="tours_booking"><?php echo htmlspecialchars($f_events[$i]['e_name']); ?><span><?php echo htmlspecialchars($f_events[$i]['e_prefecture']); ?></span></h3>
                   </div>
                   <div class="col-md-2 col-sm-3">
                     <ul class="info_booking">
-                      <li><strong>Event start</strong><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></li>
-                      <li><strong>Event end</strong><?php echo htmlspecialchars($events[$i]['e_end_date']); ?></li>
+                      <li><strong>Event start</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_start_date']))); ?></li>
+                      <li><strong>Event end</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_end_date']))); ?></li>
                     </ul>
                   </div>
                   <div class="col-md-2 col-sm-2">
                     <div class="booking_buttons">
-                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_2">Detail</a>
+                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($f_events[$i]['event_id']); ?>" class="btn_2">Detail</a>
                     </div>
                   </div>
                 </div>
@@ -370,12 +362,23 @@ $file_review = $_FILES['review_pic_path']['name'];
           </section> 
           <!-- End section 1 -->
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##       ####   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##      ##  ##  
+ ##     ##    ##      ##     ##  ##  ## ### ##          ##  
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##   
+     ## ##    ##      ##     ##  ##  ## ## ###        ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##     
+   ###  ###### ####   ##   ###### ####  ##  ##      ######  
 
-
-
-
-
-
+ ##     ###### ##  ## ######  
+ ##       ##   ## ##  ##      
+ ##       ##   ####   ##      
+ ##       ##   ###    #####   
+ ##       ##   ####   ##      
+ ##       ##   ## ##  ##      
+ ###### ###### ##  ## ######  
+ -->
 
           <section id="section-2">
           <div class="row">
@@ -559,6 +562,24 @@ $file_review = $_FILES['review_pic_path']['name'];
 
           <!-- End section 2 -->
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##        ####   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
+ ##     ##    ##      ##     ##  ##  ## ### ##           ##  
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ###   
+     ## ##    ##      ##     ##  ##  ## ## ###           ##  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
+   ###  ###### ####   ##   ###### ####  ##  ##        ####   
+
+ #####  ###### ##  ## ###### ###### ##   ## 
+ ##  ## ##     ##  ##   ##   ##     ##   ## 
+ ##  ## ##     ##  ##   ##   ##     ## # ## 
+ #####  #####  ##  ##   ##   #####  ## # ## 
+ ## ##  ##     ##  ##   ##   ##     ####### 
+ ##  ## ##      ####    ##   ##     ### ### 
+ ##  ## ######   ##   ###### ###### ##   ## 
+ -->
+
           <section id="section-3">
             <div class="row">
               <div class="col-md-6 col-sm-6 add_bottom_30">
@@ -684,6 +705,24 @@ $file_review = $_FILES['review_pic_path']['name'];
           </section>
           <!-- End section 3 -->
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##            ##   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##           ###   
+ ##     ##    ##      ##     ##  ##  ## ### ##          ####   
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ## ##   
+     ## ##    ##      ##     ##  ##  ## ## ###         ######  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##            ##   
+   ###  ###### ####   ##   ###### ####  ##  ##            ##   
+
+  ##### #### ###### ##  ## ###### ####    
+    ## ##  ##  ##   ##  ## ##     ## ##   
+    ## ##  ##  ##   ### ## ##     ##  ##  
+    ## ##  ##  ##   ###### #####  ##  ##  
+    ## ##  ##  ##   ## ### ##     ##  ##  
+ ## ## ##  ##  ##   ##  ## ##     ## ##   
+  ###   #### ###### ##  ## ###### ####   
+ -->
+
           <section id="section-4">
             <?php for ($i=0; $i < count($events_end) ; $i++) { ?>
               <div class="strip_booking">
@@ -752,7 +791,23 @@ $file_review = $_FILES['review_pic_path']['name'];
             
           </section>
           <!-- End section 4 -->
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##     ######  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##     ##      
+ ##     ##    ##      ##     ##  ##  ## ### ##     #####   
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##  
+     ## ##    ##      ##     ##  ##  ## ## ###         ##  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##     ##  ##  
+   ###  ###### ####   ##   ###### ####  ##  ##      ####   
 
+ #####  #####   ####  ###### ###### ##     ######  
+ ##  ## ##  ## ##  ## ##       ##   ##     ##      
+ ##  ## ##  ## ##  ## ##       ##   ##     ##      
+ #####  #####  ##  ## #####    ##   ##     #####   
+ ##     ## ##  ##  ## ##       ##   ##     ##      
+ ##     ##  ## ##  ## ##       ##   ##     ##      
+ ##     ##  ##  ####  ##     ###### ###### ######  
+ -->
           <section id="section-5">
             <div class="row">
               <div class="col-md-7 col-sm-7" name="a1">

@@ -464,16 +464,16 @@ $e_lng = $record['e_Lng'];
                             <h3>Map</h3>
                         </div>
                         <div id="keido" style="display: none;">
-                        <?php echo htmlspecialchars($e_lat);?>
-                         </div>
+                            <?php echo htmlspecialchars($e_lat);?>
+                        </div>
 
-                         <div id="ido" style="display: none;">
-                         <?php echo htmlspecialchars($e_lng);?>
-                         </div>
+                        <div id="ido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lng);?>
+                        </div>
 
-                         <div id="address" style="display: none;">
-                         <?php echo htmlspecialchars($e_address);?>
-                         </div>
+                        <div id="address" style="display: none;">
+                            <?php echo htmlspecialchars($e_address);?>
+                        </div>
 
                         <div class="col-md-9">
                             <div id="map_canvas" style="width:600px; height:500px"></div>

@@ -32,6 +32,7 @@ $e_name           = '';
 $e_start_date     = '';
 $e_end_date       = '';
 $e_prefecture     = '';
+$e_address        = '';
 $e_venue          = '';
 $e_access         = '';
 $explanation      = '';
@@ -54,6 +55,7 @@ if (!empty($_POST)) {
     $e_start_date     = $_POST['e_start_date'];
     $e_end_date       = $_POST['e_end_date'];
     $e_prefecture     = $_POST['e_prefecture'];
+    $e_address        = $_POST['e_address'];
     $e_venue          = $_POST['e_venue'];
     $e_access         = $_POST['e_access'];
     $explanation      = $_POST['explanation'];
@@ -81,6 +83,11 @@ if (!empty($_POST)) {
     //都道府県の空チェック
     if ($e_prefecture == '') {
         $errors['e_prefecture'] = 'blank';
+    }
+
+    //住所の空チェック
+    if ($e_address == '') {
+        $errors['e_assress'] = 'blank';
     }
 
     //会場の空チェック
@@ -417,7 +424,20 @@ if (!empty($_POST)) {
                     </tr>
                     <tr>
                         <td style="vertical-align: middle;">
-                            the place (follow on map)
+                            address
+                        </td>
+                        <td>
+                            <div>
+                                <input type="text" class="form-control" name= "e_address" placeholder = "住所の入力" value="<?php echo htmlspecialchars($e_address); ?>">
+                                <?php if(isset($errors['e_address']) && $errors['e_address'] == 'blank') { ?>
+                                <p class="error">住所を入力してください</p>
+                                <?php } ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            the place
                         </td>
                         <td>
                             <div>

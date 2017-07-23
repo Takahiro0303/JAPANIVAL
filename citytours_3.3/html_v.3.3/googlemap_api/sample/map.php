@@ -4,14 +4,14 @@ session_start();
 require('../../../../common/dbconnect.php');
 require('../../../../common/functions.php');
 
-$sql = 'SELECT e_Lat,e_Lng FROM events WHERE event_id=1';
+$sql = 'SELECT e_lat,e_lng FROM events WHERE event_id=1';
 // $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $record = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$e_lat = $record['e_Lat'];
-$e_lng = $record['e_Lng'];
+$e_lat = $record['e_lat'];
+$e_lng = $record['e_lng'];
 
 
 $sql = 'SELECT e_address FROM events WHERE event_id=1';
