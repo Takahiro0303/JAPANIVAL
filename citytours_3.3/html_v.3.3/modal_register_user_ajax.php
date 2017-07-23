@@ -15,10 +15,10 @@ $pic_path           = $_POST['pic_path'];
 
 if (isset($_POST['db_register'])) {
 
-//     $date_str = date('YmdHis');
-//     $submit_file_name = $date_str . $_FILES['pic_path']['name'];
+    // $date_str = date('YmdHis');
+    // $submit_file_name = $date_str . $_FILES['pic_path']['name'];
 
-//     move_uploaded_file($_FILES['pic_path']['tmp_name'], '../../users_pic/' . $submit_file_name);
+    // move_uploaded_file($_FILES['pic_path']['tmp_name'], '../../users_pic/' . $submit_file_name);
 
     $sql = 'INSERT INTO `users` SET `user_flag`=?,
                                     `nickname` =?,
