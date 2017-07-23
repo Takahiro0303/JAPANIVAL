@@ -2,7 +2,7 @@
 
 //イベントID初期化
 
-if (isset($event_id)) {　// event_idがセットされているか...この処理はいらないのでは？ イベント詳細ページ以外でも使うなら別ですが、他のページでも使うようであればその都度requireでrequest.phpを呼び出せば不要かと/大澤
+if (isset($event_id)) {
     $sql = 'SELECT * FROM news WHERE event_id=?';
     $data = [$event_id];
     $stmt = $dbh->prepare($sql);

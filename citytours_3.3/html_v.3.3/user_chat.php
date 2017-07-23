@@ -14,7 +14,20 @@ $login_user = get_login_user($dbh);
 
 // ○クリックされたユーザーのIDを一件取得
 if(isset($_REQUEST['chat_room_id'])){
-$chat_room_id = $_REQUEST['chat_room_id'];
+  if ($_REQUEST['chat_room_id'] == 'no') {
+    //チャットルームID生成
+    $sql = 'INSERT INTO chat_rooms SET request_id = ?,     
+                                       accept_user_id = ?,
+                                       created = NOW()';
+    $data = array($_REQUEST['request_id'], $login_user['user_id']);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+  }else{
+    $chat_room_id = $_REQUEST['chat_room_id'];
+  }
+} else {
+  header('Location: event_detail.php');
+  exit();
 }
 
 // ○バリデーションのためにrequest_idとaccept_user_idを取得
@@ -94,7 +107,7 @@ if (!empty($_POST['message'])) {
         header('Location: user_chat.php?chat_room_id='. $_REQUEST['chat_room_id']);
         exit();
     }
-  }
+}
 
 
 
