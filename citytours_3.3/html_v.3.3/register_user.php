@@ -71,9 +71,9 @@ if (!empty($_POST)) {
 
     if (empty($errors)) {
         $date_str = date('YmdHis');
-        $submit_file_name = $date_str . $_FILES['pic_path']['name'];
+        $submit_file_name = '../../users_pic/' . $date_str . $_FILES['pic_path']['name'];
 
-        move_uploaded_file($_FILES['pic_path']['tmp_name'], '../../users_pic/' . $submit_file_name);
+        move_uploaded_file($_FILES['pic_path']['tmp_name'], $submit_file_name);
 
         $_SESSION['join'] = $_POST;
         $_SESSION['join']['pic_path'] = $submit_file_name;
@@ -95,7 +95,7 @@ if (!empty($_POST)) {
                                             $nationality,
                                             $gender,
                                             $comment,
-                                            $_SESSION['join']['pic_path']);
+                                            $submit_file_name);
             $stmt = $dbh->prepare($sql);
             $stmt->execute($data);
 

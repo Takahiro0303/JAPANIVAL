@@ -72,7 +72,7 @@ if (isset($_SESSION['id'])){
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
-
+}
 // }
 
 
@@ -358,7 +358,7 @@ $e_lng = $record['e_Lng'];
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle;">
-                                                city
+                                                prefecture
                                             </td>
                                             <td>
                                                 <div>
@@ -368,7 +368,17 @@ $e_lng = $record['e_Lng'];
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle;">
-                                                the place (follow on map)
+                                                address
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['e_address']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                the place
                                             </td>
                                             <td>
                                                 <div>
@@ -463,7 +473,7 @@ $e_lng = $record['e_Lng'];
 
                         <div class="col-md-9">
 
-                            <div id="map_canvas" style="width:600px; height:500px"></div>
+                            <div id="map_canvas" style="width:100%; height:500px"></div>
 
                         </div>
                     </div>
