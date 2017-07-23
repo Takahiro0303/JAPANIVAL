@@ -30,18 +30,18 @@ $request_id = $chat_check['request_id'];
 $accept_user_id = $chat_check['accept_user_id'];
 
 // チャット情報全件取得
-// $sql ='SELECT m.*,u.*
-// FROM messages m,users u
-// WHERE m.user_id=u.user_id
-// AND m.accept_user_id=? OR m.request_user_id=?';
-// $data = [$_SESSION['id'],$_SESSION['id']];
-// $stmt = $dbh->prepare($sql);
-// $stmt->execute($data);
-// $all_messages = [];
-// while ($a_message = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $all_messages[] = $a_message;
-// }
-
+$sql ='SELECT c.*,u.*
+      FROM caht_rooms c,users u
+      WHERE c.accept_user_id=u.user_id OR c.request_user_id=u.user_id
+      AND u.user_id=?';
+$data = [$_SESSION['id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+$chat_rooms = [];
+while ($chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $chat_rooms[] = $chat_room;
+}
+// v($chat_rooms);
 
 // ○もし、ログインユーザーのidがchat_roomsテーブルのaccept_idかaccept_user_idと合えばメッセージ読み込み。そうでなければ、user_chat.php(チャットトップ)へ繊維
 if($_SESSION['id'] == $request_id || $_SESSION['id'] == $accept_user_id){
@@ -183,46 +183,21 @@ if (!empty($_POST['message'])) {
   <main style="padding-top: 100px; ">
     <!-- チャット全件表示 -->
     <aside class="col-md-3">
-      <a type="button" >
-        <div class="row">
-          <div class="col-md-3">
-               <img src="" alt="User Picture" class="img-circle">
+      <?php foreach($chat_rooms as $chat_room){ ?>
+        <a type="button" href="user_chat.php?chat_room_id=<?php echo $chat_rooms['chat_room_id']; ?>">
+          <div class="row">
+            <div class="col-md-3">
+                 <img src="../../users_pic/<?php echo $chat_room['pic_path']; ?>" alt="User Picture" class="img-circle" style="width: 40px; height: 50px;""> 
+            </div>
+            <div class="col-md-9">
+                  <div><?php echo $chat_room['nickname']; ?></div>
+                  <strong class="pull-right">09:45AM</strong>
+                  (123) 123-456
+            </div>
           </div>
-          <div class="col-md-9">
-                <div>Jack Sparrow</div>
-                <strong class="pull-right">09:45AM</strong>
-                (123) 123-456
-          </div>
-        </div>
-      </a>
-      <hr>
-      <a type="button" >
-        <div class="row">
-          <div class="col-md-3">
-               <img src="" alt="User Picture" class="img-circle">
-          </div>
-          <div class="col-md-9">
-                <div>Jack Sparrow</div>
-                <strong class="pull-right">09:45AM</strong>
-                (123) 123-456
-          </div>
-        </div>
-      </a>
-      <hr>
-      <a type="button" >
-        <div class="row">
-          <div class="col-md-3">
-               <img src="" alt="User Picture" class="img-circle">
-          </div>
-          <div class="col-md-9">
-                <div>Jack Sparrow</div>
-                <strong class="pull-right">09:45AM</strong>
-                (123) 123-456
-          </div>
-        </div>
-      </a>
-      <hr>
-
+        </a>
+        <hr>
+      <?php } ?>
     </aside>
     
     <!-- 個人間チャット表示 -->
