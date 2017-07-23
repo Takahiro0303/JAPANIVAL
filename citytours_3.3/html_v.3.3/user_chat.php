@@ -29,17 +29,18 @@ $chat_check=$stmt->fetch(PDO::FETCH_ASSOC);
 $request_id = $chat_check['request_id'];
 $accept_user_id = $chat_check['accept_user_id'];
 
-$sql ='SELECT c.*,u.*
-      FROM messages m,users u
-      WHERE m.user_id=u.user_id
-      AND m.chat_room_id=?';
-    $data = [$chat_room_id];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $messages = [];
-    while ($message = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $messages[] = $message;
-    }
+// チャット情報全件取得
+// $sql ='SELECT m.*,u.*
+// FROM messages m,users u
+// WHERE m.user_id=u.user_id
+// AND m.accept_user_id=? OR m.request_user_id=?';
+// $data = [$_SESSION['id'],$_SESSION['id']];
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute($data);
+// $all_messages = [];
+// while ($a_message = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//     $all_messages[] = $a_message;
+// }
 
 
 // ○もし、ログインユーザーのidがchat_roomsテーブルのaccept_idかaccept_user_idと合えばメッセージ読み込み。そうでなければ、user_chat.php(チャットトップ)へ繊維
@@ -288,6 +289,7 @@ if (!empty($_POST['message'])) {
     </div>
 
     <!--　イベント詳細&ユーザー詳細　表示 -->
+    <!-- イベントデータ　＝　$event_data　に取得済み -->
     <aside class="col-md-3">
       <div class=" table-responsive">
           <table　class="table table-striped">
