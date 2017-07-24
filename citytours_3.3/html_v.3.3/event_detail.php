@@ -2,32 +2,35 @@
 session_start();
 require('../../common/dbconnect.php'); //データベースへ接続
 require('../../common/functions.php');
+require('request.php'); // パラメータがなければ、edit_index.phpに遷移
 
 $login_user = get_login_user($dbh);
 
-// sessionを持たない状態で直接、このページに来た時には、event_input.phpに自動遷移
-if(!isset($_SESSION['event'])){
-    header('Location: edit_index.php');
-    exit();
-}
-
-// require('header.php');
-// require('../../common/event_data.php'); //イベント詳細情報データの読み込み (function化したデータベースの読み込み) ⇦他でも使うようなら復活させる
-// $_REQUEST['event_id'] = 1;
 
 $event_id = $_REQUEST['event_id'];
 
-// 【○】イベントデータ取得 * ログイン不要
+// ○イベントデータ取得 * ログイン不要
 $sql = 'SELECT * FROM events WHERE event_id=?';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-// v($event_data);
 
-// 【○】イベント写真データ取得 * ログイン不要
+$starts = explode('-', $event_data['e_start_date']);
+$ends = explode('-', $event_data['e_end_date']);
+
+if ($starts[0] != $ends[0]) {
+    $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+} elseif($starts[1] != $ends[1]){
+    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+} elseif($starts[2] != $ends[2]){
+    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+} else{
+    $duration = date('F d, Y', strtotime(implode('-', $starts)));
+}
+
+
 $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
@@ -35,44 +38,33 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_pics[] = $event_pic;
 }
 
-
-  // echo '<pre>';
-  // var_dump($event_pics);
-  // echo '</pre>';
-  // echo $event_id;
-
-// v($event_pics);
-
-
-
-// reviews&usersテーブルから全データ取得
-// $sql ='SELECT r.*, u.*
-//         FROM reviews r, users u
-//         WHERE r.user_id=u.user_id AND r.event_id=?';
-//         // -- ORDER BY r.created
-//         // -- DESC LIMIT %d, 3
-//  $data = [$event_id];   
-//  $stmt = $dbh->prepare($sql);
-//  $stmt->execute($data);
-// $reviews = [];
-
-// while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $reviews[] = $review;
-// }
-// v($reviews);
-
-
-// $count = count($reviews);
-
+// ○reviews&usersテーブルから全データ取得
+$sql ='SELECT r.*, u.*
+        FROM reviews r, users u
+        WHERE r.user_id=u.user_id AND r.event_id=?';
+        // -- ORDER BY r.created
+        // -- DESC LIMIT %d, 3
+ $data = [$event_id];   
+ $stmt = $dbh->prepare($sql);
+ $stmt->execute($data);
+$reviews = [];
+while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $reviews[] = $review;
+}
+$count = count($reviews);
 // v($count);
 
-// v($event_pics[0]['e_pic_path']);
+// ○newsテーブルから全データ取得 *ログイン不要
+$sql = 'SELECT * FROM news WHERE event_id=?';
+$data = [$event_id];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+    while ($new = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $news[] = $new;
+    }
 
-// マッチング情報＆リクエストボタンの表示 ※ログイン必須
-
-// ○requestsテーブルから全データ取得
-// if (isset($_SESSION[''])){
-// user_flag != 0 // 管理者ではない場合、
+// ○requestsテーブルから全データ取得　※ログイン必須
+if (isset($_SESSION['id'])){
     $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
@@ -81,19 +73,56 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
     while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $requests[] = $request;
     }
+}
 // }
-v($requests[1]['nickname']);
 
-// リクエストボタンを押した際の登録処理
-if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
-        if ($request = $_POST['request_category_id']) {
+
+// reviewDB登録
+$review_rating = '';
+$review_comment = '';
+
+if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
+  $review_rating = $_POST['review_rating'];
+  $review_comment = $_POST['review_comment'];
+
+  $review_sql = 'INSERT INTO reviews SET event_id = ?, user_id = ?, rating = ?, comment = ?, created = NOW()';
+  $review = [$_POST['event_id'],$login_user['user_id'],$_POST['review_rating'],$_POST['review_comment']];
+  $review_stmt = $dbh->prepare($review_sql);
+  $review_stmt->execute($review);
+
+}
+    
+// $file_review = $_FILES['review_pic_path']['name'];
+//         //もし画像がセットされていれば画像アップデート処理
+//         if (!empty($file_review)) {
+//             $date_str = date('YmdHis');
+//             $submit_file_name = $date_str . $_FILES['review_pic_path']['name'];
+//             move_uploaded_file($_FILES['review_pic_path']['tmp_name'], '../../review_photos/' . $submit_file_name);
+
+//                 $sql = 'SELECT review_id FROM reviews ORDER BY review_id desc limit 1';
+//                 $review_stmt = $dbh->prepare($sql);
+//                 $review_stmt->execute();
+//                 $review_id = $review_stmt->fetch(PDO::FETCH_ASSOC);
+
+
+//             $sql = 'INSERT INTO review_photos SET review_id = ?, review_pic_path = ?';
+//             $data = [$review_id['review_id'],$submit_file_name];
+//             $stmt = $dbh->prepare($sql);
+//             $stmt->execute($data);
+//         }
+// v($_FILES['review_pic_path']);
+
+// ○リクエストボタンを押した際の登録処理
+// v($request['user_id']);
+// if ($requests['user_id'] != $login_user){
+    if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
         $sql = 'INSERT INTO requests
-                    SET request_id=?,
-                        user_id=?,
-                        event_id=?,
-                        request_category_id=?,
-                        created=NOW()';
-        $data = array($requst_id, $login_user['user_id'],$_REQUST['event_id']);
+                        SET request_id=?,
+                            user_id=?,
+                            event_id=?,
+                            request_category_id=?,
+                            created=NOW()';
+        $data = [$_POST['request_id'],$_SESSION['id'],$_REQUEST['event_id'],$_POST['request_category_id']];
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
@@ -101,39 +130,28 @@ if (!empty($_POST['request_category_id'])) { // リクエストカテゴリ指�
         header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
         exit();
         }
-}
+// }
 
-// ③いいねロジック実装
-if (!empty($_POST['like_data'])) {
-    // $_POST['like_data']の値がlikeかunlikeかで条件分岐
-    if ($_POST['like_data'] == 'like') {
-        // いいね！ボタンが押されたとき（likesテーブルにデータ追加）
-        $sql = 'INSERT INTO likes SET member_id=?, tweet_id=?';
-        $data = [$login_user['member_id'] , $record['tweet_id']];
-    } else {
-        // いいね！取り消しボタンが押されたとき（likesテーブルからデータ削除）
-        $sql = 'DELETE FROM likes WHERE member_id=? AND tweet_id=?';
-        $data = [$login_user['member_id'] , $record['tweet_id']];
-    }
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
+//　マッチング希望者数カウント・表示　⇦ リクエスト欄に記載させるか要相談
+// $sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
+// $data = [$_REQUEST['event_id']];
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute($data);
+// $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    header('Location: view.php?tweet_id=' . $record['tweet_id']);
-    exit();
-}
-
-//　マッチング希望者数カウント・表示
-$sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
-$data = [$_REQUEST['event_id']];
+$sql = 'SELECT e_Lat,e_Lng FROM events WHERE event_id=?';
+$data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
-$request_count = $stmt->fetch(PDO::FETCH_ASSOC);
+$record = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$e_lat = $record['e_Lat'];
+$e_lng = $record['e_Lng'];
+
 
 ?>
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="ie ie8"> <![endif]-->
-<!--[if IE 9]><html class="ie ie9"> <![endif]-->
 <html lang="en">
 
 <head>
@@ -161,6 +179,40 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
     <!-- CSS -->
     <link href="css/slider-pro.min.css" rel="stylesheet">
     <link href="css/date_time_picker.css" rel="stylesheet">
+    <link href="modal_profile.css"  rel="stylesheet">
+
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+
+    <script src="js/jquery-2.2.4.min.js"></script>
+
+    <!-- Google Maps APIを読み込む -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzo1nDw_k6yNjo48_6UCYjLOwqF_QxEWE"></script>
+
+    <!-- initialize()関数を定義 -->
+    <script type="text/javascript">
+      function initialize() {
+        var lat = $('#keido').text();
+        var lng = $('#ido').text();
+        console.log(lat);
+        console.log(lng);
+
+        // 地図を表示する際のオプションを設定
+        var map = new google.maps.Map( document.getElementById( 'map_canvas' ), {
+          zoom: 15 ,  // ズーム値
+          center: new google.maps.LatLng(lat , lng) , // 中心の位置座標
+        } ) ;
+
+        var marker = new google.maps.Marker( {
+          map: map ,  // 地図
+          position: new google.maps.LatLng(lat , lng) , // 位置座標
+        } ) ;
+      }
+    </script>
+
 
 <!--[if lt IE 9]>
 <script src="js/html5shiv.min.js"></script>
@@ -169,7 +221,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
 </head>
 
-<body>
+<body onload="initialize()">
 
 
 
@@ -191,11 +243,15 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     <div class="col-md-7 col-sm-7">
                         <h1><?php echo $event_data['e_name']; ?></h1> <!-- イベント名表示 -->
-                        <span><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
+                        <span style="display:block; font-size: 17px;margin-bottom:6px; margin-top: 2px;"><?php echo $event_data['e_prefecture']; ?></span> <!-- 開催地名表示 -->
 
                     </div>
-                    <div class="col-md-5 col-sm-5" style="font-size: 60px;">
-                        <span><h1><?php echo $event_data['e_start_date'] . '〜'. $event_data['e_end_date']; ?></h1></span> <!-- 曜日・開催日時を表示 -->
+                    <div class="col-md-5 col-sm-5" style="text-align: center;">
+
+                        <span><h1 style="font-size: 32px; padding-top: 15px; "><?php echo $duration; ?></h1></span>
+                      <!--             date('F d, Y', strtotime($event_data['e_start_date'])) -->
+
+                         <!-- 曜日・開催日時を表示 -->
                         <!-- <span class="favorites"><i class="icon-heart" style="color: red;"></i><b>125<b></span> <!-- お気に入り数の表示 -->
                         <!--                         <a class="btn-danger" href="" aria-expanded="false" width="40px" height="20">♡</a> -->
                     </div>
@@ -222,22 +278,18 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
 
-                        <div class="sp-slides">
+                        <div class="sp-slides" style="margin-top:2px;">
 
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
-                                <?php echo '<div class="sp-slide">' ?>
-                                    <?php echo '<img' ?>    
-                                    <?php echo 'alt="Image"'  ?> 
-                                    <?php echo 'class="sp-image"'  ?> 
-                                    <?php echo 'src="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-src="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-small="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-medium="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-large="' . $event_pics[$j]['e_pic_path'] . '"'  ?> 
-                                    <?php echo 'data-retina="' . $event_pics[$j]['e_pic_path'] . '">'  ?> 
-                                <?php echo '</div>'  ?>
+                                <div class="sp-slide">
+                                    <img alt="Image" class="sp-image" src="<?php $event_pics[$j]['e_pic_path'];?>" >
+                                    <data-src="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-small="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-medium="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-large="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                    <data-retina="<?php echo $event_pics[$j]['e_pic_path'];?>">
+                                </div>
                             <?php } ?>
-
                         </div>
                         <div class="sp-thumbnails">
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
@@ -255,11 +307,11 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                             <h3>Event Description</h3>
                         </div>
                         <div class="col-md-9">
-                            <div style="word-wrap: break-word; width:99%; height:300px;">
+                            <div style="word-wrap: break-word; width:99%; height:300px; overflow: auto;">
                                 <?php echo $event_data['explanation'] ?>
                             </div>
                         </div>
-                    </div> 
+                    </div>
 
                     <!-- End row  -->
 
@@ -298,17 +350,17 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                                             <td>
                                                 <div style="margin-bottom: 10px;">
                                                     イベント日程（開始日）（必須）<br>
-                                                    <?php echo $event_data['e_start_date']; ?>
+                                                    <?php echo date('F d, Y', strtotime(implode('-', $starts))); ?>
                                                 </div>
                                                 <div>
                                                     イベント日程（終了日）（必須）<br>
-                                                    <?php echo $event_data['e_start_date']; ?>
+                                                    <?php echo date('F d, Y', strtotime(implode('-', $ends))); ?>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle;">
-                                                city
+                                                prefecture
                                             </td>
                                             <td>
                                                 <div>
@@ -318,7 +370,17 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                                         </tr>
                                         <tr>
                                             <td style="vertical-align: middle;">
-                                                the place (follow on map)
+                                                address
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_data['e_address']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                the place
                                             </td>
                                             <td>
                                                 <div>
@@ -341,7 +403,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                                                 Acces
                                             </td>
                                             <td>
-                                                <?php echo $event_data['e_access']; ?>
+                                                <?php echo $event_data['e_venue']; ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -399,25 +461,285 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
                         <div class="col-md-3">
                             <h3>Map</h3>
                         </div>
+                        <div id="keido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lat);?>
+                        </div>
+
+                        <div id="ido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lng);?>
+                        </div>
+
+                        <div id="address" style="display: none;">
+                            <?php echo htmlspecialchars($e_address);?>
+                        </div>
+
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+
+                            <div id="map_canvas" style="width:100%; height:500px"></div>
+
                         </div>
                     </div>
 
                     <hr>
 
+                    <div class="row"><!-- レビュー表示 -->
+                        <div class="col-md-3">
+                            <h3>Reviews </h3> 
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div id="general_rating" class="rating">
+                                    <div class="col-md-7">
+                                        <span><?php echo($count); ?></span> Reviews <!-- レビュー件数表示 -->            
+                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i> 
+                                    </div>
+                                    <div class="col-md-5">
+                                        <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
+                                    </div>
+                                </div> <!-- general_rating -->     
+                            </div> 
+
+                            <hr>
+
+                            <?php foreach ($reviews as $review){ ?>
+                                <div class="review_strip_single">
+                                    <img src="../../users_pic/<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
+
+                                    <!--　レビュー作成日表示 -->
+                                    <small><?php echo($review['created']);?></small>
+
+                                    <!-- ユーザー名表示 -->
+                                    <h4><?php echo($review['nickname']); ?></h4>
+
+                                    <!-- レビュー評価表示機能 -->
+                                    <?php if ($review['rating'] == 1){ ?>
+                                        <?php v($review); ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star"></i>
+                                            <i class="icon-star"></i>
+                                            <i class="icon-star"></i>
+                                            <i class="icon-star"></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 2){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star "></i>
+                                            <i class="icon-star "></i>
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 3){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star "></i>
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 4){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star "></i>
+                                        </div>
+                                        <?php }elseif ($review['rating'] == 5){ ?>
+                                        <div class="rating">
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                            <i class="icon-star voted"></i>
+                                        </div>
+                                    <?php }; ?>
+
+                                    <!-- レビュー本文表示 -->
+                                    <p><?php echo($review['comment']) ; ?></p>
+
+
+                                </div> <!-- End review strip -->
+
+                            <?php }; ?>
+                        
+                            <div align="center">
+                                <a href="" class="btn_1 add_bottom_30">See all review</a>
+                            </div>
+
+
+                        </div> <!-- col-md-9 -->
+                    </div> <!-- row -->
                     
                 </div>
                 <!--End  single_tour_desc-->
 
-                <!-- event_aside挿入 -->
-                <?php require('event_aside.php');  ?>
+                <!-- event_aside挿入 --> 
+                <?php //require('event_aside.php');  ?>
+
+                <aside class="col-md-4">
+                    <div class="box_style_1 expose">
+                        <h3 class="inner">EVENT NEWS</h3>
+                        <!-- ニュース表示 -->
+                        <div id="scroll" class="news">
+
+                            <?php if (isset($news)): ?>
+                            <!-- ニュースデータがある場合はfor文で表示 -->
+                                <?php foreach ($news as $new) { ?> 
+                                    <p style="margin-bottom: 0px; color: black; font-weight: 600; text-decoration: underline;"><?php echo $new['news_title'];?></p>
+                                    <p style="margin-bottom: 0px; color: black;"><?php echo $new['news_comment'];?></p>      
+                                    <p style="margin-bottom: 0px; font-style:oblique;">登録日<?php echo $new['created'];?></p>
+                                    <?php if ($new['created'] != $new['modified']): ?>
+                                        <p style="margin-bottom: 0px; font-style:oblique;">変更日<?php echo $new['modified'];?></p>
+                                    <?php endif; ?>
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <?php } ?>
+                            <?php else: ?>
+                            <!-- ニュースデータがない場合 -->
+                            お知らせはありません。
+                            <?php endif; ?>
+                        </div>
+
+
+                    </div> <!-- box_style_1 expose -->
+
+                    <div class="box_style_1 expose">
+                        <h3 class="inner">Eve tomo</h3>
+                        <div class="eve_tomo">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label><i class="icon-globe"></i>Nationality</label>
+                                        <div class="styled-select">
+                                            <select class="form-control" name="currency" id="currency">
+                                                <option value="not specified" selected>not specified</option>
+                                                <option value="Japan">Japan</option>
+                                                <option value="Philippine">Philippine</option>
+                                                <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Albanie">Albanie</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <label><i class=" icon-language"></i>Language</label>
+                                        <div class="styled-select">
+                                            <select class="form-control" name="currency" id="currency">
+                                                <option value="not specified" selected>not specified</option>
+                                                <option value="Japanese">Japanese</option>
+                                                <option value="Tagalog">Tagalog</option>
+                                                <option value="English">English</option>
+                                                <option value="Tagalog">Tagalog</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- row -->
+
+                            <hr>
+                            <div style="overflow: scroll; height: 1400px">
+                            <?php v($_SESSION['flag']); ?>
+                                <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == '1'): ?>
+                                    <?php foreach ($requests as $request){ ?>
+                                     <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                        <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                            <div style="text-align: center">
+                                                <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
+                                            </div>
+                                            <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
+                                            <div style="text-align: center">
+                                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                            </div>
+                                        </div><!-- col-md-6 col-sm-6 -->
+                                        <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                            <div class="button">
+                                                <!-- 個人詳細ページに遷移 -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a href="#" class="btn_full" data-toggle="modal" data-target="#myprofile"　style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+
+                                                    <!-- <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+ -->                                                </div>
+                                                <!-- チャットページに遷移 -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 10px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                            </div>
+                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
+                                                </div>
+                                            </div> <!-- button -->
+                                        </div> <!-- col-md-6 col-sm-6 -->
+                                    </div>
+                                    <?php } ?>
+                                    <p>
+                                        <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest">Request to eve tomo</a>
+                                    </p>
+
+
+                                <?php elseif ($_SESSION['flag'] == ''): ?>
+                                   
+                                     <h3>ログインしてね！</h3>
+                    
+                                <?php elseif ($_SESSION['flag'] == '0'): ?>
+                                    <h3>マッチング希望者一覧</h3>
+                                    <?php foreach ($requests as $request){ ?>
+                                         <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                            <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
+                                                <div style="text-align: center">
+                                                    <img src="../../users_pic/<?php echo($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" >
+                                                </div>
+                                                <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
+                                                <div style="text-align: center">
+                                                    <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
+                                                    <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
+                                                </div>
+                                            </div><!-- col-md-6 col-sm-6 -->
+                                            <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                                <div class="button">
+                                                    <!-- 個人詳細ページに遷移 -->
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                      <a href="#" class="btn_full" data-toggle="modal" data-target="#myprofile" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+
+                                                        <!-- <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a> -->
+                                                    </div>
+                                                    <!-- チャットページに遷移 -->
+                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                        <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                            <div class="panel-heading" style="padding : 10px; ">
+                                                                <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                                </div>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- button -->
+                                            </div> <!-- col-md-6 col-sm-6 -->
+                                        </div>
+                                    <?php } ?>
+                                
+                                <?php elseif ($_SESSION['flag'] == '2'): ?>
+
+                                <?php endif; ?>
+                        </div>
+                    </div>                        
+                </aside> <!-- class="col-md-4" -->
 
             </div>
         </div>
-        <!--End container -->
-        <div id="overlay"></div>
-        <!-- Mask on input focus -->
     </div>
 </main>
 <!-- End main -->
@@ -433,6 +755,15 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
     <!-- モーダル・主催者登録 -->
     <?php require('modal_register_organizer.php'); ?>
+
+    <!-- モーダル・レビュー登録 -->
+    <?php require('modal_leave_review.php'); ?>
+
+    <!-- モーダル・リクエスト登録 -->
+    <?php require('modal_register_request.php'); ?>
+
+    <!-- モーダル・プロフィール表示 -->
+    <?php require('modal_profile.php') ?>
 
 <div id="toTop"></div>
 <!-- Back to top button -->
@@ -487,7 +818,7 @@ $request_count = $stmt->fetch(PDO::FETCH_ASSOC);
 <script src="assets/validate.js"></script>
 
 <!-- Map -->
-<script src="http://maps.googleapis.com/maps/api/js"></script>
+<!-- <script src="http://maps.googleapis.com/maps/api/js"></script> -->
 <script src="js/map.js"></script>
 <script src="js/infobox.js"></script>
 

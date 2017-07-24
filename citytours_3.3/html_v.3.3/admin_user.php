@@ -4,15 +4,18 @@ require('../../common/dbconnect.php');
 require('../../common/functions.php');
 $login_user = get_login_user($dbh);
 
+if ($_SESSION['flag'] == '') {
+    header('Location: edit_index.php');
+    exit();//ここでこのファイルの読み込みを強制終了
+}
 
-
-$nickname = $login_user['nickname'];
-$email = $login_user['email'];
-$nationality = $login_user['nationality'];
-$gender = $login_user['gender'];
-// $level = $login_user['level'];
-$self_intro = $login_user['self_intro'];
-$errors = [];
+$nickname     = $login_user['nickname'];
+$email        = $login_user['email'];
+$nationality  = $login_user['nationality'];
+$gender       = $login_user['gender'];
+// $level     = $login_user['level'];
+$self_intro   = $login_user['self_intro'];
+$errors       = [];
 
 if (!empty($_POST)) {
     $current_password = sha1($_POST['current_password']);
@@ -118,36 +121,33 @@ if (!empty($_POST)) {
     }
 }
 
-// 参加予定イベントページ
-$sql = 'SELECT * FROM joins WHERE user_id=?';
+//参加予定（未来日）イベントデータ
+$sql = 'SELECT * FROM joins, events WHERE joins.event_id = events.event_id
+                                    AND   events.e_end_date > CURDATE()
+                                    AND   joins.user_id=?';
 $data = [$login_user['user_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
-
-while ($record = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $records[] = $record;
+while ($f_event = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $f_events[] = $f_event;
 }
 
-// v($records);
+//参加済み（過去日）イベントデータ
+$sql = 'SELECT * FROM joins, events WHERE joins.event_id = events.event_id
+                                    AND   events.e_end_date < CURDATE()
+                                    AND   joins.user_id=?';
+$data = [$login_user['user_id']];
+$stmt = $dbh->prepare($sql);
+$stmt->execute($data);
+while ($p_event = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $p_events[] = $p_event;
+}
 
 
-for ($i=0; $i < count($records) ; $i++) {
-    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date > CURDATE()';
-    $event_data =  [$records[$i]['event_id']];
-    $event_stmt = $dbh->prepare($sql);
-    $event_stmt->execute($event_data);
-    while ($event = $event_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $events[] = $event;
-    }
-    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date < CURDATE()';
-    $event_end_data =  [$records[$i]['event_id']];
-    $event_end_stmt = $dbh->prepare($sql);
-    $event_end_stmt->execute($event_end_data);
-    while ($event_end = $event_end_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $events_end[] = $event_end;
-    }
 
-
+  // echo '<pre>';
+  // var_dump($events);
+  // echo '</pre>';
 
    // echo $record[$i]['event_id'] . "iあり";
     // echo "<br>";
@@ -161,7 +161,6 @@ for ($i=0; $i < count($records) ; $i++) {
    //      $pics[] = $pic;
    //  }
 
-}
 // v($events);
 // v($pics);
 
@@ -178,29 +177,6 @@ while ($like = $like_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // v($likes);
 
-
-for ($i=0; $i < count($likes) ; $i++) {
-    $sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.event_id=? AND events.e_end_date > CURDATE()';
-    $event_like_data =  [$likes[$i]['event_id']];
-    $event_like_stmt = $dbh->prepare($sql);
-    $event_like_stmt->execute($event_like_data);
-    while ($event_like = $event_like_stmt->fetch(PDO::FETCH_ASSOC)) {
-        $event_likes[] = $event_like;
-    }
-
-   // echo $record[$i]['event_id'] . "iあり";
-    // echo "<br>";
-    // echo $record['event_id'] . "iなし";
-
-    // $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-    // $like_data =  [$likes[$i]['event_id']];
-    // $pic_like_stmt = $dbh->prepare($sql);
-    // $pic_like_stmt->execute($like_data);
-    // while ($pic_like = $pic_like_stmt->fetch(PDO::FETCH_ASSOC)) {
-    //     $pics_like[] = $pic_like;
-    // }
-
-}
 
 // reviewDB登録
 $review_rating = '';
@@ -282,22 +258,6 @@ $file_review = $_FILES['review_pic_path']['name'];
 </head>
 
 <body>
-
-  <!--[if lte IE 8]>
-    <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a>.</p>
-<![endif]-->
-
-<!--   <div id="preloader">
-    <div class="sk-spinner sk-spinner-wave">
-      <div class="sk-rect1"></div>
-      <div class="sk-rect2"></div>
-      <div class="sk-rect3"></div>
-      <div class="sk-rect4"></div>
-      <div class="sk-rect5"></div>
-    </div>
-  </div> -->
-  <!-- End Preload -->
-
   <div class="layer"></div>
   <!-- Mobile menu overlay mask -->
 
@@ -319,19 +279,6 @@ $file_review = $_FILES['review_pic_path']['name'];
   <!-- End section -->
 
   <main>
-<!--     <div id="position">
-      <div class="container">
-        <ul>
-          <li><a href="#">Home</a>
-          </li>
-          <li><a href="#">Category</a>
-          </li>
-          <li>Page active</li>
-        </ul>
-      </div>
-    </div> -->
-    <!-- End Position -->
-
     <div class="margin_60 container">      
       <h1 class="welcom">Welcome!</h1><br>
       
@@ -352,151 +299,91 @@ $file_review = $_FILES['review_pic_path']['name'];
         </nav>
         <div class="content">
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##         ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##        ###    
+ ##     ##    ##      ##     ##  ##  ## ### ##         ##    
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##    
+     ## ##    ##      ##     ##  ##  ## ## ###         ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##         ##    
+   ###  ###### ####   ##   ###### ####  ##  ##       ######  
+
+ ##   ## ###### ##     ##        ##### #### ###### ##  ##  
+ ##   ##   ##   ##     ##          ## ##  ##  ##   ##  ##  
+ ## # ##   ##   ##     ##          ## ##  ##  ##   ### ##  
+ ## # ##   ##   ##     ##          ## ##  ##  ##   ######  
+ #######   ##   ##     ##          ## ##  ##  ##   ## ###  
+ ### ###   ##   ##     ##       ## ## ##  ##  ##   ##  ##  
+ ##   ## ###### ###### ######    ###   #### ###### ##  ##  
+
+ -->
           <section id="section-1">
-            <!-- <div id="tools">
-              <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                  <div class="styled-select-filters">
-                    <select name="sort_type" id="sort_type">
-                      <option value="" selected>Sort by type</option>
-                      <option value="tours">Tours</option>
-                      <option value="hotels">Hotels</option>
-                      <option value="transfers">Transfers</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                  <div class="styled-select-filters">
-                    <select name="sort_date" id="sort_date">
-                      <option value="" selected>Sort by date</option>
-                      <option value="oldest">Oldest</option>
-                      <option value="recent">Recent</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-            <!--/tools -->
-          <?php for ($i=0; $i < count($events) ; $i++) { ?>
-            <div class="strip_booking">
-              <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <!-- <span class="month">Dec</span> -->
-                    <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($events[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="tours_booking"><?php echo htmlspecialchars($events[$i]['e_name']); ?><span><?php echo htmlspecialchars($events[$i]['e_prefecture']); ?></span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Event start</strong><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></li>
-                    <li><strong>Event end</strong><?php echo htmlspecialchars($events[$i]['e_end_date']); ?></li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_2">Detail</a>
-                  </div>
-                </div>
-              </div>
-              <!-- End row -->
-            </div>
-          <?php } ?>
-            <!-- End strip booking -->
+          <?php if (isset($f_events)): ?>
+            <?php for ($i=0; $i < count($f_events) ; $i++) { ?>
+              <?php
+                $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
 
-            <!-- <div class="strip_booking">
-              <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>27</strong>Fri</span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="tours_booking">Louvre Museum<span>2 Adults / 2 Childs</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 20 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
-                  </div>
-                </div>
-              </div>
-              <!-- End row -->
-            <!-- </div> -->
-             <!-- End strip booking -->
+                $data = [$record[$i]['event_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            <!-- <div class="strip_booking">
-              <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>28</strong>Fri</span>
+               ?>
+              <div class="strip_booking">
+                <div class="row">
+                  <div class="col-md-2 col-sm-2">
+                    <div class="date">
+                      <!-- <span class="month">Dec</span> -->
+                      <span class="day"><img src="<?php echo htmlspecialchars($f_events[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-5">
+                    <h3 class="tours_booking"><?php echo htmlspecialchars($f_events[$i]['e_name']); ?><span><?php echo htmlspecialchars($f_events[$i]['e_prefecture']); ?></span></h3>
+                  </div>
+                  <div class="col-md-2 col-sm-3">
+                    <ul class="info_booking">
+                      <li><strong>Event start</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_start_date']))); ?></li>
+                      <li><strong>Event end</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_end_date']))); ?></li>
+                    </ul>
+                  </div>
+                  <div class="col-md-2 col-sm-2">
+                    <div class="booking_buttons">
+                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($f_events[$i]['event_id']); ?>" class="btn_2">Detail</a>
+                    </div>
                   </div>
                 </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="tours_booking">Tour Eiffel<span>2 Adults</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 20 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
-                  </div>
-                </div>
+                <!-- End row -->
               </div>
- -->              <!-- End row -->
-            <!-- </div> -->
-            <!-- End strip booking -->
-
-            <!-- <div class="strip_booking">
-              <div class="row">
-                <div class="col-md-2 col-sm-2">
-                  <div class="date">
-                    <span class="month">Dec</span>
-                    <span class="day"><strong>30</strong>Fri</span>
-                  </div>
-                </div>
-                <div class="col-md-6 col-sm-5">
-                  <h3 class="transfers_booking">Orly Airport<span>2 Adults / 2Childs</span></h3>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                  <ul class="info_booking">
-                    <li><strong>Booking id</strong> 23442</li>
-                    <li><strong>Booked on</strong> Sat. 20 Dec. 2015</li>
-                  </ul>
-                </div>
-                <div class="col-md-2 col-sm-2">
-                  <div class="booking_buttons">
-                    <a href="#0" class="btn_2">Edit</a>
-                    <a href="#0" class="btn_3">Cancel</a>
-                  </div>
-                </div>
-              </div> -->
-              <!-- End row -->
-            <!-- </div> -->
-            <!-- End strip booking -->
+            <?php } ?>
+          <?php else: ?>
+            <p>参加予定のイベントはありません。</p>
+          <?php endif; ?>
 
           </section> 
-                   <!-- End section 1 -->
+          <!-- End section 1 -->
+
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##       ####   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##      ##  ##  
+ ##     ##    ##      ##     ##  ##  ## ### ##          ##  
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##   
+     ## ##    ##      ##     ##  ##  ## ## ###        ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##     
+   ###  ###### ####   ##   ###### ####  ##  ##      ######  
+
+ ##     ###### ##  ## ######  
+ ##       ##   ## ##  ##      
+ ##       ##   ####   ##      
+ ##       ##   ###    #####   
+ ##       ##   ####   ##      
+ ##       ##   ## ##  ##      
+ ###### ###### ##  ## ######  
+ -->
+
           <section id="section-2">
           <div class="row">
-            <?php for ($i=0; $i < count($event_likes) ; $i++) { ?>
 
-            
+            <?php for ($i=0; $i < count($event_likes) ; $i++) { ?>
               <div class="col-md-4 col-sm-6">
                 <div class="hotel_container">
                   <div class="img_container">
@@ -675,6 +562,24 @@ $file_review = $_FILES['review_pic_path']['name'];
 
           <!-- End section 2 -->
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##        ####   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
+ ##     ##    ##      ##     ##  ##  ## ### ##           ##  
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ###   
+     ## ##    ##      ##     ##  ##  ## ## ###           ##  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
+   ###  ###### ####   ##   ###### ####  ##  ##        ####   
+
+ #####  ###### ##  ## ###### ###### ##   ## 
+ ##  ## ##     ##  ##   ##   ##     ##   ## 
+ ##  ## ##     ##  ##   ##   ##     ## # ## 
+ #####  #####  ##  ##   ##   #####  ## # ## 
+ ## ##  ##     ##  ##   ##   ##     ####### 
+ ##  ## ##      ####    ##   ##     ### ### 
+ ##  ## ######   ##   ###### ###### ##   ## 
+ -->
+
           <section id="section-3">
             <div class="row">
               <div class="col-md-6 col-sm-6 add_bottom_30">
@@ -800,6 +705,24 @@ $file_review = $_FILES['review_pic_path']['name'];
           </section>
           <!-- End section 3 -->
 
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##            ##   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##           ###   
+ ##     ##    ##      ##     ##  ##  ## ### ##          ####   
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ## ##   
+     ## ##    ##      ##     ##  ##  ## ## ###         ######  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##            ##   
+   ###  ###### ####   ##   ###### ####  ##  ##            ##   
+
+  ##### #### ###### ##  ## ###### ####    
+    ## ##  ##  ##   ##  ## ##     ## ##   
+    ## ##  ##  ##   ### ## ##     ##  ##  
+    ## ##  ##  ##   ###### #####  ##  ##  
+    ## ##  ##  ##   ## ### ##     ##  ##  
+ ## ## ##  ##  ##   ##  ## ##     ## ##   
+  ###   #### ###### ##  ## ###### ####   
+ -->
+
           <section id="section-4">
             <?php for ($i=0; $i < count($events_end) ; $i++) { ?>
               <div class="strip_booking">
@@ -868,7 +791,23 @@ $file_review = $_FILES['review_pic_path']['name'];
             
           </section>
           <!-- End section 4 -->
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##     ######  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##     ##      
+ ##     ##    ##      ##     ##  ##  ## ### ##     #####   
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##  
+     ## ##    ##      ##     ##  ##  ## ## ###         ##  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##     ##  ##  
+   ###  ###### ####   ##   ###### ####  ##  ##      ####   
 
+ #####  #####   ####  ###### ###### ##     ######  
+ ##  ## ##  ## ##  ## ##       ##   ##     ##      
+ ##  ## ##  ## ##  ## ##       ##   ##     ##      
+ #####  #####  ##  ## #####    ##   ##     #####   
+ ##     ## ##  ##  ## ##       ##   ##     ##      
+ ##     ##  ## ##  ## ##       ##   ##     ##      
+ ##     ##  ##  ####  ##     ###### ###### ######  
+ -->
           <section id="section-5">
             <div class="row">
               <div class="col-md-7 col-sm-7" name="a1">
@@ -1290,72 +1229,8 @@ $file_review = $_FILES['review_pic_path']['name'];
   </main>
   <!-- End main -->
 
-  <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 col-sm-3">
-                    <h3>Need help?</h3>
-                    <a href="tel://004542344599" id="phone">+45 423 445 99</a>
-                    <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <h3>About</h3>
-                    <ul>
-                        <li><a href="#">About us</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Register</a></li>
-                         <li><a href="#">Terms and condition</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3 col-sm-3">
-                    <h3>Discover</h3>
-                    <ul>
-                        <li><a href="#">Community blog</a></li>
-                        <li><a href="#">Tour guide</a></li>
-                        <li><a href="#">Wishlist</a></li>
-                         <li><a href="#">Gallery</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 col-sm-3">
-                    <h3>Settings</h3>
-                    <div class="styled-select">
-                        <select class="form-control" name="lang" id="lang">
-                            <option value="English" selected>English</option>
-                            <option value="French">French</option>
-                            <option value="Spanish">Spanish</option>
-                            <option value="Russian">Russian</option>
-                        </select>
-                    </div>
-                    <div class="styled-select">
-                        <select class="form-control" name="currency" id="currency">
-                            <option value="USD" selected>USD</option>
-                            <option value="EUR">EUR</option>
-                            <option value="GBP">GBP</option>
-                            <option value="RUB">RUB</option>
-                        </select>
-                    </div>
-                </div>
-            </div><!-- End row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="social_footer">
-                        <ul>
-                            <li><a href="#"><i class="icon-facebook"></i></a></li>
-                            <li><a href="#"><i class="icon-twitter"></i></a></li>
-                            <li><a href="#"><i class="icon-google"></i></a></li>
-                            <li><a href="#"><i class="icon-instagram"></i></a></li>
-                            <li><a href="#"><i class="icon-pinterest"></i></a></li>
-                            <li><a href="#"><i class="icon-vimeo"></i></a></li>
-                            <li><a href="#"><i class="icon-youtube-play"></i></a></li>
-                            <li><a href="#"><i class="icon-linkedin"></i></a></li>
-                        </ul>
-                        <p>© Citytours 2015</p>
-                    </div>
-                </div>
-            </div><!-- End row -->
-        </div><!-- End container -->
-    </footer><!-- End footer -->
+  <!-- フッター呼び出し -->
+ <?php require('footer.php'); ?>
 
   <div id="toTop"></div><!-- Back to top button -->
   

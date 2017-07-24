@@ -36,6 +36,9 @@ if(!empty($_POST)){
             e_start_date = ?,
             e_end_date = ?,
             e_prefecture = ?,
+            e_address = ?,
+            e_lat = ?,
+            e_lng = ?,
             e_venue = ?,
             explanation = ?,
             e_access = ?,
@@ -49,6 +52,9 @@ if(!empty($_POST)){
     $_SESSION['event']['e_start_date'],
     $_SESSION['event']['e_end_date'],
     $_SESSION['event']['e_prefecture'],
+    $_SESSION['event']['e_address'],
+    $_POST['lat_name'],
+    $_POST['lng_name'],
     $_SESSION['event']['e_venue'],
     $_SESSION['event']['explanation'],
     $_SESSION['event']['e_access'],
@@ -77,6 +83,7 @@ if(!empty($_POST)){
         $event_pics_stmt = $dbh->prepare($sql);
         $event_pics_stmt->execute($data);
     } 
+
 
 // echo '<pre>';
 // var_dump($_SESSION['event']['e_pic_path']);
@@ -124,14 +131,21 @@ if(!empty($_POST)){
     <link href="css/slider-pro.min.css" rel="stylesheet">
     <link href="css/date_time_picker.css" rel="stylesheet">
 
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+
 <!--[if lt IE 9]>
 <script src="js/html5shiv.min.js"></script>
 <script src="js/respond.min.js"></script>
 <![endif]-->
 
+
 </head>
 
-<body>
+<body  onload="initialize()">
 
 
 
@@ -145,7 +159,7 @@ if(!empty($_POST)){
 
     <!-- End Header -->
 
-    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $_SESSION['event']['e_pic_path'][0];?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path'][0]);?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
@@ -227,134 +241,149 @@ if(!empty($_POST)){
                             <h3>Event Detail</h3>
                         </div>
                         <div class="col-md-9">
-                            <div class=" table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2">
-                                                イベント開催詳細
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td width= "200" style="vertical-align: middle;">
-                                                Event Name
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['e_name']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                Date and time
-                                            </td>
-                                            <td>
-                                                <div style="margin-bottom: 10px;">
-                                                    イベント日程（開始日）（必須）<br>
-                                                    <?php echo $_SESSION['event']['e_start_date']; ?>
-                                                </div>
-                                                <div>
-                                                    イベント日程（終了日）（必須）<br>
-                                                    <?php echo $_SESSION['event']['e_start_date']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                city
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['e_prefecture']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                the place (follow on map)
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['e_venue']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                Web page
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['official_url']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                Acces
-                                            </td>
-                                            <td>
-                                                <?php echo $_SESSION['event']['e_access']; ?>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class=" table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2">
-                                                The latest participants (The number of visitors)
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td width= "200" style="vertical-align: middle;">
-                                                2014
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['year_ppp']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                2015
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['year_pp']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="vertical-align: middle;">
-                                                2016
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <?php echo $_SESSION['event']['year_p']; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div style="display: inline-block;">
-                                    <form method="POST" action="event_check.php" enctype="multipart/form-data">
-                                        <input class="btn btn-primary" type="submit" value="確認">
-                                        <input type="hidden" name="action" value="確認ボタン">
-                                    </form>
+                            <form method="POST" action="event_check.php" enctype="multipart/form-data">
+                                <div class=" table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">
+                                                    イベント開催詳細
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td width= "200" style="vertical-align: middle;">
+                                                    Event Name
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['e_name']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    Date and time
+                                                </td>
+                                                <td>
+                                                    <div style="margin-bottom: 10px;">
+                                                        イベント日程（開始日）（必須）<br>
+                                                        <?php echo $_SESSION['event']['e_start_date']; ?>
+                                                    </div>
+                                                    <div>
+                                                        イベント日程（終了日）（必須）<br>
+                                                        <?php echo $_SESSION['event']['e_start_date']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    city
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['e_prefecture']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    address
+                                                </td>
+                                                <td>
+                                                    <div id="address">
+                                                        <?php echo $_SESSION['event']['e_address']; ?>
+                                                    </div>
+                                                    <input type="hidden" id="lat_id" name="lat_name" value="">
+                                                    <input type="hidden" id="lng_id" name="lng_name" value="">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    the place
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['e_venue']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    Web page
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['official_url']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    Acces
+                                                </td>
+                                                <td>
+                                                    <?php echo $_SESSION['event']['e_access']; ?>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div style="display: inline-block;">
-                                    <a href="event_input.php?action=rewrite" class="btn btn-primary">書き直す</a>
+                                <div class=" table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">
+                                                    The latest participants (The number of visitors)
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td width= "200" style="vertical-align: middle;">
+                                                    2014
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['year_ppp']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    2015
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['year_pp']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="vertical-align: middle;">
+                                                    2016
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <?php echo $_SESSION['event']['year_p']; ?>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="display: inline-block;">
+
+                                            <input class="btn btn-primary" type="submit" value="確認">
+                                            <input type="hidden" name="action" value="確認ボタン">
+                                        
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <a href="event_input.php?action=rewrite" class="btn btn-primary">書き直す</a>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
 
@@ -364,8 +393,20 @@ if(!empty($_POST)){
                         <div class="col-md-3">
                             <h3>Map</h3>
                         </div>
+                        <div id="keido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lat);?>
+                        </div>
+
+                        <div id="ido" style="display: none;">
+                            <?php echo htmlspecialchars($e_lng);?>
+                        </div>
+
+                        <div id="address" style="display: none;">
+                            <?php echo htmlspecialchars($e_address);?>
+                        </div>
+
                         <div class="col-md-9">
-                            <img src="img/SuperScreenshot 2017-7-3 12-49-11.png" width="550px" height="400px">
+                            <div id="map_canvas" style="width:600px; height:500px"></div>
                         </div>
                     </div>
 
@@ -463,7 +504,7 @@ if(!empty($_POST)){
 <script src="assets/validate.js"></script>
 
 <!-- Map -->
-<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzo1nDw_k6yNjo48_6UCYjLOwqF_QxEWE"></script>
 <script src="js/map.js"></script>
 <script src="js/infobox.js"></script>
 
@@ -472,6 +513,67 @@ if(!empty($_POST)){
 <script src="js/modal_register_organizer_ajax.js"></script>
 <!-- 自作のJS -->
 <script src="js/custom.js"></script>
+
+<script type="text/javascript">
+function initialize() {
+      // google.maps.Geocoder()コンストラクタのインスタンスを生成
+  var geocoder = new google.maps.Geocoder();
+
+
+
+  // // 地図を表示させるインスタンスを生成
+  // var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+  var address = document.getElementById("address").textContent;
+  // geocoder.geocode()メソッドを実行 
+  geocoder.geocode( { 'address':address}, function(results, status) {
+
+    // ジオコーディングが成功した場合
+    if (status == google.maps.GeocoderStatus.OK) {
+        alert( results[ 0 ].geometry.location );
+        var lat = results[ 0 ].geometry.location.lat();
+        var lng = results[ 0 ].geometry.location.lng();
+
+        console.log(lat);
+        console.log(lng);
+        $('#lat_id').val(lat);
+        $('#lng_id').val(lng);
+
+        // 地図を表示する際のオプションを設定
+        var map = new google.maps.Map( document.getElementById( 'map_canvas' ), {
+          zoom: 15 ,  // ズーム値
+          center: new google.maps.LatLng(lat , lng) , // 中心の位置座標
+        } ) ;
+
+        var marker = new google.maps.Marker( {
+          map: map ,  // 地図
+          position: new google.maps.LatLng(lat , lng) , // 位置座標
+        } ) ;
+
+
+      
+      // google.maps.Map()コンストラクタに定義されているsetCenter()メソッドで
+      // 変換した緯度・経度情報を地図の中心に表示
+      // map.setCenter(results[0].geometry.location);
+
+      // // 地図上に目印となるマーカーを設定います。
+      // // google.maps.Marker()コンストラクタにマーカーを設置するMapオブジェクトと
+      // // 変換した緯度・経度情報を渡してインスタンスを生成
+      // // →マーカー詳細
+      // var marker = new google.maps.Marker({
+      //   map: map,
+      //   position: results[0].geometry.location
+      // });
+
+
+    // ジオコーディングが成功しなかった場合
+    } else {
+      console.log('Geocode was not successful for the following reason: ' + status);
+    }
+    
+  });
+}
+</script>
 
 
 </body>

@@ -107,4 +107,211 @@
 }
 
 
+/*like CSS*/
+.wishlist_like {
+  position: absolute;
+/*  top: 10px;*/
+/*  right: 10px;*/
+
+  width: 40px;
+  height: 40px;
+  z-index: 2;
+  font-size: 20px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.wishlist_like a {
+  color: #888;
+  cursor: pointer;
+  display: block;
+}
+
+.wishlist_like:before {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "icon_set_1";
+  font-size: 40px;
+  content: "\72";
+  color: #888;
+  position: absolute;
+  left: 0;
+  top: 4px;
+}
+
+/*join CSS*/
+.wishlist_join {
+  position: absolute;
+/*  top: 10px;
+  right: 10px;*/
+  width: 40px;
+  height: 40px;
+  z-index: 2;
+  font-size: 20px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.wishlist_join a {
+  color: #888;
+  cursor: pointer;
+  display: block;
+}
+
+.wishlist_join:before {
+  font-style: normal;
+  font-weight: normal;
+  font-family: "icon_set_1";
+  font-size: 35px;
+  content: "\3e";
+  color: #888;
+  position: absolute;
+  left: 0;
+  top: 4px;
+}
+
+.wishlist_join:hover {
+
+  color: red;
+
+}
+
+.tooltip-content-flip-join {
+  position: absolute;
+  z-index: 9999;
+  width: 80px;
+  height: 20px;
+  left: -40%;
+  bottom: 100%;
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  margin-bottom: 7px;
+  cursor: default;
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.tooltip-content-flip-like {
+  position: absolute;
+  z-index: 9999;
+  width: 80px;
+  height: 20px;
+  left: -40%;
+  bottom: 100%;
+  text-align: center;
+  color: #fff;
+  opacity: 0;
+  margin-bottom: 7px;
+  cursor: default;
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+
+/*refine search関連*/
+
+
+/** {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font: 18px/1.65 sans-serif;
+  text-align: center;
+}
+
+li {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;    
+  display: block;
+  color: #333;
+}
+
+h2 {
+  color: #333;
+  padding: 10px 0;
+}
+
+.filter {
+  margin: 30px 0 10px;
+}*/
+
+/*.filter a {
+  display: inline-block;
+  padding: 10px;
+  border: 2px solid #333;
+  position: relative;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}*/
+
+/*.boxes {
+  display: flex;
+  flex-wrap: wrap;
+}*/
+
+/*.boxes a {
+  width: 23%;
+  border: 2px solid #333;
+  margin: 0 1% 20px 1%;
+  line-height: 60px;
+}*/
+
+/*.all {
+  background: khaki;
+}
+
+.green {
+  background: lightgreen;
+}
+
+.blue {
+  background: lightblue;
+}
+
+.red {
+  background: lightcoral;
+}*/
+
+.filter a.active:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 15px 15px 0 0;
+  border-color: #333 transparent transparent transparent;
+}
+
+.is-animated {
+  animation: .6s zoom-in;
+}
+
+@keyframes zoom-in {
+  0% {
+   transform: scale(.1);
+  } 
+  100% {
+    transform: none;
+  }
+}
+/*refine search関連終了*/
+
 
