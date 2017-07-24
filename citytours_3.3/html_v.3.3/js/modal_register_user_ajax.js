@@ -50,9 +50,18 @@ $(document).ready(function(){
 
     }).done(function(result){
       console.log('ajax成功');
-      console.log(result);
+      console.log(result); //画像表示されない
       var errors = JSON.parse(result);
       console.log(errors);
+
+      }).fail(function(XMLHttpRequest, textStatus, errorThrown){
+    console.log(XMLHttpRequest.status);
+    console.log(textStatus);
+    console.log(errorThrown);
+})
+
+
+
 
       if (errors['nick_name'] == 'blank') {
         $('.error_nick_name').text('ユーザー名を入力してください。');

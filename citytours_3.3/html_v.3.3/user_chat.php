@@ -207,6 +207,7 @@ if (!empty($_POST['message'])) {
     <link rel="stylesheet" type="text/css" href="css/animate.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="user.css">
+
 </head>
 <body>
 

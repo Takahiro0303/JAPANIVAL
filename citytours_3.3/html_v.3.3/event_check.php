@@ -159,7 +159,7 @@ if(!empty($_POST)){
 
     <!-- End Header -->
 
-    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $_SESSION['event']['e_pic_path'][0];?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path'][0]);?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">

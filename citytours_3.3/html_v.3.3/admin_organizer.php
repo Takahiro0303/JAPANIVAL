@@ -4,14 +4,6 @@ require('../../common/dbconnect.php');
 require('../../common/functions.php');
 $login_user = get_login_user($dbh);
 
-
-
-// echo 'flag' . $_SESSION['flag'];
-// echo '<br>';
-// echo 'id' . $_SESSION['id'];
-
-
-
 $o_name = $login_user['o_name'];
 $o_f_name = $login_user['o_f_name'];
 $o_postal = $login_user['o_postal'];
@@ -21,6 +13,9 @@ $o_tel = $login_user['o_tel'];
 $o_email = $login_user['o_email'];
 $o_intro = $login_user['o_intro'];
 $errors = [];
+
+var_dump($login_user['o_id']);
+var_dump($login_user['o_pic']);
 
 if (!empty($_POST)) {
     $o_current_password = sha1($_POST['o_current_password']);
@@ -74,8 +69,8 @@ if (!empty($_POST)) {
                 $errors['o_new_password'] = 'length';
             }  
         }
-
-        $file_name = $_FILES['o_pic']['o_name'];
+    
+        $file_name = $_FILES['o_pic']['name'];
         if (!empty($file_name)) {
             //画像が選択されていた場合
             $ext = substr($file_name, -3);
@@ -85,14 +80,15 @@ if (!empty($_POST)) {
             }
         }
     } else {
-        $errors['o_current_password'] = 'failed';
+          $errors['o_current_password'] = 'failed';
     }
 
+    //UPDATE処理
     if (empty($errors)) {
         //もし画像がセットされていればUP処理
         if (!empty($file_name)) {
             $data_str = date('YmdHis');
-            $submit_file_name = $date_str . $_FILES['o_pic']['o_name'];
+            $submit_file_name = $date_str . $_FILES['o_pic']['name'];
             move_uploaded_file($_FILES['o_pic']['tmp_name'], '../../o_pic/' . $submit_file_name);
         }
 
@@ -438,170 +434,162 @@ $past_count = count($past_events);
               </div>
             </div>
             <!-- End row -->
-            <form method="POST" action="" enctype="multipart/form-data">
-              <div class="divider"></div> <!-- 線 -->
+
+            
+            <div class="divider"></div> <!-- 線 -->
               <div id="open" style="display:none;clear:both;" >
                 <div class="row">
-              <div class="col-md-12">
-                <h4 id="edit_profile">現在のパスワードを入力してください</h4>
+                  <div class="col-md-12">
+                    <h4 id="edit_profile">現在のパスワードを入力してください</h4>
+                  </div>
+                  <div class="col-md-12 col-sm-12">
+                    <form method="POST" action="" enctype="multipart/form-data">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tbody>
+                            <tr>
+                              <th class="col-md-3 col-sm-3">現在のパスワード </th>
+                              <td>
+                                <input type="password" class="form-control" name="o_current_password" id="o_current_password" type="password">
+                              </td>
+                              <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
+                                <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
+                              <?php } ?>
+                            </tr> 
+                          </tbody>
+                        </thead>
+                      </table>
+               
+                      <div class="divider"></div> <!-- 線 -->
+                      <div class="row">
+                        <div class="col-md-12">
+                          <h4 id="edit_profile">Edit profile</h4>
+                        </div>
+                        <div class="col-md-12 col-sm-12">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tbody>                      
+                                <tr>
+                                  <th class="col-md-3 col-sm-3">団体名</th>
+                                  <td>
+                                    <input class="form-control" name="o_name" id="nickname" type="text" value="<?php echo htmlspecialchars($o_name);?>">
+                                    <?php if (isset($errors['o_name']) && $errors['o_name'] == 'blank') { ?>
+                                      <p class="alert-danger">団体名を入力してください</p>
+                                    <?php } ?>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th>代表者名</th>
+                                  <td>
+                                    <input class="form-control" name="o_f_name" id="o_f_name" type="text" value="<?php echo htmlspecialchars($o_f_name); ?>">
+                                    <?php if (isset($errors['o_f_name']) && $errors['o_f_name'] == 'blank') { ?>
+                                      <p class="alert-danger">代表者名を入力してください</p>
+                                    <?php } ?>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th>メールアドレス</th>
+                                  <td>
+                                    <input class="form-control" name="o_email" id="o_email" type="text" value="<?php echo htmlspecialchars($o_email); ?>">
+                                    <?php if(isset($errors['o_email']) && $errors['o_email'] == 'blank') { ?>
+                                      <p class="alert-danger">メールアドレスを入力してください</p>
+                                    <?php } ?>
+                                    <?php if(isset($errors['o_email']) && $errors['o_email'] == 'duplicate') { ?>
+                                      <p class="error">そのメールアドレスは既に登録されています</p>
+                                    <?php } ?>
+                                  </td>
+                                </tr>                   
+                                <tr>
+                                  <th>
+                                    新しいパスワード<p style="font-size: 10px;">6文字以上で入力してください</p> 
+                                  </th>
+                                    <td>
+                                      <input class="form-control" name="o_new_password" id="o_new_password" type="password">
+                                      <?php if(isset($errors['o_new_password']) && $errors['o_new_password'] == 'length') { ?>
+                                        <p class="alert-danger">パスワードは6文字以上で入力してください</p>
+                                      <?php } ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <th>確認パスワード</th>
+                                    <td>
+                                      <input class="form-control" name="o_confirm_password" id="o_confirm_password" type="password">
+                                      <?php if(isset($errors['o_confirm_password']) && $errors['o_confirm_password'] == 'wrong') { ?>
+                                        <p class="alert-danger">パスワードが一致しません</p>
+                                      <?php } ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <th>郵便番号</th>
+                                    <td>
+                                      <input type="text" name="o_postal" class="form-control" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','o_pref','o_address');" value="<?php echo htmlspecialchars($o_postal); ?>">
+                                      <?php if (isset($errors['o_postal']) && $errors['o_postal'] == 'blank') { ?>
+                                        <p class="alert-danger">郵便番号を入力してください</p>
+                                      <?php } ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <th>都道府県</th>
+                                    <td>
+                                      <input class="form-control" name="o_pref" id="o_pref" type="text" value="<?php echo htmlspecialchars($o_pref); ?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                  <th>市区町村・番地・建物名・号室</th>
+                                  <td>
+                                    <input class="form-control" name="o_address" id="o_address" type="text" value="<?php echo htmlspecialchars($o_address); ?>">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th>電話番号</th>
+                                    <td>
+                                      <input class="form-control" name="o_tel" id="o_tel" type="text" value="<?php echo htmlspecialchars($o_tel); ?>">
+                                    </td>
+                                </tr>                        
+                                <tr>
+                                  <th>自己紹介コメント</th>
+                                    <td>
+                                      <textarea class="form-control" name="o_intro" value="<?php echo htmlspecialchars($o_intro); ?>"></textarea>
+                                      <?php if(isset($errors['o_intro']) && $errors['o_intro'] == 'wrong') { ?>
+                                        <p class="alert-danger"></p>
+                                      <?php } ?>
+                                    </td>
+                                </tr>
+                              </tbody> 
+                            </thead>
+                          </table>
+                        </div>
+
+                        <h4>Upload profile photo</h4>
+                        <div class="form-inline upload_1">
+                          <div class="form-group">
+                          <input type="file" name="o_pic" id="js-upload-files" >
+                            <?php if(isset($errors['o_pic']) && $errors['o_pic'] == 'type') { ?>
+                            <p class="alert-danger">画像は「jpg」「png」「gif」の画像を選択してください</p>
+                           <?php } ?>
+                          </div>
+                        </div>
+                        <a href="#a1"><button type="submit" class="btn_1 green">更新</button></a>
+                        <div id="open2" style="display:none;clear:both;"></div>
+                      </div>
+                    </form>
+                  </div> 
+                </div>     
+                <!-- End row -->    
               </div>
-              <div class="col-md-12 col-sm-12">
-                <table class="table table-bordered">
-                  <thead>
-                    <tbody>
-                      <tr>
-                        <th class="col-md-3 col-sm-3">現在のパスワード </th>
-                        <td>
-                          <input type="password" class="form-control" name="o_current_password" id="o_current_password" type="password">
-                        </td>
-                        <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
-                          <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
-                        <?php } ?>
-                      </tr> 
-                    </tbody>
-                  </thead>
-                </table>
-                <div>
-                  <a class="btn_1 green" onclick="obj=document.getElementById('open1').style; obj.display=(obj.display=='none')?'block':'none';">確認</a>
-                </div>
-                <div class="divider"></div> <!-- 線 -->
-
-                <div id="open1" style="display:none;clear:both;" >
-
-
-
-            <div class="row">
-              <div class="col-md-12">
-                <h4 id="edit_profile">Edit profile</h4>
-              </div>
-              <div class="col-md-12 col-sm-12">
-                <table class="table table-bordered">
-                  <thead>
-                    <tbody>                      
-                        <tr>
-                          <th class="col-md-3 col-sm-3">団体名</th>
-                          <td>
-                            <input class="form-control" name="o_name" id="nickname" type="text" value="<?php echo htmlspecialchars($o_name);?>">
-                            <?php if (isset($errors['o_name']) && $errors['o_name'] == 'blank') { ?>
-                              <p class="alert-danger">団体名を入力してください</p>
-                            <?php } ?>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>代表者名</th>
-                          <td>
-                            <input class="form-control" name="o_f_name" id="o_f_name" type="text" value="<?php echo htmlspecialchars($o_f_name); ?>">
-                            <?php if (isset($errors['o_f_name']) && $errors['o_f_name'] == 'blank') { ?>
-                              <p class="alert-danger">代表者名を入力してください</p>
-                            <?php } ?>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>メールアドレス</th>
-                          <td>
-                            <input class="form-control" name="o_email" id="o_email" type="text" value="<?php echo htmlspecialchars($o_email); ?>">
-                            <?php if(isset($errors['o_email']) && $errors['o_email'] == 'blank') { ?>
-                              <p class="alert-danger">メールアドレスを入力してください</p>
-                            <?php } ?>
-                            <?php if(isset($errors['o_email']) && $errors['o_email'] == 'duplicate') { ?>
-                              <p class="error">そのメールアドレスは既に登録されています</p>
-                            <?php } ?>
-                          </td>
-                        </tr>
-                        <!-- <tr>
-                          <th>現在のパスワード</th>
-                            <td>
-                              <input type="password" class="form-control" name="o_current_password" id="o_current_password" type="password">
-                            </td>
-                            <?php if(isset($errors['o_current_password']) && $errors['o_current_password'] == 'failed') { ?>
-                              <p class="alert-danger">本人確認に失敗しました。再度現在のパスワードを入力してください</p>
-                            <?php } ?>
-                        </tr> -->
-                        <tr>
-                          <th>新しいパスワード</th>
-                            <td>
-                              <input class="form-control" name="o_new_password" id="o_new_password" type="password">
-                              <?php if(isset($errors['o_new_password']) && $errors['o_new_password'] == 'length') { ?>
-                                <p class="alert-danger">パスワードは6文字以上で入力してください</p>
-                              <?php } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                          <th>確認パスワード</th>
-                            <td>
-                              <input class="form-control" name="o_confirm_password" id="o_confirm_password" type="password">
-                              <?php if(isset($errors['o_confirm_password']) && $errors['o_confirm_password'] == 'wrong') { ?>
-                                <p class="alert-danger">パスワードが一致しません</p>
-                              <?php } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                          <th>郵便番号</th>
-                            <td>
-                              <input type="text" name="o_postal" class="form-control" maxlength="8" onKeyUp="AjaxZip3.zip2addr(this,'','o_pref','o_address');" value="<?php echo htmlspecialchars($o_postal); ?>">
-                              <?php if (isset($errors['o_postal']) && $errors['o_postal'] == 'blank') { ?>
-                                <p class="alert-danger">郵便番号を入力してください</p>
-                              <?php } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                          <th>都道府県</th>
-                            <td>
-                              <input class="form-control" name="o_pref" id="o_pref" type="text" value="<?php echo htmlspecialchars($o_pref); ?>">
-                            </td>
-                        </tr>
-                        <tr>
-                          <th>市区町村・番地・建物名・号室</th>
-                          <td>
-                            <input class="form-control" name="o_address" id="o_address" type="text" value="<?php echo htmlspecialchars($o_address); ?>">
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>電話番号</th>
-                            <td>
-                              <input class="form-control" name="o_tel" id="o_tel" type="text" value="<?php echo htmlspecialchars($o_tel); ?>">
-                            </td>
-                        </tr>                        
-                        <tr>
-                          <th>自己紹介コメント</th>
-                            <td>
-                              <textarea class="form-control" name="o_intro" value="<?php echo htmlspecialchars($o_intro); ?>"></textarea>
-                              <?php if(isset($errors['o_intro']) && $errors['o_intro'] == 'wrong') { ?>
-                                <p class="alert-danger"></p>
-                              <?php } ?>
-                            </td>
-                        </tr>
-                      <!-- </form> --> 
-                    </tbody>
-                  </thead>
-                </table>
-              </div> 
-            </div>
-
-
-            <!-- End row -->          
+          </section>
+          <!-- End section 5 -->  
        
-            <h4>Upload profile photo</h4>
+            <!-- <h4>Upload profile photo</h4>
             <div class="form-inline upload_1">
               <div class="form-group">
                 <input type="file" name="o_pic" id="js-upload-files" enctype="multiple/form-data">
-                <?php if(isset($errors['o_pic']) && $errors['o_pic'] == 'type') { ?>
+                <?php /*if(isset($errors['o_pic']) && $errors['o_pic'] == 'type')*/ { ?>
                   <p class="alert-danger">画像は「jpg」「png」「gif」の画像を選択してください</p>
                 <?php } ?>
               </div>
             </div>
-
- 
-
-
-            <a href="#a1"><button type="submit" class="btn_1 green">更新</button></a>
-            <div id="open2" style="display:none;clear:both;">
-  
-    </div>
-    </div> 
-<!-- ★</form>   -->          
-          </section>
-          <!-- End section 5 -->
+ -->
 
           </div>
           <!-- End content -->

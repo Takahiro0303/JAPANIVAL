@@ -219,7 +219,7 @@ if (!empty($_POST)) {
 
 <!-- End Header -->
 
-<section class="parallax-window" data-parallax="scroll" data-image-src="img/single_tour_bg_1.jpg" data-natural-width="1400" data-natural-height="470">
+<section class="parallax-window" data-parallax="scroll" data-image-src="img/single_tour_bg_1.jpg">
     <div class="parallax-content-2">
         <div class="container">
             <div class="row">
@@ -240,13 +240,12 @@ if (!empty($_POST)) {
 <!-- End section -->
 
 <main>
-
-
     <form method="POST" action="event_input.php" enctype="multipart/form-data">
 <!--         <div class="collapse" id="collapseMap">
             <div id="map" class="map"></div>
         </div> -->
         <!-- End Map -->
+
 
         <div class="container margin_60">
             <div class="row">
@@ -255,6 +254,19 @@ if (!empty($_POST)) {
                     </p> -->
                     <!-- Map button for tablets/mobiles -->
 
+<!-- 以下、イベント説明 -->
+<div class="row">
+    <div class="col-md-12">
+        <h3>トップ画像を<a href="cropper.php" onclick="window.open(this.href, 'mywindow', 'width=800,height=600,menubar=no,toolbar=no,location=no,directories=no.status=yes,resizable=yes'); return false;"><u>こちら</u></a>から選択してください</h3>
+    </div>
+    <!--<div class="col-md-6">
+         <div>
+            <a href="hoge" onclick="window.open(this.href, 'mywindow', 'width=800,height=600,menubar=no,toolbar=no,location=no,directories=no.status=yes,resizable=yes'); return false;">画像トリミングはこちら</a>
+        </div> 
+    </div>-->
+</div>
+ <!-- End row  -->
+ <hr>
 
 
                     <div id="Img_carousel" class="slider-pro" style="margin-bottom: 10px;">
@@ -558,7 +570,7 @@ if (!empty($_POST)) {
         <!-- End general_rating -->
         <hr>
         <div class="review_strip_single">
-            <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="70px" height="70px">
+            <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="20px" height="20px">
             <h4>Sponge Bob</h4>
             <div class="rating">
                 <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i>
@@ -819,7 +831,6 @@ if (!empty($_POST)) {
 <script src="js/modal_register_organizer_ajax.js"></script>
 <!-- 自作のJS -->
 <script src="js/custom.js"></script>
-
 
 </body>
 </html>

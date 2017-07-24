@@ -370,19 +370,23 @@ $file_review = $_FILES['review_pic_path']['name'];
                 $stmt->execute($data);
                 $f_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
                ?>
               <div class="strip_booking">
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
                     <div class="date" style="background-color:#FF6666; border-radius: 5px;">
                       <img class="day" src="<?php echo htmlspecialchars($f_event_pic['e_pic_path']); ?>" height="100px" style="padding:5px;width:100%; border-radius: 10px;">
+
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-5">
                     <h3 class="tours_booking"><?php echo htmlspecialchars($f_events[$i]['e_name']); ?><span><?php echo htmlspecialchars($f_events[$i]['e_prefecture']); ?></span></h3>
                   </div>
+
                   <div class="col-md-2 col-sm-3" ">
                     <ul class="info_booking" style="padding-top:23px; padding-bottom:20px; padding-right:0px; text-align: left; font-size: 15px;">
+
                       <li><strong>Event start</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_start_date']))); ?></li>
                       <li><strong>Event end</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_end_date']))); ?></li>
                     </ul>
@@ -390,6 +394,7 @@ $file_review = $_FILES['review_pic_path']['name'];
                   <div class="col-md-2 col-sm-2">
                     <div class="booking_buttons" style="padding-top: 14px">
                       <a href="event_detail.php?event_id=<?php echo htmlspecialchars($p_events[$i]['event_id']); ?>" class="btn_2" style="font-size: 14px; font-weight: 400; line-height: 1.42857143">Detail</a>
+
                     </div>
                   </div>
                 </div>
@@ -424,8 +429,10 @@ $file_review = $_FILES['review_pic_path']['name'];
           <section id="section-2">
           <div class="row">
 
+
             <?php for ($i=0; $i < count($likes) ; $i++) { ?>
             <?php
+
 
               // $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
 
@@ -527,7 +534,9 @@ $file_review = $_FILES['review_pic_path']['name'];
  ##  ## ##      ####    ##   ##     ### ### 
  ##  ## ######   ##   ###### ###### ##   ## 
  -->
+
 <!-- 
+
           <section id="section-3">
             <div class="row">
               <div class="col-md-6 col-sm-6 add_bottom_30">
@@ -735,8 +744,6 @@ $file_review = $_FILES['review_pic_path']['name'];
           <?php endif; ?>
 
           </section> 
-
-
 
           <!-- End section 4 -->
 <!-- 
