@@ -15,7 +15,7 @@ $o_intro = $login_user['o_intro'];
 $errors = [];
 
 var_dump($login_user['o_id']);
-var_dump($_FILES['o_pic']['o_name']);
+var_dump($login_user['o_pic']);
 
 if (!empty($_POST)) {
     $o_current_password = sha1($_POST['o_current_password']);
@@ -70,7 +70,7 @@ if (!empty($_POST)) {
             }  
         }
     
-        $file_name = $_FILES['o_pic']['o_name'];
+        $file_name = $_FILES['o_pic']['name'];
         if (!empty($file_name)) {
             //画像が選択されていた場合
             $ext = substr($file_name, -3);
@@ -88,7 +88,7 @@ if (!empty($_POST)) {
         //もし画像がセットされていればUP処理
         if (!empty($file_name)) {
             $data_str = date('YmdHis');
-            $submit_file_name = $date_str . $_FILES['o_pic']['o_name'];
+            $submit_file_name = $date_str . $_FILES['o_pic']['name'];
             move_uploaded_file($_FILES['o_pic']['tmp_name'], '../../o_pic/' . $submit_file_name);
         }
 
@@ -563,7 +563,7 @@ $past_count = count($past_events);
                         <h4>Upload profile photo</h4>
                         <div class="form-inline upload_1">
                           <div class="form-group">
-                          <input type="file" name="o_pic" id="js-upload-files" enctype="multiple/form-data">
+                          <input type="file" name="o_pic" id="js-upload-files" >
                             <?php if(isset($errors['o_pic']) && $errors['o_pic'] == 'type') { ?>
                             <p class="alert-danger">画像は「jpg」「png」「gif」の画像を選択してください</p>
                            <?php } ?>
