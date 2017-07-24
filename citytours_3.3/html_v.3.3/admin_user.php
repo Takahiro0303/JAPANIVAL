@@ -166,7 +166,7 @@ while ($p_event = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 // お気に入りページ
 
-$sql = 'SELECT * FROM likes WHERE user_id=?';
+$sql = 'SELECT * FROM likes, events WHERE likes.event_id = events.event_id AND likes.user_id=?';
 $like_data = [$login_user['user_id']];
 $like_stmt = $dbh->prepare($sql);
 $like_stmt->execute($like_data);
@@ -196,6 +196,7 @@ if (!empty($_POST)) {
 // v($review_comment);
 // v($review_rating);
     
+if (isset($_FILES['review_pic_path']['name'])) {
 
 $file_review = $_FILES['review_pic_path']['name'];
         //もし画像がセットされていれば画像アップデート処理
@@ -215,6 +216,8 @@ $file_review = $_FILES['review_pic_path']['name'];
             $stmt = $dbh->prepare($sql);
             $stmt->execute($data);
         }
+  # code...
+}
 // v($_FILES['review_pic_path']);
 
 ?>
@@ -265,14 +268,54 @@ $file_review = $_FILES['review_pic_path']['name'];
   <!-- header.phpのrequire -->
   <?php require('header.php');  ?>
 
+<?php  
+  $sql = 'SELECT COUNT(*) AS total FROM event_pics INNER JOIN events ON event_pics.event_id = events.event_id AND events.e_end_date > CURDATE()';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $pic_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $event_number = mt_rand(0, $pic_count['total']-1);
+
+  $sql = 'SELECT * FROM event_pics INNER JOIN events ON event_pics.event_id = events.event_id AND events.e_end_date > CURDATE()';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  while ($e_info = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $e_infos[] = $e_info;
+  }
+
+    // echo '<pre>';
+    // var_dump($e_info);
+    // echo count($f_events);
+    // echo '<br>';
+    // echo $event_number;
+    // echo '</pre>';
+    // echo '<pre>';
+    // var_dump($e_infos[$event_number]);
+    // echo '</pre>';
+
+?>
 
 
-
-  <section class="parallax-window" data-parallax="scroll" data-image-src="img/admin_top.jpg" data-natural-width="1400" data-natural-height="470">
+  <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $e_infos[$event_number]['e_pic_path'] ?>" data-natural-width="1400" data-natural-height="470">
     <div class="parallax-content-1">
       <div class="animated fadeInDown">
-        <h1>Hello Clara!</h1>
-        <p>Ridiculus sociosqu cursus neque cursus curae ante scelerisque vehicula.</p>
+        <h1><?php echo $e_infos[$event_number]['e_name'] ?></h1>
+
+        <?php 
+              $starts = explode('-', $e_infos[$event_number]['e_start_date']);
+              $ends = explode('-', $e_infos[$event_number]['e_end_date']);
+
+              if ($starts[0] != $ends[0]) {
+                  $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+              } elseif($starts[1] != $ends[1]){
+                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+              } elseif($starts[2] != $ends[2]){
+                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+              } else{
+                  $duration = date('F d, Y', strtotime(implode('-', $starts)));
+              } 
+        ?>
+        <p><?php echo $duration ?></p>
       </div>
     </div>
   </section>
@@ -280,18 +323,17 @@ $file_review = $_FILES['review_pic_path']['name'];
 
   <main>
     <div class="margin_60 container">      
-      <h1 class="welcom">Welcome!</h1><br>
-      
       <div id="tabs" class="tabs">
+        <br>
         <nav>
           <ul>
             <li><a href="#section-1" class="icon-calendar"><span>will join</span></a>
             </li>
-            <li><a href="#section-2" class="icon-wishlist"><span>like</span></a>
+            <li><a href="#section-2" class="icon-wishlist"><span>liked</span></a>
             </li>
-            <li><a href="#section-3" class="icon-back-in-time"><span>Reveiw</span></a>
-            </li>
-            <li><a href="#section-4" class="icon-hourglass"><span>Join the Past</span></a>
+<!--             <li><a href="#section-3" class="icon-back-in-time"><span>Reveiw</span></a>
+            </li> -->
+            <li><a href="#section-4" class="icon-hourglass"><span>Joined</span></a>
             </li>
             <li><a href="#section-5" class="icon-profile"><span>Profile</span></a>
             </li>
@@ -323,32 +365,31 @@ $file_review = $_FILES['review_pic_path']['name'];
               <?php
                 $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
 
-                $data = [$record[$i]['event_id']];
+                $data = [$f_events[$i]['event_id']];
                 $stmt = $dbh->prepare($sql);
                 $stmt->execute($data);
-                $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+                $f_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
 
                ?>
               <div class="strip_booking">
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
-                    <div class="date">
-                      <!-- <span class="month">Dec</span> -->
-                      <span class="day"><img src="<?php echo htmlspecialchars($f_events[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
+                    <div class="date" style="background-color:#FF6666; border-radius: 5px;">
+                      <img class="day" src="<?php echo htmlspecialchars($f_event_pic['e_pic_path']); ?>" height="100px" style="padding:5px;width:100%; border-radius: 10px;">
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-5">
                     <h3 class="tours_booking"><?php echo htmlspecialchars($f_events[$i]['e_name']); ?><span><?php echo htmlspecialchars($f_events[$i]['e_prefecture']); ?></span></h3>
                   </div>
-                  <div class="col-md-2 col-sm-3">
-                    <ul class="info_booking">
+                  <div class="col-md-2 col-sm-3" ">
+                    <ul class="info_booking" style="padding-top:23px; padding-bottom:20px; padding-right:0px; text-align: left; font-size: 15px;">
                       <li><strong>Event start</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_start_date']))); ?></li>
                       <li><strong>Event end</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($f_events[$i]['e_end_date']))); ?></li>
                     </ul>
                   </div>
                   <div class="col-md-2 col-sm-2">
-                    <div class="booking_buttons">
-                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($f_events[$i]['event_id']); ?>" class="btn_2">Detail</a>
+                    <div class="booking_buttons" style="padding-top: 14px">
+                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($p_events[$i]['event_id']); ?>" class="btn_2" style="font-size: 14px; font-weight: 400; line-height: 1.42857143">Detail</a>
                     </div>
                   </div>
                 </div>
@@ -383,179 +424,86 @@ $file_review = $_FILES['review_pic_path']['name'];
           <section id="section-2">
           <div class="row">
 
-            <?php for ($i=0; $i < count($event_likes) ; $i++) { ?>
+            <?php for ($i=0; $i < count($likes) ; $i++) { ?>
+            <?php
+
+              // $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+              // $data = [$records[$i]['event_id']];
+              // $stmt = $dbh->prepare($sql);
+              // $stmt->execute($data);
+              // $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+              $starts = explode('-', $likes[$i]['e_start_date']);
+              $ends = explode('-', $likes[$i]['e_end_date']);
+
+              if ($starts[0] != $ends[0]) {
+                  $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+              } elseif($starts[1] != $ends[1]){
+                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+              } elseif($starts[2] != $ends[2]){
+                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+              } else{
+                  $duration = date('F d, Y', strtotime(implode('-', $starts)));
+              }
+
+              $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+              $data = [$likes[$i]['event_id']];
+              $stmt = $dbh->prepare($sql);
+              $stmt->execute($data);
+              $l_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                // echo '<pre>';
+                // var_dump($likes[$i]);
+                // echo '</pre>';
+
+              //join数カウント
+              $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
+              $data = [$likes[$i]['event_id']];
+              $stmt = $dbh->prepare($sql);
+              $stmt->execute($data);
+              $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+              //like数カウント
+              $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+              $data = [$likes[$i]['event_id']];
+              $stmt = $dbh->prepare($sql);
+              $stmt->execute($data);
+              $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+            ?>
+
+
               <div class="col-md-4 col-sm-6">
-                <div class="hotel_container">
+                <div class="tour_container">
                   <div class="img_container">
-                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($event_likes[$i]['event_id']); ?>">
-                      <img src="../../event_pictures/<?php echo htmlspecialchars($event_likes[$i]['e_pic_path']); ?>" width="200" height="200" class="img-responsive" alt="Image">
-                      <div class="">
-                      </div>
-                      <div class="score">
-                        <!-- <span>7.5</span>Good -->
-                      </div>
+                    <a href="event_detail.php?event_id=<?php echo htmlspecialchars($likes[$i]['event_id']); ?>">
+                      <img src="<?php echo htmlspecialchars($l_event_pic['e_pic_path']); ?>" width="800" height="533" class="img-responsive" alt="Image" style="height: 220px;">
+<!--                       <div class="ribbon top_rated">
+                      </div> -->
                       <div class="short_info hotel">
-                        <!-- From/Per night<span class="price"><sup>$</sup>59</span> -->
+                          <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
+                                                          
+                          <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+                       
+
                       </div>
                     </a>
                   </div>
-                  <div class="hotel_title">
-                    <h3><strong><?php echo htmlspecialchars($event_likes[$i]['e_name']); ?></strong></h3>
-                    <div class="rating">
-                      <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                    </div>
+                  <div class="tour_title">
+                    <h3><strong><?php echo htmlspecialchars($likes[$i]['e_name']); ?></strong></h3>
+                    <div><?php echo $duration; ?></div>
+
                     <!-- end rating -->
-                    <div class="wishlist_close_admin">
-                      -
-                    </div>
+
                   </div>
                 </div>
                 <!-- End box tour -->
               </div>
-              
               <!-- End col-md-6 -->
 
-              <!-- <div class="col-md-4 col-sm-6 ">
-                <div class="hotel_container">
-                  <div class="img_container">
-                    <a href="single_hotel.html">
-                      <img src="img/hotel_2.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="score">
-                        <span>9.0</span>Superb
-                      </div>
-                      <div class="short_info hotel">
-                        From/Per night<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="hotel_title">
-                    <h3><strong>Mariott</strong> Hotel</h3>
-                    <div class="rating">
-                      <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                    </div>
-               -->      <!-- end rating -->
-                    <!-- <div class="wishlist_close_admin"> -->
-                      
-                    <!-- </div>
-                  </div>
-                </div> -->
-                <!-- End box -->
-              <!-- </div> -->
-              <!-- End col-md-6 -->
-
-              <!-- <div class="col-md-4 col-sm-6">
-                <div class="tour_container">
-                  <div class="img_container">
-                    <a href="single_tour.html">
-                      <img src="img/tour_box_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="short_info">
-                        <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="tour_title">
-                    <h3><strong>Arc Triomphe</strong> tour</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div> -->
-                    <!-- end rating -->
-                    <!-- <div class="wishlist_close_admin"> -->
-                    
-                    <!-- </div>
-                  </div>
-                </div> -->
-                <!-- End box tour -->
-              <!-- </div> -->
-              <!-- End col-md-6 -->
-
-              <!-- <div class="col-md-4 col-sm-6">
-                <div class="tour_container">
-                  <div class="img_container">
-                    <a href="single_tour.html">
-                      <img src="img/tour_box_3.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon popular">
-                      </div>
-                      <div class="short_info">
-                        <i class="icon_set_1_icon-44"></i>Historic Buildings<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="tour_title">
-                    <h3><strong>Versailles</strong> tour</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-               -->      <!-- end rating -->
-                    <!-- <div class="wishlist_close_admin"> -->
-                      <!-- -
-                    </div>
-                  </div>
-                </div> -->
-                <!-- End box tour -->
-              <!-- </div> -->
-              <!-- End col-md-6 -->
-
-              <!-- <div class="col-md-4 col-sm-6">
-                <div class="tour_container">
-                  <div class="img_container">
-                    <a href="single_tour.html">
-                      <img src="img/tour_box_4.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon popular">
-                      </div>
-                      <div class="short_info">
-                        <i class="icon_set_1_icon-30"></i>Walking tour<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="tour_title">
-                    <h3><strong>Pompidue</strong> tour</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-               -->      <!-- end rating -->
-                    <!-- <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div> -->
-                <!-- End box tour -->
-              <!-- </div> -->
-              <!-- End col-md-6 -->
-
-              <!-- <div class="col-md-4 col-sm-6">
-                <div class="transfer_container">
-                  <div class="img_container">
-                    <a href="single_transfer.html">
-                      <img src="img/transfer_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="short_info">
-                        From/Per person<span class="price"><sup>$</sup>45</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="transfer_title">
-                    <h3><strong>Orly Airport</strong> private</h3>
-                    <div class="rating">
-                      <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><small>(75)</small>
-                    </div>
-               -->      <!-- end rating -->
-                    <!-- <div class="wishlist_close_admin">
-                      -
-                    </div>
-                  </div>
-                </div> -->
-                <!-- End box tour -->
-              <!-- </div> -->
-              <!-- End col-md-6 -->
-
-           
-            <!-- End row -->
-            <!-- <button type="submit" class="btn_1 green">Update wishlist</button> -->
           <?php } ?>
            </div>
           </section>
@@ -579,7 +527,7 @@ $file_review = $_FILES['review_pic_path']['name'];
  ##  ## ##      ####    ##   ##     ### ### 
  ##  ## ######   ##   ###### ###### ##   ## 
  -->
-
+<!-- 
           <section id="section-3">
             <div class="row">
               <div class="col-md-6 col-sm-6 add_bottom_30">
@@ -614,10 +562,10 @@ $file_review = $_FILES['review_pic_path']['name'];
                 </div>
                 <button type="submit" class="btn_1 green">Update Email</button>
               </div>
-            </div>
+            </div> -->
             <!-- End row -->
 
-            <hr>
+<!--             <hr>
             <br>
             <div class="row">
               <div class="col-md-6 col-sm-6">
@@ -700,9 +648,9 @@ $file_review = $_FILES['review_pic_path']['name'];
                 </table>
                 <button type="submit" class="btn_1 green">Update notifications settings</button>
               </div>
-            </div>
+            </div> -->
             <!-- End row -->
-          </section>
+<!--           </section> -->
           <!-- End section 3 -->
 
 <!-- 
@@ -724,72 +672,72 @@ $file_review = $_FILES['review_pic_path']['name'];
  -->
 
           <section id="section-4">
-            <?php for ($i=0; $i < count($events_end) ; $i++) { ?>
+          <?php if (isset($p_events)): ?>
+            <?php for ($i=0; $i < count($p_events) ; $i++) { ?>
+              <?php
+                //イベント写真取得
+                $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+                $data = [$p_events[$i]['event_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $p_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                //レビュー済み判定
+
+                $sql = 'SELECT COUNT(*) AS total FROM reviews WHERE event_id = ? AND user_id = ?';
+                $data = [$p_events[$i]['event_id'], $login_user['user_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $review_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+               ?>
               <div class="strip_booking">
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
-                    <div class="date">
-                      <!-- <span class="month">Dec</span> -->
-                      <span class="day"><img src="../../event_pictures/<?php echo htmlspecialchars($events_end[$i]['e_pic_path']); ?>" width="50px" height="80px"></span>
+                    <div class="date" style="background-color:#008000; border-radius: 5px;">
+                      <img class="day" src="<?php echo htmlspecialchars($p_event_pic['e_pic_path']); ?>" height="100px" style="padding:5px;width:100%; border-radius: 10px;">
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-5">
-                    <h3 class="tours_booking"><?php echo htmlspecialchars($events_end[$i]['e_name']); ?><span><?php echo htmlspecialchars($events_end[$i]['e_prefecture']); ?></span></h3>
+                    <h3 class="tours_booking"><?php echo htmlspecialchars($p_events[$i]['e_name']); ?><span><?php echo htmlspecialchars($p_events[$i]['e_prefecture']); ?></span></h3>
                   </div>
-                  <div class="col-md-2 col-sm-3">
-                    <ul class="info_booking">
-                      <li><strong>Event start</strong><?php echo htmlspecialchars($events_end[$i]['e_start_date']); ?></li>
-                      <li><strong>Event end</strong><?php echo htmlspecialchars($events_end[$i]['e_end_date']); ?></li>
+                  <div class="col-md-2 col-sm-3" ">
+                    <ul class="info_booking" style="padding-top:23px; padding-bottom:20px; padding-right:0px; text-align: left; font-size: 15px;">
+                      <li><strong>Event start</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($p_events[$i]['e_start_date']))); ?></li>
+                      <li><strong>Event end</strong><?php echo htmlspecialchars(date('F d, Y', strtotime($p_events[$i]['e_end_date']))); ?></li>
                     </ul>
                   </div>
                   <div class="col-md-2 col-sm-2">
-                    <div class="booking_buttons">
-                      <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview" id="<?php echo htmlspecialchars($events_end[$i]['event_id']); ?>">Review</a>
+                      <?php if ($review_count['total'] == 0) { ?>
+
+                        <div class="" style="margin-top: 17px;">
+                        <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview" id="<?php echo htmlspecialchars($p_events[$i]['event_id']); ?>" style="margin-bottom: 0px; width: 100%;" >Review</a>
+                        
+                      <?php } else if($review_count['total'] > 0){ ?>
+
+                        <div class="" style="margin-top: 5px;">
+                        <button type="button" class="btn btn-outline-secondary" style="margin-bottom: 0px; width: 100%;" disabled>Reviewed</button>
+
+                      <?php } ?>
+
+                    </div>
+                    <div class="booking_buttons" style="padding-top: 0px">
+                      <a href="event_detail.php?event_id=<?php echo htmlspecialchars($p_events[$i]['event_id']); ?>" class="btn_2" style="font-size: 14px; font-weight: 400; line-height: 1.42857143">Detail</a>
                     </div>
                   </div>
                 </div>
                 <!-- End row -->
               </div>
             <?php } ?>
-            <!-- <div class="row">
-              <div class="col-md-4 col-sm-6">
-                <div class="hotel_container">
-                  <div class="img_container">
-                    <a href="single_hotel.html">
-                      <img src="img/hotel_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                      <div class="ribbon top_rated">
-                      </div>
-                      <div class="score">
-                        <span>7.5</span>Good
-                      </div>
-                      <div class="short_info hotel">
-                        From/Per night<span class="price"><sup>$</sup>59</span>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="hotel_title">
-                    <h3><strong>Park Hyatt</strong> Hotel</h3>
-                    <div class="rating">
-                      <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                    </div> -->
-                    <!-- end rating -->
-                    <!-- <div class="wishlist_close_admin">
-                
-                    </div>
-                  </div>
-                </div> -->
-                <!-- End box tour -->
-              <!-- </div> -->
-              <!-- End col-md-6 -->
+          <?php else: ?>
+            <p>参加予定のイベントはありません。</p>
+          <?php endif; ?>
 
-            <!-- </div> -->
-            <!-- End row -->
-            <!-- <div class="col-md-12 col-sm-12">
-              <textarea class="form-control"></textarea><br> 
-              <button type="submit" class="btn_1 green">Review</button>  
-            </div> -->
-            
-          </section>
+          </section> 
+
+
+
           <!-- End section 4 -->
 <!-- 
   ####  ###### #### ###### ###### ####  ##  ##     ######  
