@@ -176,3 +176,5 @@
     </header><!-- End Header -->
 
 <?php endif; ?>
+
+<?php require('modal_about_us.php'); ?>

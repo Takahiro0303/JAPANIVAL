@@ -28,7 +28,7 @@ USE `japanival`;
 -- テーブルの構造 `caht_rooms`
 --
 
-CREATE TABLE `caht_rooms` (
+CREATE TABLE `chat_rooms` (
   `chat_room_id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `accept_user_id` int(11) NOT NULL,
