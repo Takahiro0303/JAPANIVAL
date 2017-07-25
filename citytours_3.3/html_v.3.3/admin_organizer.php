@@ -14,8 +14,8 @@ $o_email = $login_user['o_email'];
 $o_intro = $login_user['o_intro'];
 $errors = [];
 
-var_dump($login_user['o_id']);
-var_dump($login_user['o_pic']);
+// var_dump($login_user['o_id']);
+// var_dump($login_user['o_pic']);
 
 if (!empty($_POST)) {
     $o_current_password = sha1($_POST['o_current_password']);
@@ -146,7 +146,7 @@ if (isset($_GET['search_word']) && !empty($_GET['search_word'])) {
   $e_stmt = $dbh->prepare($e_sql);
   $e_stmt->execute();
 } else {
-  $e_sql = 'SELECT * FROM events WHERE o_id=? ORDER BY e_start_date ASC';
+  $e_sql = 'SELECT * FROM events WHERE e_end_date > CURDATE() AND o_id=? ORDER BY e_start_date ASC';
   $e_data = [$login_user['o_id']];
   $e_stmt = $dbh->prepare($e_sql);
   $e_stmt->execute($e_data);
@@ -157,7 +157,7 @@ $events = array();
 while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
   $events[] = $e_record;
 }
-$count = count($events);
+// $count = count($events);
 /*session-1 End*/
 
 /*session-3*/
@@ -175,6 +175,9 @@ $past_count = count($past_events);
 
 // var_dump($login_user['o_id']);
 /*session-3 End*/
+
+
+
 
 ?>
 
@@ -242,7 +245,44 @@ $past_count = count($past_events);
   <?php require('header.php');  ?>  
   <!-- End Header -->
 
-  <section class="parallax-window" data-parallax="scroll" data-image-src="img/admin_top.jpg" data-natural-width="1400" data-natural-height="470">    
+<?php  
+  $sql = 'SELECT COUNT(*) AS total FROM event_pics INNER JOIN events ON event_pics.event_id = events.event_id AND events.e_end_date > CURDATE()';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $pic_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $event_number = mt_rand(0, $pic_count['total']-1);
+
+  $sql = 'SELECT * FROM event_pics INNER JOIN events ON event_pics.event_id = events.event_id AND events.e_end_date > CURDATE()';
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  while ($e_info = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $e_infos[] = $e_info;
+  }
+
+?>
+  <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $e_infos[$event_number]['e_pic_path'] ?>" data-natural-width="1400" data-natural-height="470">
+    <div class="parallax-content-1">
+      <div class="animated fadeInDown">
+        <h1><?php echo $e_infos[$event_number]['e_name'] ?></h1>
+
+        <?php 
+              $starts = explode('-', $e_infos[$event_number]['e_start_date']);
+              $ends = explode('-', $e_infos[$event_number]['e_end_date']);
+
+              if ($starts[0] != $ends[0]) {
+                  $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+              } elseif($starts[1] != $ends[1]){
+                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+              } elseif($starts[2] != $ends[2]){
+                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+              } else{
+                  $duration = date('F d, Y', strtotime(implode('-', $starts)));
+              } 
+        ?>
+        <p><?php echo $duration ?></p>
+      </div>
+    </div>
   </section>
   <!-- End section -->
 
@@ -263,11 +303,11 @@ $past_count = count($past_events);
       <div id="tabs" class="tabs">
         <nav>
           <ul>
-            <li><a href="#section-1" class="icon-calendar"><span>登録済みイベント一覧</span></a>
+            <li><a href="#section-1" class="icon-calendar"><span>実施予定イベント</span></a>
             </li>
             <li><a href="#section-2" class="icon-wishlist"><span>イベント登録</span></a>
             </li>
-            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント </span></a>
+            <li><a href="#section-3" class="icon-back-in-time"><span>実施済みイベント</span></a>
             </li>
             <!-- <li><a href="#section-3-2" class="icon-back-in-time"><span>実施済みイベント② </span></a>
             </li> -->
@@ -277,133 +317,249 @@ $past_count = count($past_events);
         </nav>
 
         <div class="content">
-          <section id="section-1">
-            <div id="tools" class="col-md-12">
-              <form method="GET" action="">
-                <div class="row">
-                  <div class="col-md-3 col-sm-3 col-xs-6">
-                    <div> 
-                      <span class="input-group">
-                      <input type="text" name="search_word" placeholder="イベント名"　value="<?php echo htmlspecialchars($word); ?>">
-                      <button class="btn btn-default" type="submit" style="margin-left:0;"><i class="icon-search"></i></button>
-                      </span>
+
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##         ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##        ###    
+ ##     ##    ##      ##     ##  ##  ## ### ##         ##    
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##    
+     ## ##    ##      ##     ##  ##  ## ## ###         ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##         ##    
+   ###  ###### ####   ##   ###### ####  ##  ##       ######  
+
+
+ -->
+
+ <section id="section-1">
+    <div id="tools" class="col-md-12">
+        <form method="GET" action="" style="margin-bottom: 0px;">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-6">
+                    <div style="padding-top:0px; display: table-cell;"> 
+                        <span class="input-group" style="padding-top:0px; margin-top:0px; display: table-cell;";>
+                            <input type="text" style="margin: 5px; width: 200px; border-radius: 5px; margin-bottom;" name="search_word" placeholder="イベント名"　value="<?php echo htmlspecialchars($word); ?>">
+
+                            <button class="btn" type="submit" style="height:30px;line-height:30px;padding: 0 10px ;"><i class="icon-search"></i></button>
+                        </span>
                     </div>                                   
-                  </div>                
-                </div>
-              </form>
-            </div>
-          <!--/tools -->
-
-            <div class="strip_booking col-md-12">
-              <?php for ($i=0; $i <$count ; $i++) { ?>
-                <div class="row">
-                  <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-                    <div class="row">
-                      <div class="col-lg-4 col-md-4 col-sm-4">
-                        <div class="ribbon_3 popular">
-                          <span>Popular</span>
-                        </div>
-                        <div class="wishlist">
-                          <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                        </div>
-                        <div class="img_list" >
-                          <a href="single_tour.html"><img src="img/tour_box_1.jpg" alt="Image">
-                          <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div>
-                          </a>
-                        </div>
-                      </div>
-                      <div class="clearfix visible-xs-block"></div>
-                      <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="tour_list_desc">
-                          <div class="rating"></div>
-                            <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
-                            <p><?php echo htmlspecialchars($events[$i]['explanation']); ?></p>
-                            <p><?php echo htmlspecialchars($events[$i]['e_start_date']); ?></p>
-                        </div>
-                      </div>
-                      <div class="col-lg-2 col-md-2 col-sm-2">
-                        <div class="price_list">
-                          <div>
-                            <p><a href="#0" class="btn_1">詳細</a></p><br>
-                            <p><a href="event_input.php" class="btn_1">編集</a></p> 
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              <?php } ?>
-              <!-- End row -->              
-            </div>
-            <!-- End strip booking -->
-          </section>
-          <!-- End section 1 -->
-
-
-          <section id="section-2">
-          </section>
-          <!-- End section 2 -->
-
-          <!-- 過去のFMT(不要) -->
-          
-          
-          <section id="section-3">
-          <div id="tools" class="col-md-12">
-            <form method="GET" action="">
-              <div class="row">
-                <div class="col-md-3 col-sm-3 col-xs-6">
-                  <div> 
-                    <span class="input-group">
-                    <input type="text" name="search_word" placeholder="イベント名"　value="<?php echo htmlspecialchars($word); ?>">
-                    <button class="btn btn-default" type="submit" style="margin-left:0;"><i class="icon-search"></i></button>
-                    </span>
-                  </div>                                   
                 </div>                
-              </div>
-            </form>
-          </div>
-
-
-          <?php for ($i=0; $i <$past_count ; $i++) { ?>              
-          <div class="row">
-            <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s">
-              <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                  <div class="ribbon_3 popular">
-                    <span>Popular</span>
-                  </div>
-                  <div class="wishlist">
-                    <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                  </div>
-                  <div class="img_list" >
-                    <a href="review_modal.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>"><img src="../../o_pic/<?php echo htmlspecialchars($past_events[$i]['e_pic_path']) ?>" alt="Image">
-                    <!-- <div class="short_info"><i class="icon_set_1_icon-4"></i>Museums </div> -->
-                    </a>
-                  </div>
-                </div>
-                <div class="clearfix visible-xs-block"></div>
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                  <div class="tour_list_desc">
-                    <div class="rating"></div>
-                      <h3><strong><?php echo htmlspecialchars($past_events[$i]['e_name']); ?></strong></h3>
-                      <p><?php echo htmlspecialchars($past_events[$i]['explanation']); ?></p>
-                      <p><?php echo htmlspecialchars($past_events[$i]['e_start_date']); ?></p>
-                  </div>  
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                  <div class="price_list">
-                    <div>
-                      <p><a href="review_modal.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>" class="btn_1">レビューを見る</a></p><br>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-          <?php } ?>               
-          <!-- End row --> 
-          </section>
-          <!-- End section 3 -->
+        </form>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="row">
+
+
+            <?php for ($i=0; $i < count($events) ; $i++) { ?>
+            <?php
+
+
+            $starts = explode('-', $events[$i]['e_start_date']);
+            $ends = explode('-', $events[$i]['e_end_date']);
+
+            if ($starts[0] != $ends[0]) {
+                $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+            } elseif($starts[1] != $ends[1]){
+                $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+            } elseif($starts[2] != $ends[2]){
+                $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+            } else{
+                $duration = date('F d, Y', strtotime(implode('-', $starts)));
+            }
+
+            $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+            $data = [$events[$i]['event_id']];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $l_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //join数カウント
+            $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
+            $data = [$events[$i]['event_id']];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //like数カウント
+            $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+            $data = [$events[$i]['event_id']];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+            ?>
+
+
+            <div class="col-md-4 col-sm-6">
+                <div class="tour_container">
+                    <div class="img_container">
+                        <a href="event_detail.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>">
+                            <img src="<?php echo htmlspecialchars($l_event_pic['e_pic_path']); ?>" width="800" height="533" class="img-responsive" alt="Image" style="height: 220px;">
+
+
+                            <div class="short_info hotel" style="">
+                                <p><a href="event_input.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_1" style="float: left; position: absolute; bottom:8px;">編集/ニュース投稿</a></p> 
+                                <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
+
+                                <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+
+                            </div>
+                        </a>
+                    </div>
+                    <div class="tour_title">
+                        <h3><strong><?php echo htmlspecialchars($events[$i]['e_name']); ?></strong></h3>
+                        <div><?php echo $duration; ?></div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+    </div>
+</section>
+          <!-- End section 1 -->
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##       ####   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##      ##  ##  
+ ##     ##    ##      ##     ##  ##  ## ### ##          ##  
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##   
+     ## ##    ##      ##     ##  ##  ## ## ###        ##    
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##     
+   ###  ###### ####   ##   ###### ####  ##  ##      ######  
+                                                             -->
+
+<section id="section-2">
+    <button class="btn btn-primary" style="width:100%; font-size: 20px; height:40px;" onclick="javascript:location.href = 'event_input.php';" >CREAT AN EVENT</button>
+
+</section>
+
+
+
+
+
+
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##        ####   
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
+ ##     ##    ##      ##     ##  ##  ## ### ##           ##  
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ###   
+     ## ##    ##      ##     ##  ##  ## ## ###           ##  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
+   ###  ###### ####   ##   ###### ####  ##  ##        ####   
+
+ -->
+<section id="section-3">
+    <div id="tools" class="col-md-12">
+        <form method="GET" action="" style="margin-bottom: 0px;">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-xs-6">
+                    <div style="padding-top:0px; display: table-cell;"> 
+                        <span class="input-group" style="padding-top:0px; margin-top:0px; display: table-cell;";>
+                            <input type="text" style="margin: 5px; width: 200px; border-radius: 5px; margin-bottom;" name="search_word" placeholder="イベント名"　value="<?php echo htmlspecialchars($word); ?>">
+
+                            <button class="btn" type="submit" style="height:30px;line-height:30px;padding: 0 10px ;"><i class="icon-search"></i></button>
+
+                        </span>
+                    </div>                                   
+                </div>                
+            </div>
+        </form>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="row">
+
+
+            <?php for ($i=0; $i < count($past_events) ; $i++) { ?>
+            <?php
+
+
+            $starts = explode('-', $past_events[$i]['e_start_date']);
+            $ends = explode('-', $past_events[$i]['e_end_date']);
+
+            if ($starts[0] != $ends[0]) {
+                $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+            } elseif($starts[1] != $ends[1]){
+                $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+            } elseif($starts[2] != $ends[2]){
+                $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+            } else{
+                $duration = date('F d, Y', strtotime(implode('-', $starts)));
+            }
+
+            $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+            $data = [$past_events[$i]['event_id']];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $l_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //join数カウント
+            $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
+            $data = [$past_events[$i]['event_id']];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            //like数カウント
+            $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+            $data = [$past_events[$i]['event_id']];
+            $stmt = $dbh->prepare($sql);
+            $stmt->execute($data);
+            $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+            ?>
+
+
+            <div class="col-md-4 col-sm-6">
+                <div class="tour_container">
+                    <div class="img_container">
+                        <a href="event_detail.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>">
+                            <img src="<?php echo htmlspecialchars($l_event_pic['e_pic_path']); ?>" width="800" height="533" class="img-responsive" alt="Image" style="height: 220px;">
+
+
+                            <div class="short_info hotel" style="">
+                                <p><a href="event_input.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>" class="btn_1" style="float: left; position: absolute; bottom:8px;">編集/ニュース投稿</a></p> 
+                                <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
+
+                                <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+
+                            </div>
+                        </a>
+                    </div>
+                    <div class="tour_title">
+                        <h3><strong><?php echo htmlspecialchars($past_events[$i]['e_name']); ?></strong></h3>
+                        <div><?php echo $duration; ?></div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+    </div>
+</section>
+
+
+<!-- 
+  ####  ###### #### ###### ###### ####  ##  ##     ######  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##     ##      
+ ##     ##    ##      ##     ##  ##  ## ### ##     #####   
+  ####  ##### ##      ##     ##  ##  ## ######  ###### ##  
+     ## ##    ##      ##     ##  ##  ## ## ###         ##  
+ ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##     ##  ##  
+   ###  ###### ####   ##   ###### ####  ##  ##      ####   
+ -->
+
+
+
+
+
+
+
 
           <section id="section-5">
             <div class="row">

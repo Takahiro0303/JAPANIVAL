@@ -58,7 +58,6 @@ $(document).ready(function(){
     console.log(XMLHttpRequest.status);
     console.log(textStatus);
     console.log(errorThrown);
-})
 
 
 

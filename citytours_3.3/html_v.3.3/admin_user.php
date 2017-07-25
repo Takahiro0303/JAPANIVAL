@@ -283,16 +283,6 @@ $file_review = $_FILES['review_pic_path']['name'];
     $e_infos[] = $e_info;
   }
 
-    // echo '<pre>';
-    // var_dump($e_info);
-    // echo count($f_events);
-    // echo '<br>';
-    // echo $event_number;
-    // echo '</pre>';
-    // echo '<pre>';
-    // var_dump($e_infos[$event_number]);
-    // echo '</pre>';
-
 ?>
 
 
@@ -376,7 +366,7 @@ $file_review = $_FILES['review_pic_path']['name'];
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
                     <div class="date" style="background-color:#FF6666; border-radius: 5px;">
-                      <img class="day" src="<?php echo htmlspecialchars($f_event_pic['e_pic_path']); ?>" height="100px" style="padding:5px;width:100%; border-radius: 10px;">
+                      <img class="day" src="<?php echo htmlspecialchars($f_event_pic['e_pic_path']); ?>" style=" height: 100px; padding:5px;width:100%; border-radius: 10px;">
 
                     </div>
                   </div>
@@ -705,7 +695,7 @@ $file_review = $_FILES['review_pic_path']['name'];
                 <div class="row">
                   <div class="col-md-2 col-sm-2">
                     <div class="date" style="background-color:#008000; border-radius: 5px;">
-                      <img class="day" src="<?php echo htmlspecialchars($p_event_pic['e_pic_path']); ?>" height="100px" style="padding:5px;width:100%; border-radius: 10px;">
+                      <img class="day" src="<?php echo htmlspecialchars($p_event_pic['e_pic_path']); ?>" style="height: 100px; padding:5px;width:100%; border-radius: 10px;">
                     </div>
                   </div>
                   <div class="col-md-6 col-sm-5">
@@ -740,7 +730,7 @@ $file_review = $_FILES['review_pic_path']['name'];
               </div>
             <?php } ?>
           <?php else: ?>
-            <p>参加予定のイベントはありません。</p>
+            <p>参加済みのイベントはありません。</p>
           <?php endif; ?>
 
           </section> 
@@ -1184,8 +1174,17 @@ $file_review = $_FILES['review_pic_path']['name'];
   </main>
   <!-- End main -->
 
-  <!-- フッター呼び出し -->
- <?php require('footer.php'); ?>
+    <!-- フッター呼び出し -->
+    <?php require('footer.php'); ?>
+
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
+
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
+
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
 
   <div id="toTop"></div><!-- Back to top button -->
   
@@ -1283,8 +1282,15 @@ $file_review = $_FILES['review_pic_path']['name'];
 
       <!-- Common scripts -->
       <script src="js/jquery-2.2.4.min.js"></script>
-      <script src="js/common_scripts_min.js"></script>
+
+<!--       <script src="js/common_scripts_min.js"></script> -->
+<!--       <script src="js/common_scripts_min.js"></script> -->
       <script src="js/functions.js"></script>
+
+
+
+
+
 
       <!-- Specific scripts -->
       <script src="js/icheck.js"></script>
@@ -1339,7 +1345,16 @@ $file_review = $_FILES['review_pic_path']['name'];
         });
 
       </script>
+    <script src="js/notify_func.js"></script>
+    <script src="js/modal_login_ajax.js"></script>
+    <script src="js/modal_register_user_ajax.js"></script>
+    <script src="js/modal_register_organizer_ajax.js"></script>
+    <script src="js/join_ajax.js"></script>
+    <script src="js/like_ajax.js"></script>
 
+    <!-- 自作のJS -->
+    <script src="js/custom.js"></script>
+<!--     <script src="js/bootstrap.js"></script> -->
 
 </body>
 

@@ -39,7 +39,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // ○reviews&usersテーブルから全データ取得
-$sql ='SELECT r.*, u.*
+$sql ='SELECT r.rating, r.comment, r.created, u.nickname, u.pic_path
         FROM reviews r, users u
         WHERE r.user_id=u.user_id AND r.event_id=?';
         // -- ORDER BY r.created
@@ -51,6 +51,10 @@ $reviews = [];
 while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $reviews[] = $review;
 }
+
+  echo '<pre>';
+  var_dump($reviews);
+  echo '</pre>';
 $count = count($reviews);
 // v($count);
 
@@ -509,52 +513,52 @@ $e_lng = $record['e_Lng'];
                                     <small><?php echo($review['created']);?></small>
 
                                     <!-- ユーザー名表示 -->
-                                    <h4><?php echo($review['nickname']); ?></h4>
+                                    <h4 style="margin-bottom: 10px;"><?php echo($review['nickname']); ?></h4>
 
                                     <!-- レビュー評価表示機能 -->
-                                    <?php if ($review['rating'] == 1){ ?>
-                                        <?php v($review); ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == 2){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star "></i>
-                                            <i class="icon-star "></i>
-                                            <i class="icon-star "></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == 3){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star "></i>
-                                            <i class="icon-star "></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == 4){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star "></i>
-                                        </div>
-                                        <?php }elseif ($review['rating'] == 5){ ?>
-                                        <div class="rating">
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                            <i class="icon-star voted"></i>
-                                        </div>
-                                    <?php }; ?>
-
+                                    <div style="margin-bottom: 10px;">
+                                        <?php if ($review['rating'] == 1){ ?>
+                                            <div class="rating">
+                                                <i class="icon-star voted" style="font-weight: 400;"></i>
+                                                <i class="icon-star"></i>
+                                                <i class="icon-star"></i>
+                                                <i class="icon-star"></i>
+                                                <i class="icon-star"></i>
+                                            </div>
+                                            <?php }elseif ($review['rating'] == 2){ ?>
+                                            <div class="rating">
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star "></i>
+                                                <i class="icon-star "></i>
+                                                <i class="icon-star "></i>
+                                            </div>
+                                            <?php }elseif ($review['rating'] == 3){ ?>
+                                            <div class="rating">
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star "></i>
+                                                <i class="icon-star "></i>
+                                            </div>
+                                            <?php }elseif ($review['rating'] == 4){ ?>
+                                            <div class="rating">
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star "></i>
+                                            </div>
+                                            <?php }elseif ($review['rating'] == 5){ ?>
+                                            <div class="rating">
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                                <i class="icon-star voted"></i>
+                                            </div>
+                                        <?php }; ?>
+                                    </div>
                                     <!-- レビュー本文表示 -->
                                     <p><?php echo($review['comment']) ; ?></p>
 
@@ -562,10 +566,10 @@ $e_lng = $record['e_Lng'];
                                 </div> <!-- End review strip -->
 
                             <?php }; ?>
-                        
+<!--                         
                             <div align="center">
                                 <a href="" class="btn_1 add_bottom_30">See all review</a>
-                            </div>
+                            </div> -->
 
 
                         </div> <!-- col-md-9 -->
