@@ -850,7 +850,7 @@ $file_review = $_FILES['review_pic_path']['name'];
                 <!-- End 展開の中身 -->
               </div>
               <div class="col-md-5 col-sm-5">
-                <img src="img/tourist_guide_pic.jpg" alt="Image" class="img-responsive styled profile_pic">
+                <img src="<?php echo htmlspecialchars ($login_user['pic_path']); ?>" alt="Image" class="img-responsive styled profile_pic">
               </div>
             </div>
             <!-- End row -->

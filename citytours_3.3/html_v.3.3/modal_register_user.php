@@ -304,18 +304,19 @@
                             <textarea name="comment" id="r_u_comment" class="form-control" placeholder="Describe who you are"></textarea>
                             <p class="error error_comment"></p>
                         </div>
+                    <!-- <form id = "file_upload_form" enctype="multipart/form-data" method="post" name="file_upload_form"> -->
                         <div class="form-group">
                             <label>Photo</label>
                             <div class="form-group">
                                 <input type="file" name="pic_path" id="r_u_pic_path">
                                 <p class="error error_pic_path"></p>
-                            </div> 
+                        </div>
                         </div>
                         <div>
 <!--                             <button id="register_user_button" class="btn_full">Create an account</button> なぜページが更新されるのか質問 -->
                             <input type="button" id="register_user_button_c" class="btn_full" value="Create an account">
-
                         </div>
+                    <!-- </form> -->
                     </form>
                 </div>
         </div>

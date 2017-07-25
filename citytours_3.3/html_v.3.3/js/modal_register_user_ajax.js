@@ -13,7 +13,9 @@ $(document).ready(function(){
     var gender = $('#r_u_gender').val();
     var japanese_level = $('#r_u_japanese_level').val();
     var comment = $('#r_u_comment').val();
-    var pic_path = $('#r_u_pic_path').val();
+    // var pic_path = $('#r_u_pic_path').val();
+    var pic_path = new FormData($('#r_u_pic_path').get(0));
+
 
     console.log(nick_name);
     console.log(email);
@@ -47,6 +49,10 @@ $(document).ready(function(){
       type: "POST",
       url: "modal_register_user_ajax.php",
       data: r_u_data
+      // cache: false,
+      // contentType : false,
+      // processData : false,
+      // dataType    : "html"
 
     }).done(function(result){
       console.log('ajax成功');
@@ -115,6 +121,7 @@ $(document).ready(function(){
           $('#r_u_gender_s').text(gender);
           $('#r_u_japanese_level_s').text(japanese_level);
           $('#r_u_comment_s').text(comment);
+          $('#r_u_pic_path_s').text(pic_path);
         
       }
 
@@ -139,7 +146,7 @@ $(document).ready(function(){
                       gender: $('#r_u_gender_s').text(),
                       japanese_level: $('#r_u_japanese_level_s').text(), 
                       comment: $('#r_u_comment_s').text(), 
-                      pic_path: 'a',
+                      pic_path: $('#r_u_pic_path_s').text(),
                       db_register: 'on'
                     };
 
@@ -162,8 +169,6 @@ $(document).ready(function(){
 
     });
   });
-
-
 
   // 確認モーダルでの戻るボタン押下
   $('#register_user_button_b').click(function(){
