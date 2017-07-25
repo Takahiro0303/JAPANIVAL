@@ -32,7 +32,7 @@
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">About us USER<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_about_us">About us<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_organizer">Make An Event<i class="icon-down-open-mini"></i></a>
@@ -72,7 +72,7 @@
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">About us ORGANIZER<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_about_us">About us<i class="icon-down-open-mini"></i></a>
                             </li>
                              <li class="submenu">
                                 <a href="event_input.php">Make An Event<i class="icon-down-open-mini"></i></a>
@@ -113,7 +113,7 @@
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">About us GUEST<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_about_us">About us<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_user">Sign Up<i class="icon-down-open-mini"></i></a>
@@ -157,7 +157,7 @@
                         <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
                         <ul class="umetani">
                             <li class="submenu">
-                                <a href="javascript:void(0);" class="show-submenu">About us MANAGER<i class="icon-down-open-mini"></i></a>
+                                <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_about_us">About us<i class="icon-down-open-mini"></i></a>
                             </li>
                             <li class="submenu">
                                 <a href="#" class="show-submenu" data-toggle="modal" data-target="#modal_register_user">Sign Up<i class="icon-down-open-mini"></i></a>
