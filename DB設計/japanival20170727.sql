@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017 年 7 月 26 日 18:25
+-- Generation Time: 2017 年 7 月 26 日 18:30
 -- サーバのバージョン： 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `japanival`
 --
+CREATE DATABASE IF NOT EXISTS `japanival` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `japanival`;
 
 -- --------------------------------------------------------
 
