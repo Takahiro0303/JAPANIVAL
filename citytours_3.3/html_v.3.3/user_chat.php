@@ -7,7 +7,7 @@ require('../../common/functions.php'); // 関数ファイル読み込み
 $login_user = get_login_user($dbh);
 
 
-$login_user['user_id'] = '3';
+// $login_user['user_id'] = '3';
 // chat_room_idが指定されてなければ、user_chat画面に遷移
 // if (empty($_REQUEST['chat_room_id'])) {
 //     header('Location: user_chat.php');
@@ -16,17 +16,17 @@ $login_user['user_id'] = '3';
 
 // ○クリックされたユーザーのIDを一件取得
 if(isset($_REQUEST['chat_room_id'])){
-  if ($_REQUEST['chat_room_id'] == 'no') {
+  if ($_REQUEST['chat_room_id'] == 'no' && !isset($chat_room_id)) {
     //チャットルームID生成
     $sql = 'INSERT INTO chat_rooms SET request_id = ?,     
                                        accept_user_id = ?,
                                        created = NOW()';
-    $data = array($_REQUEST['request_id'], $login_user['user_id']);
+    $data = [$_REQUEST['request_id'], $login_user['user_id']];
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
 
-    $sql = 'SELECT * FROM chat_rooms SET request_id = ? AND accept_user_id = ?';
-    $data = array($_REQUEST['request_id'], $login_user['user_id']);
+    $sql = 'SELECT * FROM chat_rooms WHERE request_id = ? AND accept_user_id = ?';
+    $data = [$_REQUEST['request_id'], $login_user['user_id']];
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
     $room=$stmt->fetch(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ if(isset($_REQUEST['chat_room_id'])){
 
 //チャットルームID情報を取得
 $sql ='SELECT * FROM chat_rooms WHERE chat_room_id=?';
-$data = [$login_user['user_id']];
+$data = [$chat_room_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
 $chat_check=$stmt->fetch(PDO::FETCH_ASSOC);
@@ -249,6 +249,7 @@ if (!empty($_POST['message'])) {
                  <img src="../../users_pic/<?php echo $event_chat_room['pic_path']; ?>" alt="User Picture" class="img-circle" style="width: 40px; height: 50px;""> 
             </div>
             <div class="col-md-9">
+                <a href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($event_chat_room['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($event_chat_room['request_id']); ?>">
                   <div>Event : <?php echo $event_chat_room['e_name']; ?></div>
                   <?php if ($event_chat_room['accept_user_id'] == $login_user['user_id']): ?>
                     <div>Request User : <?php echo $opponent_info['nickname']; ?></div>
@@ -256,8 +257,8 @@ if (!empty($_POST['message'])) {
                     <div>Accept User : <?php echo $opponent_info['nickname']; ?></div>
                   <?php endif; ?>
                   <div>Reqest Category : <?php echo $event_chat_room['request_category']; ?></div>
-
-                  <strong class="pull-right">09:45AM</strong>
+                </a>
+                <strong class="pull-right">09:45AM</strong>
             </div>
           </div>
         </a>

@@ -39,7 +39,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // ○reviews&usersテーブルから全データ取得
-$sql ='SELECT r.rating, r.comment, r.created, u.nickname, u.pic_path
+$sql ='SELECT r.rating, r.comment, r.created, u.nickname
         FROM reviews r, users u
         WHERE r.user_id=u.user_id AND r.event_id=?';
         // -- ORDER BY r.created
@@ -52,34 +52,8 @@ while ($review = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $reviews[] = $review;
 }
 
-  echo '<pre>';
-  var_dump($reviews);
-  echo '</pre>';
 $count = count($reviews);
 // v($count);
-
-// ○newsテーブルから全データ取得 *ログイン不要
-$sql = 'SELECT * FROM news WHERE event_id=?';
-$data = [$event_id];
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-    while ($new = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $news[] = $new;
-    }
-
-// ○requestsテーブルから全データ取得　※ログイン必須
-if (isset($_SESSION['id'])){
-    $sql ='SELECT r.*,u.* FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
-    $data = [$_REQUEST['event_id']];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $requests = [];
-    while ($request = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $requests[] = $request;
-    }
-}
-// }
-
 
 // reviewDB登録
 $review_rating = '';
@@ -96,45 +70,7 @@ if (!empty($_POST['review_rating']) && !empty($_POST['review_text'])) {
 
 }
     
-// $file_review = $_FILES['review_pic_path']['name'];
-//         //もし画像がセットされていれば画像アップデート処理
-//         if (!empty($file_review)) {
-//             $date_str = date('YmdHis');
-//             $submit_file_name = $date_str . $_FILES['review_pic_path']['name'];
-//             move_uploaded_file($_FILES['review_pic_path']['tmp_name'], '../../review_photos/' . $submit_file_name);
 
-//                 $sql = 'SELECT review_id FROM reviews ORDER BY review_id desc limit 1';
-//                 $review_stmt = $dbh->prepare($sql);
-//                 $review_stmt->execute();
-//                 $review_id = $review_stmt->fetch(PDO::FETCH_ASSOC);
-
-
-//             $sql = 'INSERT INTO review_photos SET review_id = ?, review_pic_path = ?';
-//             $data = [$review_id['review_id'],$submit_file_name];
-//             $stmt = $dbh->prepare($sql);
-//             $stmt->execute($data);
-//         }
-// v($_FILES['review_pic_path']);
-
-// ○リクエストボタンを押した際の登録処理
-// v($request['user_id']);
-// if ($requests['user_id'] != $login_user){
-    if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
-        $sql = 'INSERT INTO requests
-                        SET request_id=?,
-                            user_id=?,
-                            event_id=?,
-                            request_category_id=?,
-                            created=NOW()';
-        $data = [$_POST['request_id'],$_SESSION['id'],$_REQUEST['event_id'],$_POST['request_category_id']];
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute($data);
-
-        // 更新後、イベント詳細ページに戻す
-        header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
-        exit();
-        }
-// }
 
 //　マッチング希望者数カウント・表示　⇦ リクエスト欄に記載させるか要相談
 // $sql = 'SELECT COUNT(*) AS total FROM requests WHERE event_id=?';
@@ -286,7 +222,7 @@ $e_lng = $record['e_Lng'];
 
                             <?php  for ($j = 0; $j< count($event_pics); $j++) { ?>
                                 <div class="sp-slide">
-                                    <img alt="Image" class="sp-image" src="<?php $event_pics[$j]['e_pic_path'];?>" >
+                                    <img alt="Image" class="sp-image" src="<?php echo $event_pics[$j]['e_pic_path'];?>" >
                                     <data-src="<?php echo $event_pics[$j]['e_pic_path'];?>">
                                     <data-small="<?php echo $event_pics[$j]['e_pic_path'];?>">
                                     <data-medium="<?php echo $event_pics[$j]['e_pic_path'];?>">
@@ -479,7 +415,7 @@ $e_lng = $record['e_Lng'];
 
                         <div class="col-md-9">
 
-                            <div id="map_canvas" style="width:100%; height:500px"></div>
+                            <div id="map_canvas" style="width:100%; height:400px"></div>
 
                         </div>
                     </div>
@@ -495,11 +431,11 @@ $e_lng = $record['e_Lng'];
                                 <div id="general_rating" class="rating">
                                     <div class="col-md-7">
                                         <span><?php echo($count); ?></span> Reviews <!-- レビュー件数表示 -->            
-                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i> 
+<!--                                         <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star"></i><i class="icon-star"></i>  -->
                                     </div>
-                                    <div class="col-md-5">
+<!--                                     <div class="col-md-5">
                                         <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview">Leave a review</a>
-                                    </div>
+                                    </div> -->
                                 </div> <!-- general_rating -->     
                             </div> 
 
@@ -507,18 +443,18 @@ $e_lng = $record['e_Lng'];
 
                             <?php foreach ($reviews as $review){ ?>
                                 <div class="review_strip_single">
-                                    <img src="../../users_pic/<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px">
+                                    <img src="<?php echo($review['pic_path']); ?>" alt="Image" class="img-circle" width="70px" height="70px" style="height:70px;" >
 
                                     <!--　レビュー作成日表示 -->
                                     <small><?php echo($review['created']);?></small>
 
                                     <!-- ユーザー名表示 -->
-                                    <h4 style="margin-bottom: 10px;"><?php echo($review['nickname']); ?></h4>
+                                    <h4 style="margin-bottom: 10px;margin-top: -20px;"><?php echo($review['nickname']); ?></h4>
 
                                     <!-- レビュー評価表示機能 -->
                                     <div style="margin-bottom: 10px;">
                                         <?php if ($review['rating'] == 1){ ?>
-                                            <div class="rating">
+                                            <div class="rating" style="margin-top:30px;">
                                                 <i class="icon-star voted" style="font-weight: 400;"></i>
                                                 <i class="icon-star"></i>
                                                 <i class="icon-star"></i>
@@ -526,7 +462,7 @@ $e_lng = $record['e_Lng'];
                                                 <i class="icon-star"></i>
                                             </div>
                                             <?php }elseif ($review['rating'] == 2){ ?>
-                                            <div class="rating">
+                                            <div class="rating" style="margin-top:30px;">
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star "></i>
@@ -534,7 +470,7 @@ $e_lng = $record['e_Lng'];
                                                 <i class="icon-star "></i>
                                             </div>
                                             <?php }elseif ($review['rating'] == 3){ ?>
-                                            <div class="rating">
+                                            <div class="rating" style="margin-top:30px;">
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
@@ -542,7 +478,7 @@ $e_lng = $record['e_Lng'];
                                                 <i class="icon-star "></i>
                                             </div>
                                             <?php }elseif ($review['rating'] == 4){ ?>
-                                            <div class="rating">
+                                            <div class="rating" style="margin-top:30px;">
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
@@ -550,7 +486,7 @@ $e_lng = $record['e_Lng'];
                                                 <i class="icon-star "></i>
                                             </div>
                                             <?php }elseif ($review['rating'] == 5){ ?>
-                                            <div class="rating">
+                                            <div class="rating" style="margin-top:30px;">
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
                                                 <i class="icon-star voted"></i>
@@ -579,17 +515,17 @@ $e_lng = $record['e_Lng'];
                 <!--End  single_tour_desc-->
 
                 <!-- event_aside挿入 --> 
-                <?php //require('event_aside.php');  ?>
+                <?php require('event_aside.php');  ?>
 
-                <aside class="col-md-4">
+<!--                 <aside class="col-md-4">
                     <div class="box_style_1 expose">
                         <h3 class="inner">EVENT NEWS</h3>
                         <!-- ニュース表示 -->
-                        <div id="scroll" class="news">
+<!--                         <div id="scroll" class="news"> -->
 
-                            <?php if (isset($news)): ?>
+<!--                             <?php if (isset($news)): ?> -->
                             <!-- ニュースデータがある場合はfor文で表示 -->
-                                <?php foreach ($news as $new) { ?> 
+<!--                                 <?php foreach ($news as $new) { ?> 
                                     <p style="margin-bottom: 0px; color: black; font-weight: 600; text-decoration: underline;"><?php echo $new['news_title'];?></p>
                                     <p style="margin-bottom: 0px; color: black;"><?php echo $new['news_comment'];?></p>      
                                     <p style="margin-bottom: 0px; font-style:oblique;">登録日<?php echo $new['created'];?></p>
@@ -598,15 +534,15 @@ $e_lng = $record['e_Lng'];
                                     <?php endif; ?>
                                     <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 <?php } ?>
-                            <?php else: ?>
+                            <?php else: ?> -->
                             <!-- ニュースデータがない場合 -->
-                            お知らせはありません。
+<!--                             お知らせはありません。
                             <?php endif; ?>
-                        </div>
+                        </div> -->
 
 
-                    </div> <!-- box_style_1 expose -->
-
+                 <!--    </div>  --><!-- box_style_1 expose -->
+<!-- 
                     <div class="box_style_1 expose">
                         <h3 class="inner">Eve tomo</h3>
                         <div class="eve_tomo">
@@ -639,9 +575,9 @@ $e_lng = $record['e_Lng'];
                                         </div>
                                     </div>
                                 </div>
-                            </div> <!-- row -->
+                            </div>   --><!-- row -->
 
-                            <hr>
+<!--                             <hr>
                             <div style="overflow: scroll; height: 1400px">
                             <?php v($_SESSION['flag']); ?>
                                 <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] == '1'): ?>
@@ -653,20 +589,20 @@ $e_lng = $record['e_Lng'];
                                             </div>
                                             <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
                                             <div style="text-align: center">
-                                                <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                                                <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
-                                            </div>
-                                        </div><!-- col-md-6 col-sm-6 -->
-                                        <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
-                                            <div class="button">
+                                                <img src="img/japan.png" width="32px" height="20px">  --><!-- 国籍(国旗)表示 -->
+<!--                                                 <div>Language : JP/EN</div> < -->
+<!--                                             </div>
+                                        </div> --><!-- col-md-6 col-sm-6 -->
+<!--                                         <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                            <div class="button"> -->
                                                 <!-- 個人詳細ページに遷移 -->
-                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                    <a href="#" class="btn_full" data-toggle="modal" data-target="#myprofile"　style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+<!--                                                 <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <a href="#" class="btn_full" data-toggle="modal" data-target="#myprofile"　style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a> -->
 
                                                     <!-- <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
- -->                                                </div>
+ -->                                               <!--  </div> -->
                                                 <!-- チャットページに遷移 -->
-                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+<!--                                                 <div class="col-md-12 col-sm-12" style="padding : 0px; ">
                                                     <div class="panel panel-danger" style="margin-bottom: 5px;">
                                                         <div class="panel-heading" style="padding : 10px; ">
                                                             <div style="margin-bottom: 5px;">
@@ -681,10 +617,10 @@ $e_lng = $record['e_Lng'];
 
                                                 <div class="col-md-12 col-sm-12" style="padding : 0px; ">
                                                     <a class="btn_full_outline" href="user_chat.php?<?php  ?>" style="padding: 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
-                                                </div>
-                                            </div> <!-- button -->
-                                        </div> <!-- col-md-6 col-sm-6 -->
-                                    </div>
+                                                </div> -->
+                                        <!--     </div>  --><!-- button -->
+                                       <!--  </div>  --><!-- col-md-6 col-sm-6 -->
+<!--                                     </div>
                                     <?php } ?>
                                     <p>
                                         <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest">Request to eve tomo</a>
@@ -706,19 +642,19 @@ $e_lng = $record['e_Lng'];
                                                 <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;"><?php echo($request['nickname']); ?></h4>
                                                 <div style="text-align: center">
                                                     <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                                                    <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
-                                                </div>
-                                            </div><!-- col-md-6 col-sm-6 -->
-                                            <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
-                                                <div class="button">
+                                              <!--       <div>Language : JP/EN</div>  --><!-- 対応可能言語表示 -->
+<!--                                                 </div>
+                                            </div>  --><!-- col-md-6 col-sm-6 -->
+<!--                                             <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                                <div class="button"> -->
                                                     <!-- 個人詳細ページに遷移 -->
-                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                      <a href="#" class="btn_full" data-toggle="modal" data-target="#myprofile" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
+<!--                                                     <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                      <a href="#" class="btn_full" data-toggle="modal" data-target="#myprofile" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a> -->
 
                                                         <!-- <a class="btn_full" href="" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a> -->
-                                                    </div>
+                      <!--                               </div> -->
                                                     <!-- チャットページに遷移 -->
-                                                    <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+<!--                                                     <div class="col-md-12 col-sm-12" style="padding : 0px; ">
                                                         <div class="panel panel-danger" style="margin-bottom: 5px;">
                                                             <div class="panel-heading" style="padding : 10px; ">
                                                                 <div style="margin-bottom: 5px;">
@@ -731,16 +667,16 @@ $e_lng = $record['e_Lng'];
                                                         </div>
                                                     </div>
                                                 </div> <!-- button -->
-                                            </div> <!-- col-md-6 col-sm-6 -->
-                                        </div>
+                                   <!--          </div>  --> --><!-- col-md-6 col-sm-6 -->
+<!--                                         </div>
                                     <?php } ?>
                                 
                                 <?php elseif ($_SESSION['flag'] == '2'): ?>
 
                                 <?php endif; ?>
-                        </div>
-                    </div>                        
-                </aside> <!-- class="col-md-4" -->
+                        </div> -->
+<!--                     </div>                        
+                </aside>  --><!-- class="col-md-4" -->
 
             </div>
         </div>
@@ -765,9 +701,6 @@ $e_lng = $record['e_Lng'];
 
     <!-- モーダル・リクエスト登録 -->
     <?php require('modal_register_request.php'); ?>
-
-    <!-- モーダル・プロフィール表示 -->
-    <?php require('modal_profile.php') ?>
 
 <div id="toTop"></div>
 <!-- Back to top button -->
