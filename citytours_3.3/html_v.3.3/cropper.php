@@ -49,7 +49,7 @@ if (!empty($_POST['cropp_file_name'])) { // 送信ボタンが押されたとき
 echo '<br>';
 var_dump($errors);
 echo '<br>';
-var_dump( $_SESSION['event']['cropp_file_name']);
+var_dump($_SESSION['event']['cropp_file_name']);
 ?>
 
 <!DOCTYPE html>
@@ -100,7 +100,7 @@ var_dump( $_SESSION['event']['cropp_file_name']);
               <input type="file" accept="image/*" name="top_picture_path">
 
               <h2>選択された画像</h2>
-              <div class="my-gallery" style="border:solid 1px; width:50%; height:300px;"></div>
+              <div class="my-gallery" style="border:solid 1px; width:100%; height:500px;"></div>
 
               <h2>プレビュー</h2>
               <div id="cropped" style="border:solid 1px;width:560px;height:188px;overflow:hidden;"></div>
