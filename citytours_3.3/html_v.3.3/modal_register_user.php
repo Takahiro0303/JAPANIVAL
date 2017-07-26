@@ -310,7 +310,7 @@
                             <div class="form-group">
                                 <input type="file" name="pic_path" id="r_u_pic_path">
                                 <p class="error error_pic_path"></p>
-                        </div>
+                            </div>
                         </div>
                         <div>
 <!--                             <button id="register_user_button" class="btn_full">Create an account</button> なぜページが更新されるのか質問 -->

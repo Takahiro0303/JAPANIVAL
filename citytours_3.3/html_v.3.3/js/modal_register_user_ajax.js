@@ -49,6 +49,9 @@ $(document).ready(function(){
       type: "POST",
       url: "modal_register_user_ajax.php",
       data: r_u_data
+      processData: false,
+      contentType: false,
+      dataType: 'json'
       // cache: false,
       // contentType : false,
       // processData : false,
