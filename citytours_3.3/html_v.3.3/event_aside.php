@@ -26,24 +26,6 @@ if (isset($_SESSION['id'])){
 }
 
 
-
-// リクエスト情報を登録
-if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
-  $sql = 'INSERT INTO requests
-                  SET user_id=?,
-                      event_id=?,
-                      request_category_id=?,
-                      created=NOW()';
-  $data = [$_SESSION['id'],$_REQUEST['event_id'],$_POST['request_category_id']];
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute($data);
-
-  // 更新後、イベント詳細ページに戻す
-  // header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
-  // exit();
-}
-
-
 ?>
 
 <aside class="col-md-4">
@@ -145,7 +127,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                 <?php if (isset($_REQUEST['event_id'])): ?> <!-- //イベントデータがあれば、紐づくニュースを表示 -->
                     <?php if ($_SESSION['id'] != '' && $_SESSION['flag'] != ''): ?>
                         <p>
-                            <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest" style="margin-top: 5px;">Request to Friends</a>
+                            <a class="btn_map" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myRequest" style="margin-top: 5px; margin-bottom: 0px;">Request to Friends</a>
                         </p>
                     <?php endif ?>
                         <?php foreach ($requests as $request) { ?>
@@ -167,11 +149,14 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                 <div >
 
                                     <div class="col-md-6 col-sm-6" style="padding-left: 0;">
-                                        <div style="text-align: center" style="height:95px;">
-                                            <img src="<?php echo htmlspecialchars($request['pic_path']); ?>" alt="Image" class="img-circle" width="95px" height="95px" style="width: 120px; height:120px;">
-                                        </div>
-                                        <h4 style="margin-top: 10px; text-align: center; margin-bottom: 5px; text-decoration: underline;"><?php echo htmlspecialchars($request['nickname']); ?></h4>
                                         <div style="text-align: center">
+                                            <img src="<?php echo htmlspecialchars($request['pic_path']); ?>" alt="Image" class="img-circle" style="width: 95px; height:95px; margin-top: 5px;">
+                                     
+                                        <h4 style="margin-top: 5px; text-align: center; margin-bottom: 5px; text-decoration: underline;"><?php echo htmlspecialchars($request['nickname']); ?></h4>
+                                        <!-- <div style="text-align: center"> -->
+                                        <?php $duration = date('Y/m/d H:i', strtotime($request['created'])) ?>
+                                        <p style="margin-top: 5px; text-align: center; margin-bottom: 5px; text-decoration: underline;">登録:<?php echo htmlspecialchars($duration); ?></p>
+                                        <!-- <div style="text-align: center"> -->
 
                                         </div>
                                     </div>
@@ -213,7 +198,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                                         <?php if (isset($chat_room_id['chat_room_id'])): ?>
                                                             <a class="btn_full_outline" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>keep on Chat</a>
                                                         <?php else:?>
-                                                            <a class="btn_full_outline" href="user_chat.php?chat_room_id=no&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>start Chat</a>
+                                                            <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">wait for friends</button>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -260,7 +245,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
 
                                 </div>
                             </div>
-                            <?php require('modal_profile.php') ?>
+
 
                         <?php } ?>
 

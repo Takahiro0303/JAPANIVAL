@@ -395,10 +395,10 @@ header.sticky #logo .logo_sticky{ display:block; }
 /*	width:160px;//TODO!:
 	height:34px;//TODO!:*/
 	display:block;
-	background-image:url(../img/logo.png); /*//TODO!: 元々は(../img/logo.png)ここを変えてもヘッダーのロゴは変わらない*/
+	background-image:url(../img/japanival_logo.png); /*//TODO!: 元々は(../img/logo.png)ここを変えてもヘッダーのロゴは変わらない*/
 	background-repeat:no-repeat;
 	background-position:left top;
-	background-size: 160px 34px;
+	background-size: 180px 52.5px;
 	text-indent:-9999px;
 }
 header.sticky #logo_home h1{
@@ -406,13 +406,16 @@ header.sticky #logo_home h1{
 	padding:0;
 }
 header.sticky #logo_home h1 a{
-	background-image:url(../img/logo_sticky.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
+	background-image:url(../img/japanival_logo.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
+	background-size: 180px 52.5px;
 }
 header#plain #logo_home h1 a{
-	background-image:url(../img/logo_sticky.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
+	background-image:url(../img/japanival_logo.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
+	background-size: 180px 52.5px;
 }
 header.sticky#colored #logo_home h1 a{
-	background-image:url(../img/logo_sticky_colored.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
+	background-image:url(../img/japanival_logo.png);/*ここを変えてもヘッダーのロゴは変わらない。*/
+	background-size: 180px 52.5px;
 }
 @media only screen and (min--moz-device-pixel-ratio: 2),
 only screen and (-o-min-device-pixel-ratio: 2/1),
@@ -427,7 +430,7 @@ header.sticky #logo_home h1 a, header#plain #logo_home h1 a{
 	background-size: 180px 52.5px; /*//TODO!:変更前:160px 34px*/
 }
 header.sticky#colored #logo_home h1 a{
-    background-image: url(../img/logo_sticky_colored_2x.png);
+    background-image: url(../img/japanival_logo.png);
 		background-size: 160px 34px;
 }
 }

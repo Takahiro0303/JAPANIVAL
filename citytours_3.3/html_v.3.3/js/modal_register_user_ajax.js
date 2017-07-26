@@ -54,14 +54,6 @@ $(document).ready(function(){
       var errors = JSON.parse(result);
       console.log(errors);
 
-      }).fail(function(XMLHttpRequest, textStatus, errorThrown){
-    console.log(XMLHttpRequest.status);
-    console.log(textStatus);
-    console.log(errorThrown);
-
-
-
-
       if (errors['nick_name'] == 'blank') {
         $('.error_nick_name').text('ユーザー名を入力してください。');
       }else if(errors['nick_name'] == ''){

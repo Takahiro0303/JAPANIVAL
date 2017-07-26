@@ -702,6 +702,9 @@ $e_lng = $record['e_Lng'];
     <!-- モーダル・リクエスト登録 -->
     <?php require('modal_register_request.php'); ?>
 
+    <!-- モーダル・プロフィール -->
+    <?php require('modal_profile.php') ?>
+
 <div id="toTop"></div>
 <!-- Back to top button -->
 

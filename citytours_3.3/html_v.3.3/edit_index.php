@@ -33,6 +33,24 @@ for ($i=1; $i <= $event_category_count['total']; $i++) {
     $category_count_total[$i] = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+
+// リクエスト情報を登録
+if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定されていればリクエスト処理
+  $sql = 'INSERT INTO requests
+                  SET user_id=?,
+                      event_id=?,
+                      request_category_id=?,
+                      created=NOW()';
+  $data = [$_SESSION['id'],$_REQUEST['event_id'],$_POST['request_category_id']];
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute($data);
+
+  // $_POST['request_category_id']= '';
+  // 更新後、イベント詳細ページに戻す
+  header('Location: event_detail.php?event_id=' . $_REQUEST['event_id']);
+  exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -379,7 +397,7 @@ for ($i=1; $i <= $event_category_count['total']; $i++) {
                         }
                     ?>
 
-                    <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.1s">
+                    <div class="col-md-4 col-sm-6 wow zoomIn" data-wow-delay="0.1s" style="height:360px;">
                         <div class="tour_container">
                             <?php if (strtotime(date('Y-m-d')) > strtotime($records[$i]['e_end_date'])){ ?>
                                 <div class="ribbon_3"><span>Past</span></div>
@@ -389,58 +407,65 @@ for ($i=1; $i <= $event_category_count['total']; $i++) {
                             <div class="img_container">
                                 <a href="event_detail.php?event_id=<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
                                     <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 270px;">
-                                    <div class="short_info">
-                                        <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
-                                                                        
-                                        <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
-                                     
 
-                                    </div>
                                 </a>
+                                    <div class="short_info">
+                                        <div  class="col-md-4 col-sm-4 col-xs-4" style="height: 40px; padding: 0px; margin-top: 2px; margin-left: -2px; display:inline-block;">   
+
+                                            <?php if (isset($login_user['user_id'])): ?>
+                                                <?php if ($like_count['total'] == '1'): ?>
+                                                <div class="like_button_color error" style="display:inline-block;" >           
+                                                    <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer; margin-right: 0px;"></i>
+                                                    <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                    <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                    <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="like">
+                                                <?php else: ?>
+                                                <div class="like_button_color" style="display:inline-block;" >  
+                                                    <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer; margin-right: 0px;"></i>
+                                                    <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                    <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                    <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unlike">
+                                                <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div style=" display:inline-block;">
+                                                <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
+                                            </div>
+                                        </div>
+
+
+
+                                        <div  class="col-md-5 col-sm-5 col-xs-5" style="height: 40px; padding: 0px; margin-top: 5px; margin-left: -1px; display:inline-block;">
+                                            <?php if (isset($login_user['user_id'])): ?>
+                                                <?php if ($join_count['total'] == '1'): ?>
+                                                <div class="join_button_color error" style="display:inline-block;">           
+                                                    <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer; margin-right: 0px; "></i>
+                                                    <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                    <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                    <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="join">
+                                                <?php else: ?>
+                                                <div class="join_button_color" style="display:inline-block;">  
+                                                    <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer; margin-right: 0px;"></i>
+                                                    <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
+                                                    <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
+                                                    <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unjoin">
+                                                <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+                                                   
+                                        <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+                                        </div>   
+                                    </div>
+
                             </div>
-                            <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px;">
-                                <div class="row">
-                                    <div class="col-md-8 col-sm-8 col-xs-8" style="margin-top: 5px;">
-                                        <h3><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>
+                            <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px; height:75px; display: table-cell; vertical-align: middle;">
+                                <div class="row" style="height: 100%;">
+                                    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 5px;">
+                                        <h3 style="display: table-cell; vertical-align: middle;"><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>
                                         <div><?php echo $duration; ?></div>
                                     </div>
                                     <!-- end rating -->
-                                    <div  class="col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 2px; margin-left: -2px;">
-                                        <?php if (isset($login_user['user_id'])): ?>
-                                            <?php if ($join_count['total'] == '1'): ?>
-                                            <div class="join_button_color error" >           
-                                                <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
-                                                <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
-                                                <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                                <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="join">
-                                            <?php else: ?>
-                                            <div class="join_button_color" >  
-                                                <i class="icon_set_1_icon-30 join_button" style="font-size: 40px; cursor: pointer;"></i>
-                                                <input type="hidden" class="event_id_join" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
-                                                <input type="hidden" class="user_id_join" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                                <input type="hidden" class="join_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unjoin">
-                                            <?php endif; ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div  class="col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 5px; margin-left: -1px;">
-                                        <?php if (isset($login_user['user_id'])): ?>
-                                            <?php if ($like_count['total'] == '1'): ?>
-                                            <div class="like_button_color error" >           
-                                                <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
-                                                <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
-                                                <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                                <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="like">
-                                            <?php else: ?>
-                                            <div class="like_button_color" >  
-                                                <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer;"></i>
-                                                <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
-                                                <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
-                                                <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unlike">
-                                            <?php endif; ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
+
                                     <!-- End wish list-->
                                 </div>
                             </div>
