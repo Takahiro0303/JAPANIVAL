@@ -7,6 +7,11 @@
                   <h4 class="modal-title" id="about_us">About us</h4>
               </div>
               <div class="modal-body">
+                  <pre>
+                        <h2>祭りの力で日本を、いや世界を変えるんだ</h2>
+                    そんな想いでこのサービスを立ち上げました。
+                              by ハンサム土田
+                  </pre>
                   <div class="row" align="center" style="padding-top: 20px">
                       <div class="col-md-6">
                           <div class="members">

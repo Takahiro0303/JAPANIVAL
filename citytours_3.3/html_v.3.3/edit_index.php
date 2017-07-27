@@ -940,6 +940,9 @@ $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
     <!-- フッター呼び出し -->
     <?php require('footer.php'); ?>
 
+    <!-- モーダルabout us -->
+    <?php require('modal_about_us.php'); ?>
+
     <!-- モーダル・ログイン -->
     <?php require('modal_login.php'); ?>
 
