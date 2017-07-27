@@ -20,11 +20,12 @@
                                 <option value="2">Want you to Navigate</option>
                                 <option value="3">Let's hang out</option>
                             </select>
+                            <div class="error error_request_category_id"></div>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <input type="hidden" id="modal_request_event_id" value="<?php echo htmlspecialchars($event_id) ?>">
+                    <input type="hidden" id="modal_request_event_id" value="<?php echo htmlspecialchars($event_id); ?>">
                 </div>
                 <div>
                     <input type="button" class="btn btn-primary" id="register_request_button_c" style="width:100%; height:40px;" value="REQUEST">
@@ -51,8 +52,8 @@
                     <div class="col-md-12" style="width:100%;">
                         <div class="form-group" style="width:100%;">
                             <label>こちらのカテゴリーIDで登録して宜しいでしょうか？</label>
-                                <div id="confirm_request" style="font-size: 15px; text-decoration: underline;"></div>
-                            </select>
+                                <div id="confirm_request" style="font-size: 20px; text-decoration: underline; margin-top: 30px; margin-bottom: 40px; text-align: center;"></div>
+                            
                         </div>
                     </div>
                 </div>
@@ -60,9 +61,9 @@
                     <input type="hidden" id="modal_request_event_id" value="<?php echo htmlspecialchars($event_id) ?>">
                 </div>
                 <div>
-                    <input type="button" class="btn btn-primary" id="register_request_button_c" style="width:100%; height:40px;" value="REQUEST">
-                            <input type="button" id="register_user_button_r" class="btn_full" value="Register">
-                            <input type="button" id="register_user_button_b" class="btn_full" value="Back">
+
+                        <input type="button" id="register_request_button_r" class="btn_full" value="Register">
+                        <input type="button" id="register_request_button_b" class="btn_full" value="Back">
                 </div>
             </div>
         </div>

@@ -44,7 +44,13 @@ $(document).ready(function(){
         $('#myRequest_confirm').modal();
 
 
-        $('#confirm_request').text(comment);
+        if (request_category_id == '1') {
+          $('#confirm_request').text('Want to Know');
+        }else if (request_category_id == '2') {
+          $('#confirm_request').text('Want you to Navigate');
+        }else if (request_category_id == '3') {
+          $('#confirm_request').text("Let's hang out");
+        }
       }
 
     }).fail(function(result){
@@ -54,25 +60,21 @@ $(document).ready(function(){
   });
 
   // 確認モーダルでの登録ボタン押下
-  $('#register_user_button_r').click(function(){
+  $('#register_request_button_r').click(function(){
     console.log('click');
 
+    var request_category_id = $('#request_category_id').val();
+    var event_id = $('#modal_request_event_id').val();
+
     var r_u_data_c = {  
-                      nick_name: $('#r_u_nick_name_s').text(), 
-                      email: $('#r_u_email_s').text(), 
-                      password: $('#r_u_password_s').val(), 
-                      // confirm_password: $('#r_u_confirm_password_s').text(),
-                      nationality: $('#r_u_nationality_s').text(),
-                      gender: $('#r_u_gender_s').text(),
-                      japanese_level: $('#r_u_japanese_level_s').text(), 
-                      comment: $('#r_u_comment_s').text(), 
-                      pic_path: 'a',
+                      request_category_id: request_category_id,
+                      event_id: event_id,
                       db_register: 'on'
                     };
 
     $.ajax({
       type: "POST",
-      url: "modal_register_user_ajax.php",
+      url: "modal_register_request_ajax.php",
       data: r_u_data_c
 
     }).done(function(result){
@@ -80,8 +82,7 @@ $(document).ready(function(){
       // console.log(result);
       // var errors = JSON.parse(result);
       // console.log(errors);
-      $('#modal_register_user_confirm').modal('hide');        // 3
-      $('#modal_register_user_result').modal();
+      location.reload();
 
 
     }).fail(function(result){
@@ -93,18 +94,10 @@ $(document).ready(function(){
 
 
   // 確認モーダルでの戻るボタン押下
-  $('#register_user_button_b').click(function(){
+  $('#register_request_button_b').click(function(){
     console.log('click');
-    $('#modal_register_user_confirm').modal('hide');
-    $('#modal_register_user').modal();
-
-  });
-
-  // 登録完了通知モーダルでのサインインボタン押下
-  $('#signin_modal_button').click(function(){
-    console.log('click');
-    $('#modal_register_user_result').modal('hide');
-    $('#modal_login').modal();
+    $('#myRequest_confirm').modal('hide');
+    $('#myRequest').modal();
 
   });
 

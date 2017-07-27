@@ -15,7 +15,7 @@ if (isset($event_id)) {
 
 // ○requestsテーブルから全データ取得　※ログイン必須
 if (isset($_SESSION['id'])){
-    $sql ='SELECT r.request_id, r.request_category_id, r.created, u.nickname, u.user_id, u.pic_path, u.nationality, u.gender, u.self_intro FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=?';
+    $sql ='SELECT r.request_id, r.request_category_id, r.created, u.nickname, u.user_id, u.pic_path, u.nationality, u.gender, u.self_intro FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=? ORDER BY r.created DESC ';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
     $stmt->execute($data);
@@ -235,7 +235,7 @@ if (isset($_SESSION['id'])){
                                                         <?php if (isset($chat_room_id['chat_room_id'])): ?>
                                                             <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
                                                         <?php else:?>
-                                                            <a class="btn_full_outline" href="user_chat.php?chat_room_id=no&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>start Chat</a>
+                                                            <a class="btn_full_outline" href="user_chat.php?chat_room_id=no&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Start Chat</a>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>

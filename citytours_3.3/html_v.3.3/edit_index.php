@@ -309,7 +309,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                             <ul>
                                 <li><a href="#section-1" ><i class="icon_set_1_icon-39"></i><span>Pick Up!!</span></a></li>
                                 <li><a href="#section-2" ><i class="icon_set_1_icon-42"></i><span>Refine Search</span></a></li>
-                                <li><a href="#section-3" ><i class="icon_set_1_icon-37"></i><span>Map Search</span></a></li>
+
                             </ul>
                         </nav>
                     <div class="content">
@@ -510,9 +510,9 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
 
                                 <div class="row">
                                     <aside class="col-lg-3 col-md-3">
-                                        <p>
+<!--                                         <p>
                                             <a class="btn_map" data-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Hide map" data-text-original="View on map">View on map</a>
-                                        </p>
+                                        </p> -->
 
                                         <div class="box_style_cat">
                                         <div class="cta filter">
@@ -543,77 +543,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                         </div>
                                         </div>
 
-                                        <div id="filters_col">
-                                            <a data-toggle="collapse" href="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters" id="filters_col_bt"><i class="icon_set_1_icon-65"></i>Filters <i class="icon-plus-1 pull-right"></i></a>
-                                            <div class="collapse" id="collapseFilters">
-                                                <div class="filter_type">
-                                                    <h6>Price</h6>
-                                                    <input type="text" id="range" name="range" value="">
-                                                </div>
-                                                <div class="filter_type">
-                                                    <h6>Rating</h6>
-                                                    <ul>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox"><span class="rating">
-                                            <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i>
-                                            </span>
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox"><span class="rating">
-                                            <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i>
-                                            </span>
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox"><span class="rating">
-                                            <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><i class="icon-smile"></i>
-                                            </span>
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox"><span class="rating">
-                                            <i class="icon-smile voted"></i><i class="icon-smile voted"></i><i class="icon-smile"></i><i class="icon-smile"></i><i class="icon-smile"></i>
-                                            </span>
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox"><span class="rating">
-                                            <i class="icon-smile voted"></i><i class="icon-smile"></i><i class="icon-smile"></i><i class="icon-smile"></i><i class="icon-smile"></i>
-                                            </span>
-                                                            </label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="filter_type">
-                                                    <h6>Facility</h6>
-                                                    <ul>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox">Pet allowed</label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox">Groups allowed</label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox">Tour guides</label>
-                                                        </li>
-                                                        <li>
-                                                            <label>
-                                                                <input type="checkbox">Access for disabled</label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <!--End collapse -->
-                                        </div>
+                                        
                                         <!--End filters col-->
                                     </aside>
                                     <!--End aside -->
@@ -718,8 +648,8 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                             <div class="strip_all_tour_list wow fadeIn" data-wow-delay="0.1s" data-category="<?php echo htmlspecialchars($event_categories[0]['e_category']); ?>" href="#">
                                                 <div class="row">
                                                     <div class="col-lg-4 col-md-4 col-sm-4">
-                                                        <div class="ribbon_3 popular"><span>Popular</span>
-                                                        </div>
+                                                   <!--      <div class="ribbon_3 popular"><span>Popular</span>
+                                                        </div> -->
                                                         <div class="wishlist">
                                                             <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
                                                         </div>
@@ -862,193 +792,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
  ##   ## ##  ## ##      
  ##   ## ##  ## ##      
 -->
-                        <section id="section-3">
-                            <div class="container-fluid full-height">
-                                <div class="row row-height">
-                                    <div class="col-md-7 content-left">
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="hotel_container">
-                                                <div class="ribbon_3 popular"><span>Popular</span></div>
-                                                <div class="img_container">
-                                                    <a href="single_hotel.html">
-                                                    <img src="img/hotel_1.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                                    <div class="score"><span>7.5</span>Good</div>
-                                                    <div class="short_info hotel">
-                                                        From/Per night<span class="price"><sup>$</sup>59</span>
-                                                    </div>
-                                                    </a>
-                                                </div>
-                                                <div class="hotel_title">
-                                                    <h3><strong>Park Hyatt</strong> Hotel</h3>
-                                                    <div class="rating">
-                                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                                                    </div><!-- end rating -->
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="#">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div><!-- End wish list-->
-                                                    <div onclick="onHtmlClick('Hotels', 0)" class="view_on_map">View on map</div>
-                                                </div>
-                                            </div><!-- End box tour -->
-                                        </div><!-- End col-md-6 -->
-                                        
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="hotel_container">
-                                                <div class="ribbon_3 popular"><span>Popular</span></div>
-                                                <div class="img_container">
-                                                    <a href="single_hotel.html">
-                                                    <img src="img/hotel_2.jpg"  width="800" height="533" class="img-responsive" alt="Image">
-                                                    <div class="score"><span>9.0</span>Superb</div>
-                                                    <div class="short_info hotel">
-                                                        From/Per night<span class="price"><sup>$</sup>45</span>
-                                                    </div>
-                                                    </a>
-                                                </div>
-                                                <div class="hotel_title">
-                                                    <h3><strong>Mariott</strong> Hotel</h3>
-                                                    <div class="rating">
-                                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                                                    </div><!-- end rating -->
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="#">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div><!-- End wish list-->
-                                                    <div onclick="onHtmlClick('Hotels', 1)" class="view_on_map">View on map</div>
-                                                </div>
-                                            </div><!-- End box -->
-                                        </div><!-- End col-md-6 -->
-                                        </div><!-- End row -->
-                                        
-                                        <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="hotel_container">
-                                                <div class="ribbon_3 popular"><span>Popular</span></div>
-                                                <div class="img_container">
-                                                    <a href="single_hotel.html">
-                                                    <img src="img/hotel_3.jpg"  width="800" height="533" class="img-responsive" alt="Image">
-                                                    <div class="score"><span>9.5</span>Superb</div>
-                                                    <div class="short_info hotel">
-                                                        From/Per night<span class="price"><sup>$</sup>39</span>
-                                                    </div>
-                                                    </a>
-                                                </div>
-                                                <div class="hotel_title">
-                                                    <h3><strong>Lumiere</strong> Hotel</h3>
-                                                    <div class="rating">
-                                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                                                    </div><!-- end rating -->
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="#">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div><!-- End wish list-->
-                                                    <div onclick="onHtmlClick('Hotels', 2)" class="view_on_map">View on map</div>
-                                                </div>
-                                            </div><!-- End box -->
-                                        </div><!-- End col-md-6 -->
-                                        
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="hotel_container">
-                                                <div class="ribbon_3 popular"><span>Popular</span></div>
-                                                <div class="img_container">
-                                                    <a href="single_hotel.html">
-                                                    <img src="img/hotel_4.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                                    <div class="score"><span>7.5</span>Good</div>
-                                                    <div class="short_info hotel">
-                                                            From/Per night<span class="price"><sup>$</sup>45</span>
-                                                    </div>
-                                                    </a>
-                                                </div>
-                                                <div class="hotel_title">
-                                                    <h3><strong>Concorde</strong> Hotel</h3>
-                                                    <div class="rating">
-                                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                                                    </div><!-- end rating -->
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div><!-- End wish list-->
-                                                    <div onclick="onHtmlClick('Hotels', 3)" class="view_on_map">View on map</div>
-                                                </div>
-                                            </div><!-- End box -->
-                                        </div><!-- End col-md-6 -->
-                                        </div><!-- End row -->
-                                        
-                                        <div class="row">
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="hotel_container">
-                                                <div class="ribbon_3"><span>Top rated</span></div>
-                                                <div class="img_container">
-                                                    <a href="single_hotel.html">
-                                                    <img src="img/hotel_5.jpg"  width="800" height="533" class="img-responsive" alt="Image">
-                                                    <div class="score"><span>8.0</span>Good</div>
-                                                    <div class="short_info hotel">
-                                                        From/Per night<span class="price"><sup>$</sup>39</span>
-                                                    </div>
-                                                    </a>
-                                                </div>
-                                                <div class="hotel_title">
-                                                    <h3><strong>Louvre</strong> Hotel</h3>
-                                                    <div class="rating">
-                                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                                                    </div><!-- end rating -->
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="#">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div><!-- End wish list-->
-                                                    <div onclick="onHtmlClick('Hotels', 4)" class="view_on_map">View on map</div>
-                                                </div>
-                                            </div><!-- End box -->
-                                        </div><!-- End col-md-6 -->
-                                        
-                                        <div class="col-md-6 col-sm-6">
-                                            <div class="hotel_container">
-                                                <div class="ribbon_3"><span>Top rated</span></div>
-                                                <div class="img_container">
-                                                    <a href="single_hotel.html">
-                                                    <img src="img/hotel_6.jpg" width="800" height="533" class="img-responsive" alt="Image">
-                                                    <div class="score"><span>8.5</span>Superb</div>
-                                                    <div class="short_info hotel">
-                                                            From/Per night<span class="price"><sup>$</sup>45</span>
-                                                    </div>
-                                                    </a>
-                                                </div>
-                                                <div class="hotel_title">
-                                                    <h3><strong>Concorde</strong> Hotel</h3>
-                                                    <div class="rating">
-                                                        <i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star voted"></i><i class="icon-star-empty"></i>
-                                                    </div><!-- end rating -->
-                                                    <div class="wishlist">
-                                                        <a class="tooltip_flip tooltip-effect-1" href="javascript:void(0);">+<span class="tooltip-content-flip"><span class="tooltip-back">Add to wishlist</span></span></a>
-                                                    </div><!-- End wish list-->
-                                                    <div onclick="onHtmlClick('Hotels', 5)" class="view_on_map">View on map</div>
-                                                </div>
-                                            </div><!-- End box -->
-                                        </div><!-- End col-md-6 -->
-                                        </div><!-- End row -->
-                                    
-                                    <hr>
-                                        
-                                        <div class="text-center">
-                                            <ul class="pagination">
-                                                <li><a href="#">Prev</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li><a href="#">4</a></li>
-                                                <li><a href="#">5</a></li>
-                                                <li><a href="#">Next</a></li>
-                                            </ul>
-                                        </div><!-- end pagination-->
-                                    </div>
-                                    
-                                    <div class="col-md-5 map-right hidden-sm hidden-xs">
-                                        <div class="map" id="map"></div>
-                                    </div>
-                                    
-                                </div><!-- End row-->
-                            </div><!-- End container-fluid -->
-                        </section>
 
-                    </div>
-                    <!-- /content -->
-                </div>
 
     <!-- フッター呼び出し -->
     <?php require('footer.php'); ?>

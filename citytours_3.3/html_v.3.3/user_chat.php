@@ -68,6 +68,8 @@ while ($event_chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_chat_rooms[] = $event_chat_room;
 }
 
+
+
   // echo '<pre>';
 
   // var_dump($event_chat_rooms);
@@ -198,35 +200,155 @@ if (!empty($_POST['message'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/animate.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="user.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - City tours and travel site template by Ansonika</title>
+    
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+  
+  <!-- Google web fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lato:300,400|Montserrat:400,400i,700,700i" rel="stylesheet">
 
+
+    <!-- 元々with search bar付きのページで必要なCSS-->
+    <link href="css/base.css" rel="stylesheet">
+
+    <!-- 元々with search tabs付きのページで必要なCSS-->
+    <link href="rs-plugin/css/settings.css" rel="stylesheet">
+    <link href="css/extralayers.css" rel="stylesheet">
+    
+    <link href="css/tabs_home.css" rel="stylesheet">
+
+    <!-- 元々 tour listページで必要な Range sliderCSS -->
+    <!-- Radio and check inputs -->
+    <link href="css/skins/square/grey.css" rel="stylesheet">
+
+    <!-- Range slider -->
+    <link href="css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+        
+    <!-- REVOLUTION SLIDER CSS -->
+    <link rel="stylesheet" type="text/css" href="rev-slider-files/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css">
+    <link rel="stylesheet" type="text/css" href="rev-slider-files/fonts/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="rev-slider-files/css/settings.css">
+    
+    <!-- REVOLUTION LAYERS STYLES -->
+    <style>
+        .tp-caption.News-Title,
+        .News-Title {
+            color: rgba(255, 255, 255, 1.00);
+            font-size: 70px;
+            line-height: 60px;
+            font-weight: 700;
+            font-style: normal;
+            text-decoration: none;
+            background-color: transparent;
+            border-color: transparent;
+            border-style: none;
+            border-width: 0px;
+            border-radius: 0 0 0 0px
+        }
+
+        .tp-caption.News-Subtitle,
+        .News-Subtitle {
+            color: rgba(255, 255, 255, 1.00);
+            font-size: 15px;
+            line-height: 24px;
+            font-weight: 700;
+            font-style: normal;
+            font-family: Roboto Slab;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0);
+            border-color: transparent;
+            border-style: none;
+            border-width: 0px;
+            border-radius: 0 0 0 0px
+        }
+
+        .tp-caption.News-Subtitle:hover,
+        .News-Subtitle:hover {
+            color: rgba(255, 255, 255, 0.65);
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0);
+            border-color: transparent;
+            border-style: solid;
+            border-width: 0px;
+            border-radius: 0 0 0px 0
+        }
+    </style>
+    <style type="text/css">
+        @import url(http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700);
+    </style>
+    <style type="text/css">
+        .hermes.tp-bullets {}
+
+        .hermes .tp-bullet {
+            overflow: hidden;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            background-color: rgba(0, 0, 0, 0);
+            box-shadow: inset 0 0 0 2px rgb(255, 255, 255);
+            -webkit-transition: background 0.3s ease;
+            transition: background 0.3s ease;
+            position: absolute
+        }
+
+        .hermes .tp-bullet:hover {
+            background-color: rgba(0, 0, 0, 0.21)
+        }
+
+        .hermes .tp-bullet:after {
+            content: ' ';
+            position: absolute;
+            bottom: 0;
+            height: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 0 0 1px rgb(255, 255, 255);
+            -webkit-transition: height 0.3s ease;
+            transition: height 0.3s ease
+        }
+
+        .hermes .tp-bullet.selected:after {
+            height: 100%
+        }
+    </style>
+
+        
 </head>
 <body>
 
-  <header>
+<?php require('header_chat.php');  ?>
+
+  <div class="row" style="margin-top: 90px; position: fixed; width: 100%; top: 0; left: 0; right: 0; bottom: 0; z-index: 200000;height: 50px; ">
     <!-- チャット全件表示 -->
-    <aside class="col-md-3">
-      <h3 class="page-header" align="center">チャット一覧</h3>
-    </aside>
+    <div class="col-md-3">
+      <h4 class="" align="center">Chat List</h4>
+    </div>
     <!-- 個人間チャット表示 -->
     <div class="col-md-6">
-      <h3 class="page-header" align="center">チャット相手の名前を表示</h3>
+      <h4 class="" align="center"></h4>
     </div>
     <!-- チャット全件表示 -->
-    <aside class="col-md-3" align="center">
-      <h3 class="page-header">イベント詳細</h3>
-    </aside>
-  </header>
+    <div class="col-md-3" align="center">
+      <h4 class="">Event Detail</h4>
+    </div>
+  </div>
 
-  <main style="padding-top: 100px; ">
+  <main style="padding-top: 140px; ">
     <!-- チャット全件表示 -->
     <aside class="col-md-3">
       <?php foreach($event_chat_rooms as $event_chat_room){ ?>
@@ -243,12 +365,14 @@ if (!empty($_POST['message'])) {
           $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
         ?>
-        <a type="button" href="user_chat.php?chat_room_id=<?php echo $event_chat_room['event_chat_room_id']; ?>">
+
+        <div style="border: double 1px black; padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #E6E6E6">
+
           <div class="row">
-            <div class="col-md-3">
-                 <img src="../../users_pic/<?php echo $event_chat_room['pic_path']; ?>" alt="User Picture" class="img-circle" style="width: 40px; height: 50px;""> 
+            <div class="col-md-3 col-sm-3" style="text-align: right; padding-right: 3px;">
+                 <img src="<?php echo $opponent_info['pic_path']; ?>" alt="User Picture" class="img-circle" style="width: 80px; height: 60px;"> 
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 <a href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($event_chat_room['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($event_chat_room['request_id']); ?>">
                   <div>Event : <?php echo $event_chat_room['e_name']; ?></div>
                   <?php if ($event_chat_room['accept_user_id'] == $login_user['user_id']): ?>
@@ -258,61 +382,53 @@ if (!empty($_POST['message'])) {
                   <?php endif; ?>
                   <div>Reqest Category : <?php echo $event_chat_room['request_category']; ?></div>
                 </a>
-                <strong class="pull-right">09:45AM</strong>
             </div>
           </div>
-        </a>
-        <hr>
+
+        </div>
+
       <?php } ?>
     </aside>
     
+
+
+
     <!-- 個人間チャット表示 -->
     <div class="col-md-6">
         <div class="row">
-          <div id="messages" style="overflow-y: auto; width: 100%; height: 500px;">
+          <div id="messages" style="overflow-y: auto; width: 100%; height: 500px;" class="chat-frame">
 
           <?php foreach($messages as $message){ ?>
-            <section class="comment-list">
+<!--             <section class="comment-list "> -->
               <!-- チャット相手からのメッセージ -->
               <?php if ($message['user_id'] != $_SESSION['id']) { ?>
-                <article class="row">
-                  <div class="col-md-2 col-sm-2 hidden-xs">
-                    <figure class="thumbnail">
-                      <img class="img-responsive" src="../../users_pic/<?php echo $message['pic_path']; ?>" />
-                    </figure>
-                  </div>
-                  <div class="col-md-10 col-sm-10">
-                    <div class="panel panel-default arrow left">
-                      <div class="panel-body">
-                        <div class="comment-post">
-                          <p>
+                <article class=" chat-talk">
+                    <span class="talk-icon">
+                      <img class="img-responsive" src="<?php echo $opponent_info['pic_path']; ?>" style="width:50px; height: 50px;" >
+                    </span>
+                        <span class="talk-content">
                             <?php echo $message['message']; ?>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                        </span>
                 </article>
               <?php }elseif($message['user_id'] == $_SESSION['id']){ ?>
               <!-- 自分が送ったメッセージ -->
-              <article class="row">
-                <div class="col-md-10 col-sm-10">
-                  <div class="panel panel-default arrow right">
-                    <div class="panel-body">
-                      <div class="comment-post">
-                        <p>
+              <article class=" chat-talk mytalk">
+
+                  <span class="talk-icon">
+                    <img class="img-responsive" src="<?php echo $login_user['pic_path']; ?>" style="width:50px; height: 50px;">
+                  </span>
+
+                      <span class="talk-content">
                           <?php echo $message['message']; ?>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-2 col-sm-2 hidden-xs">
-                  <figure class="thumbnail">
-                    <img class="img-responsive" src="../../users_pic/<?php echo $login_user['pic_path']; ?>" />
-                  </figure>
-                </div>
+                      </span>
+
+
+
+
+
               </article>
+
+
               <?php }; ?>
             </section>
           <?php } ?>
@@ -321,7 +437,7 @@ if (!empty($_POST['message'])) {
               <div class="panel-footer">
                 <input id="btn-input" type="text" name='message' class="form-control input-sm chat_input" placeholder="type a message">
                 <input type="hidden" name="user_id" value="<?php echo $_SESSION['login_user_id']; ?>">
-                <p  align="right">
+                <p align="right" style="margin-top: 10px;">
                     <input type="submit" value="Send" class="btn btn-danger" id="btn-chat">
                 </p>
               </div>
@@ -332,29 +448,180 @@ if (!empty($_POST['message'])) {
     <!-- イベント詳細&ユーザー詳細 表示 -->
     <!-- イベントデータ = $event_data に取得済み -->
     <aside class="col-md-3">
-      <div class=" table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th colspan="2">Event : <?php echo $event_chat_room['e_name']?></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Date&Time:</td><td>あ</td>
-                <td>City:</td><td>あ</td>
-                <td>place:</td><td>あ</td>
-                <td>Web Page:</td><td>あ</td>
+      <div class="">
 
-              </tr>
-              
+                            <div class="">
+                                <table class="table table-striped">
 
-            </tbody>
-          </table>
-        </div>
+                                    <tbody>
+                                        <tr>
+                                            <td width= "120" style="vertical-align: middle;">
+                                                Event Name
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['e_name']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                Date and time
+                                            </td>
+                                            <td>
+                                                <div style="margin-bottom: 10px;">
+                                                    Start Date<br>
+                                                    <?php echo date('F d, Y', strtotime($event_chat_room['e_start_date'])); ?>
+                                                </div>
+                                                <div>
+                                                    End Date<br>
+                                                    <?php echo date('F d, Y', strtotime($event_chat_room['e_end_date'])); ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                prefecture
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['e_prefecture']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                address
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['e_address']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                the place
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['e_venue']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                Web page
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['official_url']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                Acces
+                                            </td>
+                                            <td>
+                                                <?php echo $event_chat_room['e_venue']; ?>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">
+                                                The latest participants (The number of visitors)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td width= "120" style="vertical-align: middle;">
+                                                2014
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['year_ppp']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                2015
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['year_pp']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align: middle;">
+                                                2016
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <?php echo $event_chat_room['year_p']; ?>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <td colspan ="2" style="font-weight: 700; font-size: 20px;">
+                                        <a href="event_detail.php?event_id=<?php echo htmlspecialchars($event_chat_room['event_id']);?>">Back to Event Detail</a>
+                                        </td>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+      </div>
     </aside>
 
   </main><!-- main_section -->
+
+
+    <!-- モーダル・ログイン -->
+    <?php require('modal_login.php'); ?>
+
+    <!-- モーダル・ユーザー登録 -->
+    <?php require('modal_register_user.php'); ?>
+
+    <!-- モーダル・主催者登録 -->
+    <?php require('modal_register_organizer.php'); ?>
+
+
+<div id="toTop"></div>
+<!-- Back to top button -->
+
+
+<!-- Common scripts -->
+<script src="js/jquery-2.2.4.min.js"></script>
+<!-- <script src="js/common_scripts_min.js"></script>
+<script src="js/functions.js"></script> -->
+
+<!-- Specific scripts -->
+<script src="js/icheck.js"></script>
+<script>
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_square-grey',
+        radioClass: 'iradio_square-grey'
+    });
+</script>
+<!-- Date and time pickers -->
+
+
+<script src="js/modal_login_ajax.js"></script>
+<script src="js/modal_register_user_ajax.js"></script>
+<script src="js/modal_register_organizer_ajax.js"></script>
+<script src="js/modal_register_request_ajax.js"></script>
+
+<!-- 自作のJS -->
+<script src="js/custom.js"></script>
 
 </body>
 </html>
