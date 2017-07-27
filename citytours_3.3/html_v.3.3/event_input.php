@@ -15,8 +15,6 @@ if ($_SESSION['id'] == '' && $_SESSION['flag'] == '') {
 }
 
 
-
-
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'rewrite') {
     //$_REQUEST, $_GET, $_POST, $_FILEの情報全てを持つスーパーグローバル変数
     //$_REQUESTと$_GETの使い分け
@@ -44,10 +42,6 @@ $news_comment     = '';
 
 //バリデーションエラーの内容を保持する配列
 $errors = array();
-
-
-
-
 
 if (!empty($_POST)) {
 //$_POSTが空じゃなければ処理
@@ -114,10 +108,10 @@ if (!empty($_POST)) {
           // echo '</pre>';
 
 
-
     if (empty($errors)) {
         //送信データを$_SESSIONに登録
         $_SESSION['event'] = $_POST;
+
         //Notice: Undefined index: picture_path
         //画像データの拡張子チェック
         //$_POST['name属性値']
@@ -219,7 +213,7 @@ if (!empty($_POST)) {
 
 <!-- End Header -->
 
-<section class="parallax-window" data-parallax="scroll" data-image-src="img/single_tour_bg_1.jpg">
+<section class="parallax-window" data-parallax="scroll" data-image-src="../../event_pictures/event_top_pictures/<?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']); ?>">
     <div class="parallax-content-2">
         <div class="container">
             <div class="row">
@@ -258,6 +252,7 @@ if (!empty($_POST)) {
 <div class="row">
     <div class="col-md-12">
         <h3>トップ画像を<a href="cropper.php" onclick="window.open(this.href, 'mywindow', 'width=800,height=600,menubar=no,toolbar=no,location=no,directories=no.status=yes,resizable=yes'); return false;"><u>こちら</u></a>から選択してください</h3>
+        <input type="hidden" name="cropp_file_name" value="../../event_pictures/event_top_pictures/<?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']); ?>">
     </div>
     <!--<div class="col-md-6">
          <div>

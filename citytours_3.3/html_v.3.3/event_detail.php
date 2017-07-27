@@ -30,7 +30,7 @@ if ($starts[0] != $ends[0]) {
 }
 
 
-$sql = 'SELECT * FROM event_pics WHERE event_id=?';
+$sql = 'SELECT * FROM event_pics WHERE event_id=? AND top_pic_flag=0';
 $data = [$event_id];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
@@ -176,7 +176,8 @@ $e_lng = $record['e_Lng'];
 
     <!-- End Header -->
 
-    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo $event_pics[0]['e_pic_path'];?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="
+    <?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']);?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">

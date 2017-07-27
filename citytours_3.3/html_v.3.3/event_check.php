@@ -1,6 +1,9 @@
 <?php  
 
 session_start();
+echo '<pre>';
+var_dump($_SESSION['event']);    
+echo '</pre>';
 
 require('../../common/dbconnect.php');
 require('../../common/functions.php');
@@ -63,6 +66,7 @@ if(!empty($_POST)){
     $_SESSION['event']['year_ppp'],
     $_SESSION['event']['official_url']];
 
+
     $events_stmt = $dbh->prepare($sql);
     $events_stmt->execute($data);
 
@@ -72,17 +76,44 @@ if(!empty($_POST)){
     $events_stmt->execute();
     $event_id_register = $events_stmt->fetch(PDO::FETCH_ASSOC);
 
-    for ($j = 0; $j< count($_SESSION['event']['e_pic_path']); $j++) {
-    // event_picsテーブルへの登録
+
+    /*if ($_POST['top_pic']) {
         $sql = 'INSERT INTO event_pics
         SET event_id= ?,
         e_pic_path = ?,
+        top_pic_flag=1,
         created = NOW()';
 
-        $data = [$event_id_register['event_id'],$_SESSION['event']['e_pic_path'][$j]];
+        $data = [$event_id_register['event_id'],$_POST['top_pic']];
         $event_pics_stmt = $dbh->prepare($sql);
         $event_pics_stmt->execute($data);
-    } 
+    }*/
+
+
+
+    for ($j = 0; $j< count($_SESSION['event']['e_pic_path']); $j++) {
+    // event_picsテーブルへの登録
+        $sql = 'INSERT INTO event_pics
+                        SET event_id= ?,
+                            e_pic_path = ?,        
+                            created = NOW()';
+
+        $data = [$event_id_register['event_id'],
+                 $_SESSION['event']['e_pic_path'][$j]];
+        $event_pics_stmt = $dbh->prepare($sql);
+        $event_pics_stmt->execute($data);
+    }
+
+    //TOP画像
+    $sql = 'INSERT INTO event_pics
+                    SET event_id=?,
+                        top_pic_flag=1,
+                        cropp_file_name=?,
+                        created=NOW()';
+    $data = [$event_id_register['event_id'],
+             $_SESSION['event']['cropp_file_name']];
+    $event_top_pics_stmt = $dbh->prepare($sql);
+    $event_top_pics_stmt->execute($data);
 
 
 // echo '<pre>';
@@ -159,7 +190,9 @@ if(!empty($_POST)){
 
     <!-- End Header -->
 
-    <section class="parallax-window" data-parallax="scroll" data-image-src="<?php echo htmlspecialchars($_SESSION['event']['e_pic_path'][0]);?>" data-natural-width="1400" data-natural-height="470">
+    <section class="parallax-window" data-parallax="scroll" data-image-src="
+
+    <?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']);?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">

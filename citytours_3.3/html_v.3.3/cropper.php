@@ -10,46 +10,46 @@ var_dump($_POST);
 //バリデーションエラーの内容を保持する配列
 $errors = array();
 
-$top_file_name = $_FILES['top_picture_path']['name'];
+if (!empty($_POST['cropp_file_name'])) { // 送信ボタンが押されたとき
+  $top_pic = $_POST['cropp_file_name'];
 
-if (!empty($_FILES['top_picture_path'])) { // 送信ボタンが押されたとき
-    if (!empty($top_file_name)) {
-        $ext = substr($top_file_name, -3);
-        $ext = strtolower($ext);
-        if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
-            $errors['top_picture_path'] = 'type';
-        }
-    } else {
-        //画像未選択
-        $errors['top_picture_path'] = 'blank';
-    }
+  // エラーがなかったとき
+  if (empty($errors)) {
+      $date_str = date('YmdHis');
+      /*echo'aaaaa';*/
+      $submit_file_name = $date_str . '_top_picture.png';
 
-    // エラーがなかったとき
-    if (empty($errors)) {
-        $date_str = date('YmdHis');
-        /*echo'aaaaa';*/
-        $submit_file_name = $date_str . $_FILES['top_picture_path']['name'];
+      $img = $top_pic;
+      $img = str_replace('data:image/png;base64,', '', $img);
+      $img = str_replace(' ', '+', $img);
+      $fileData = base64_decode($img);
 
-        move_uploaded_file($_POST['cropp_file_name'], '../../event_pictures/event_top_pictures/' . $submit_file_name);
+      file_put_contents('../../event_pictures/event_top_pictures/'.$submit_file_name,$fileData);
 
-        //送信データを$_SESSIONに登録
-        $_SESSION['join']['top_picture_path'] = $submit_file_name;    
-    }
+      //送信データを$_SESSIONに登録
+      $_SESSION['event']['cropp_file_name'] = $submit_file_name;    
+  }
 }
 
 //送信ボタンが押された際の処理
 /*if (!empty($_POST)) {
-  
-  $sql = 'INSERT INTO event_pics SET e_pic_path=?'
-  $data = [];
+  //データベースへの登録
+  $sql = 'INSERT INTO event_pics SET top_pic_flag=?,
+                                     event_id=?,
+                                     cropp_file_name=?
+                                     created=NOW()';
+  $data = ['1',
+           ];
   $stmt = $dbh->prepare($sql);
   $stmt->execute($data);
 }*/
-var_dump($_FILES['top_picture_path']['name']);
+
+
+
 echo '<br>';
-echo 'bbb';
 var_dump($errors);
 echo '<br>';
+var_dump($_SESSION['event']['cropp_file_name']);
 ?>
 
 <!DOCTYPE html>
@@ -97,15 +97,16 @@ echo '<br>';
           <form method="POST" action="cropper.php" enctype="multipart/form-data">
             <div>
               <button type="button" id="imgUpload" class="btn_1">画像を選択する</button>
+              <input type="file" accept="image/*" name="top_picture_path">
+
               <h2>選択された画像</h2>
-              <div class="my-gallery" style="border:solid 1px; width:50%; height:300px;"></div>
+              <div class="my-gallery" style="border:solid 1px; width:100%; height:500px;"></div>
 
               <h2>プレビュー</h2>
               <div id="cropped" style="border:solid 1px;width:560px;height:188px;overflow:hidden;"></div>
               <input id="cropp_file_name" type="hidden" name="cropp_file_name">
-              <button type="button" id="cropBtn">表示</button>
+              <button type="button" id="cropBtn">表示</button>              
               
-              <input type="file" accept="image/*" name="top_picture_path">
               <input type="submit" class="btn_1" >
               <button type="button" id="resetBtn" class="btn_1">リセット</button>
 
