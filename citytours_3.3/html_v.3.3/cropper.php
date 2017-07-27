@@ -5,7 +5,7 @@ require('../../common/functions.php');
 
 $login_user = get_login_user($dbh);
 
-var_dump($_POST);
+// var_dump($_POST);
 
 //バリデーションエラーの内容を保持する配列
 $errors = array();
@@ -46,10 +46,6 @@ if (!empty($_POST['cropp_file_name'])) { // 送信ボタンが押されたとき
 
 
 
-echo '<br>';
-var_dump($errors);
-echo '<br>';
-var_dump($_SESSION['event']['cropp_file_name']);
 ?>
 
 <!DOCTYPE html>

@@ -409,8 +409,9 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                     <img src="<?php echo htmlspecialchars($event_pic['e_pic_path']); ?>" class="img-responsive" alt="Image" style="width: 800px; height: 270px;">
 
                                 </a>
+                                <?php if (isset($login_user['user_id'])): ?>
                                     <div class="short_info">
-                                        <div  class="col-md-4 col-sm-4 col-xs-4" style="height: 40px; padding: 0px; margin-top: 2px; margin-left: -2px; display:inline-block;">   
+                                        <div  class="col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 7px; margin-left: 3px; display:inline-block;">   
 
                                             <?php if (isset($login_user['user_id'])): ?>
                                                 <?php if ($like_count['total'] == '1'): ?>
@@ -428,14 +429,16 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                                 <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>
-                                            <div style=" display:inline-block;">
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-xs-2">
+                                            <div style=" margin-top: 12px;">
                                                 <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
                                             </div>
                                         </div>
 
 
 
-                                        <div  class="col-md-5 col-sm-5 col-xs-5" style="height: 40px; padding: 0px; margin-top: 5px; margin-left: -1px; display:inline-block;">
+                                        <div    class="col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-md-2 col-sm-2 col-xs-2" style="height: 40px; padding: 0px; margin-top: 5px; margin-left: -1px; display:inline-block;">
                                             <?php if (isset($login_user['user_id'])): ?>
                                                 <?php if ($join_count['total'] == '1'): ?>
                                                 <div class="join_button_color error" style="display:inline-block;">           
@@ -452,10 +455,14 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                                 <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>
-                                                   
-                                        <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-xs-2">
+                                            <div style=" margin-top: 12px;">           
+                                                <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
+                                            </div>
                                         </div>   
                                     </div>
+                                <?php endif; ?>
 
                             </div>
                             <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px; height:75px; display: table-cell; vertical-align: middle;">

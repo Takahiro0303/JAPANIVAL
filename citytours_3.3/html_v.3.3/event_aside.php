@@ -14,7 +14,7 @@ if (isset($event_id)) {
 }
 
 // ○requestsテーブルから全データ取得　※ログイン必須
-if (isset($_SESSION['id'])){
+if (isset($_REQUEST['event_id'])){
     $sql ='SELECT r.request_id, r.request_category_id, r.created, u.nickname, u.user_id, u.pic_path, u.nationality, u.gender, u.self_intro FROM requests r,users u WHERE r.user_id=u.user_id AND r.event_id=? ORDER BY r.created DESC ';
     $data = [$_REQUEST['event_id']];
     $stmt = $dbh->prepare($sql);
@@ -141,10 +141,6 @@ if (isset($_SESSION['id'])){
                                 // echo $chat_room_id['chat_room_id'];
                             ?>
 
-
-<!--                             <?php   echo '<pre>';
-                              var_dump($chat_room_id);
-                              echo '</pre>'; ?> -->
                             <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
                                 <div >
 
@@ -167,80 +163,133 @@ if (isset($_SESSION['id'])){
                                         </div>
                                         <!-- チャットページに遷移 -->
 
+                                        <!-- もしユーザーなら -->
+                                        <?php if (isset($login_user['user_id'])): ?>
+                                            
                                         <!-- もし自分のリクエストならば -->
-                                        <?php if ($request['user_id'] == $login_user['user_id']): ?>
-                                            <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                <div class="panel panel-info" style="margin-bottom: 5px;">
-                                                    <div class="panel-heading" style="padding : 5px; ">
-                                                        <div style="margin-bottom: 5px;">
-                                                            YOUR Request
-                                                        </div>
-                                                        <?php if($request['request_category_id'] == '1'): ?>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-info" style="text-decoration:underline; ">INQUIRY</a>
-                                                            </div>
-                                                        <?php elseif($request['request_category_id'] == '2'): ?>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-info" style="text-decoration:underline; font-size: 20px;">NAVIGATION</a>
-                                                            </div>
-                                                        <?php elseif($request['request_category_id'] == '3'): ?>    
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-info" style="text-decoration:underline; ">HANG OUT</a>
-                                                            </div>
-                                                        <?php else: ?>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-info" style="text-decoration:underline; ">選んでない</a>
-                                                            </div>
-                                                        <?php endif; ?>
+                                            <?php if ($request['user_id'] == $login_user['user_id']): ?>
 
-                                                    </div>
-                                                    <div class="panel-body" style="padding : 5px">
-                                                        <?php if (isset($chat_room_id['chat_room_id'])): ?>
-                                                            <a class="btn_full_outline" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>keep on Chat</a>
-                                                        <?php else:?>
-                                                            <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">wait for friends</button>
-                                                        <?php endif; ?>
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-info" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 5px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                YOUR Request
+                                                            </div>
+                                                            <?php if($request['request_category_id'] == '1'): ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-info" style="text-decoration:underline; ">INQUIRY</a>
+                                                                </div>
+                                                            <?php elseif($request['request_category_id'] == '2'): ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-info" style="text-decoration:underline; font-size: 20px;">NAVIGATION</a>
+                                                                </div>
+                                                            <?php elseif($request['request_category_id'] == '3'): ?>    
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-info" style="text-decoration:underline; ">HANG OUT</a>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-info" style="text-decoration:underline; ">選んでない</a>
+                                                                </div>
+                                                            <?php endif; ?>
+
+                                                        </div>
+                                                        <div class="panel-body" style="padding : 5px">
+                                                            <?php if (isset($chat_room_id['chat_room_id'])): ?>
+                                                                <a class="btn_full_outline" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>keep on Chat</a>
+                                                            <?php else:?>
+                                                                <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">waiting</button>
+                                                            <?php endif; ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                        <!-- もし自分のリクエストでないならば -->
+                                            <!-- もし自分のリクエストでないならば -->
+                                            <?php else: ?>
+
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 5px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                            </div>
+                                                            <?php if($request['request_category_id'] == '1'): ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">INQUIRY</a>
+                                                                </div>
+                                                            <?php elseif($request['request_category_id'] == '2'): ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; font-size: 20px;">NAVIGATION</a>
+                                                                </div>
+                                                            <?php elseif($request['request_category_id'] == '3'): ?>    
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">HANG OUT</a>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">選んでない</a>
+                                                                </div>
+                                                            <?php endif; ?>
+
+                                                        </div>
+                                                        <div class="panel-body" style="padding : 5px">
+                                                            <?php if (isset($chat_room_id['chat_room_id'])): ?>
+                                                                <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
+                                                            <?php else:?>
+                                                                <a class="btn_full_outline" href="user_chat.php?chat_room_id=no&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Start Chat</a>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+
                                         <?php else: ?>
-                                            <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                                <div class="panel panel-danger" style="margin-bottom: 5px;">
-                                                    <div class="panel-heading" style="padding : 5px; ">
-                                                        <div style="margin-bottom: 5px;">
-                                                            Request Category
-                                                        </div>
-                                                        <?php if($request['request_category_id'] == '1'): ?>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-danger" style="text-decoration:underline; ">INQUIRY</a>
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 5px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                Request Category
                                                             </div>
-                                                        <?php elseif($request['request_category_id'] == '2'): ?>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-danger" style="text-decoration:underline; font-size: 20px;">NAVIGATION</a>
-                                                            </div>
-                                                        <?php elseif($request['request_category_id'] == '3'): ?>    
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-danger" style="text-decoration:underline; ">HANG OUT</a>
-                                                            </div>
-                                                        <?php else: ?>
-                                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                                <a href="" class="text-danger" style="text-decoration:underline; ">選んでない</a>
-                                                            </div>
-                                                        <?php endif; ?>
+                                                            <?php if($request['request_category_id'] == '1'): ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">INQUIRY</a>
+                                                                </div>
+                                                            <?php elseif($request['request_category_id'] == '2'): ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; font-size: 20px;">NAVIGATION</a>
+                                                                </div>
+                                                            <?php elseif($request['request_category_id'] == '3'): ?>    
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">HANG OUT</a>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">選んでない</a>
+                                                                </div>
+                                                            <?php endif; ?>
 
-                                                    </div>
-                                                    <div class="panel-body" style="padding : 5px">
-                                                        <?php if (isset($chat_room_id['chat_room_id'])): ?>
-                                                            <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
-                                                        <?php else:?>
-                                                            <a class="btn_full_outline" href="user_chat.php?chat_room_id=no&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Start Chat</a>
-                                                        <?php endif; ?>
+                                                        </div>
+                                                        <div class="panel-body" style="padding : 5px">
+                                                            <?php if (isset($chat_room_id['chat_room_id'])): ?>
+                                                                <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">chatting now</button>
+                                                            <?php else:?>
+                                                                <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">searching for friends</button>
+                                                            <?php endif; ?>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+
+
+
+
+
+
+
+
                                         <?php endif; ?>
+
+
+
                                     </div>
 
                                 </div>
@@ -252,44 +301,52 @@ if (isset($_SESSION['id'])){
                 <?php else: ?>
                     <?php echo '<br>'; ?>
                     イベント登録後、同イベントに関心を持つ外国人ユーザーが下記の例のように、リクエストをポストします。
-                    <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
-                        <div >
+                            <div class="row" style=" border-radius: 3px; padding: 10px; padding-bottom: 5px; margin-top: 10px; box-shadow:0 0 5px #fff, 0 0 5px #ccc, 0 0 1px #aaa; ">
+                                <div >
 
-                            <div class="col-md-6 col-sm-6" style="padding-left: 0; padding-top: 5px;">
-                                <div style="text-align: center">
-                                    <img src="img/spongebob.jpg" alt="Image" class="img-circle" width="95px" height="95px" >
-                                </div>
-                                <h4 style="margin-top: 0px; text-align: center; margin-bottom: 5px;">Sponge Bob</h4>
-                                <div style="text-align: center">
-                                    <img src="img/japan.png" width="32px" height="20px"> <!-- 国籍(国旗)表示 -->
-                                    <div>Language : JP/EN</div> <!-- 対応可能言語表示 -->
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
-                                <!-- 個人詳細ページに遷移 -->
-                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                    <a class="btn_full" href="profile.html" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-user" ></i>Profile</a>
-                                </div>
-                                <!-- チャットページに遷移 -->
-                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
-                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
-                                        <div class="panel-heading" style="padding : 10px; ">
-                                            <div style="margin-bottom: 5px;">
-                                                Request Category
-                                            </div>
-                                            <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
-                                                <a href="" class="text-danger" style="text-decoration:underline; ">GUIDE</a>
-                                            </div>
-                                        </div>
-                                        <div class="panel-body" style="padding : 5px">
-                                            <a class="btn_full_outline" href="chat" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Chat</a>
+                                    <div class="col-md-6 col-sm-6" style="padding-left: 0;">
+                                        <div style="text-align: center">
+                                            <img src="../../users_pic/baikin.jpg" alt="Image" class="img-circle" style="width: 95px; height:95px; margin-top: 5px;">
+                                     
+                                        <h4 style="margin-top: 5px; text-align: center; margin-bottom: 5px; text-decoration: underline;">バイキンマン</h4>
+                                        <!-- <div style="text-align: center"> -->
+                                        登録:2017/07/27 10:50
+                                        <!-- <div style="text-align: center"> -->
+
                                         </div>
                                     </div>
+                                    <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
+                                        <!-- 個人詳細ページに遷移 -->
+                                        <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                            <a href="#" class="btn_full" data-toggle="modal" data-target="" style="padding : 0px; height: 30px;line-height: 30px;"><i class=" icon-user" ></i>Profile</a>
+                                        </div>
+                                        <!-- チャットページに遷移 -->
+
+                                        <!-- ハリボテ -->
+                                                <div class="col-md-12 col-sm-12" style="padding : 0px; ">
+                                                    <div class="panel panel-danger" style="margin-bottom: 5px;">
+                                                        <div class="panel-heading" style="padding : 5px; ">
+                                                            <div style="margin-bottom: 5px;">
+                                                                Request Category
+                                                            </div>
+
+                                                                <div style="font-weight: 900; font-size: 24px; margin-bottom: 5px;">
+                                                                    <a href="" class="text-danger" style="text-decoration:underline; ">INQUIRY</a>
+                                                                </div>
+
+
+                                                        </div>
+                                                        <div class="panel-body" style="padding : 5px">
+
+                                                                <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">chatting now</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    </div>
+
                                 </div>
                             </div>
-
-                        </div>
-                    </div>
                 <?php endif; ?>
             </div>
         </div>

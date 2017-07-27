@@ -39,7 +39,7 @@ while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 // ○reviews&usersテーブルから全データ取得
-$sql ='SELECT r.rating, r.comment, r.created, u.nickname
+$sql ='SELECT r.rating, r.comment, r.created, u.nickname, u.pic_path
         FROM reviews r, users u
         WHERE r.user_id=u.user_id AND r.event_id=?';
         // -- ORDER BY r.created
@@ -177,7 +177,7 @@ $e_lng = $record['e_Lng'];
     <!-- End Header -->
 
     <section class="parallax-window" data-parallax="scroll" data-image-src="
-    <?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']);?>" data-natural-width="1400" data-natural-height="470">
+    <?php echo htmlspecialchars($event_pics[0]['e_pic_path']);?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
