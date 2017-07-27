@@ -252,7 +252,7 @@ if (!empty($_POST)) {
 <div class="row">
     <div class="col-md-12">
         <h3>トップ画像を<a href="cropper.php" onclick="window.open(this.href, 'mywindow', 'width=800,height=600,menubar=no,toolbar=no,location=no,directories=no.status=yes,resizable=yes'); return false;"><u>こちら</u></a>から選択してください</h3>
-        <input type="hidden" name="cropp_file_name" value="../../event_pictures/event_top_pictures/<?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']); ?>">
+      <!--   <input type="hidden" name="cropp_file_name" value="../../event_pictures/event_top_pictures/<?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']); ?>"> -->
     </div>
     <!--<div class="col-md-6">
          <div>

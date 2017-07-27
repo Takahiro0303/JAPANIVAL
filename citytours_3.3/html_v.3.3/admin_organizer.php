@@ -161,14 +161,16 @@ while ($e_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
 /*session-1 End*/
 
 /*session-3*/
-$past_sql = 'SELECT events.*,event_pics.e_pic_path FROM events LEFT JOIN event_pics ON events.event_id = event_pics.event_id WHERE events.o_id=? AND events.e_end_date < CURDATE()';
-$past_date = [$login_user['o_id']];
-$past_stmt = $dbh->prepare($past_sql);
-$past_stmt->execute($past_date);
+  $e_sql = 'SELECT * FROM events WHERE e_end_date < CURDATE() AND o_id=? ORDER BY e_start_date ASC';
+  $e_data = [$login_user['o_id']];
+  $e_stmt = $dbh->prepare($e_sql);
+  $e_stmt->execute($e_data);
 
 $past_events = array();
 
-while ($past_record = $past_stmt->fetch(PDO::FETCH_ASSOC)) {
+
+
+while ($past_record = $e_stmt->fetch(PDO::FETCH_ASSOC)) {
   $past_events[] = $past_record; 
 }
 $past_count = count($past_events);
@@ -176,7 +178,9 @@ $past_count = count($past_events);
 // var_dump($login_user['o_id']);
 /*session-3 End*/
 
-
+  echo '<pre>';
+  var_dump($past_events);
+  echo '</pre>';
 
 
 ?>
@@ -402,7 +406,7 @@ $past_count = count($past_events);
 
 
                             <div class="short_info hotel" style="">
-                                <p><a href="event_input.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_1" style="float: left; position: absolute; bottom:8px;">編集/ニュース投稿</a></p> 
+                                <p><a href="event_input.php?event_id=<?php echo htmlspecialchars($events[$i]['event_id']); ?>" class="btn_1" style="float: left; position: absolute; top:-160px;">編集/ニュース投稿</a></p> 
                                 <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
 
                                 <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 
@@ -524,7 +528,7 @@ $past_count = count($past_events);
 
 
                             <div class="short_info hotel" style="">
-                                <p><a href="event_input.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>" class="btn_1" style="float: left; position: absolute; bottom:8px;">編集/ニュース投稿</a></p> 
+                                <p><a href="event_input.php?event_id=<?php echo htmlspecialchars($past_events[$i]['event_id']); ?>" class="btn_1" style="float: left; position: absolute; top:-160px;">編集/ニュース投稿</a></p> 
                                 <span class="like_count">Like:<span class="like_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $like_count_total['total']; ?></span></span> 
 
                                 <span class="join_count">Join:<span class="join_count_change_<?php echo htmlspecialchars($records[$i]['event_id']); ?>"><?php echo $join_count_total['total']; ?></span></span> 

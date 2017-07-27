@@ -1,9 +1,9 @@
 <?php  
 
 session_start();
-echo '<pre>';
-var_dump($_SESSION['event']);    
-echo '</pre>';
+// echo '<pre>';
+// var_dump($_SESSION['event']);    
+// echo '</pre>';
 
 require('../../common/dbconnect.php');
 require('../../common/functions.php');
@@ -105,15 +105,15 @@ if(!empty($_POST)){
     }
 
     //TOP画像
-    $sql = 'INSERT INTO event_pics
-                    SET event_id=?,
-                        top_pic_flag=1,
-                        cropp_file_name=?,
-                        created=NOW()';
-    $data = [$event_id_register['event_id'],
-             $_SESSION['event']['cropp_file_name']];
-    $event_top_pics_stmt = $dbh->prepare($sql);
-    $event_top_pics_stmt->execute($data);
+    // $sql = 'INSERT INTO event_pics
+    //                 SET event_id=?,
+    //                     top_pic_flag=1,
+    //                     cropp_file_name=?,
+    //                     created=NOW()';
+    // $data = [$event_id_register['event_id'],
+    //          $_SESSION['event']['cropp_file_name']];
+    // $event_top_pics_stmt = $dbh->prepare($sql);
+    // $event_top_pics_stmt->execute($data);
 
 
 // echo '<pre>';
@@ -192,7 +192,7 @@ if(!empty($_POST)){
 
     <section class="parallax-window" data-parallax="scroll" data-image-src="
 
-    <?php echo htmlspecialchars($_SESSION['event']['cropp_file_name']);?>" data-natural-width="1400" data-natural-height="470">
+    <?php echo htmlspecialchars($_SESSION['event']['e_pic_path'][0]);?>" data-natural-width="1400" data-natural-height="470">
         <div class="parallax-content-2">
             <div class="container">
                 <div class="row">
@@ -563,7 +563,7 @@ function initialize() {
 
     // ジオコーディングが成功した場合
     if (status == google.maps.GeocoderStatus.OK) {
-        alert( results[ 0 ].geometry.location );
+        // alert( results[ 0 ].geometry.location );編集
         var lat = results[ 0 ].geometry.location.lat();
         var lng = results[ 0 ].geometry.location.lng();
 
