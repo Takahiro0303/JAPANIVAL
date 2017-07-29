@@ -195,8 +195,12 @@ if (isset($_REQUEST['event_id'])){
 
                                                         </div>
                                                         <div class="panel-body" style="padding : 5px">
+
+                                                            <?php echo $chat_room_id['chat_room_id']; ?>
+                                                            <?php echo $request['request_id']; ?>
+
                                                             <?php if (isset($chat_room_id['chat_room_id'])): ?>
-                                                                <a class="btn_full_outline" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>keep on Chat</a>
+                                                                <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
                                                             <?php else:?>
                                                                 <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">waiting</button>
                                                             <?php endif; ?>
@@ -233,6 +237,10 @@ if (isset($_REQUEST['event_id'])){
 
                                                         </div>
                                                         <div class="panel-body" style="padding : 5px">
+
+                                                            <?php echo $chat_room_id['chat_room_id']; ?>
+                                                            <?php echo $request['request_id']; ?>
+                                                        
                                                             <?php if (isset($chat_room_id['chat_room_id'])): ?>
                                                                 <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
                                                             <?php else:?>
@@ -270,10 +278,14 @@ if (isset($_REQUEST['event_id'])){
 
                                                         </div>
                                                         <div class="panel-body" style="padding : 5px">
+
+                                                            <?php echo $chat_room_id['chat_room_id']; ?>
+                                                            <?php echo $request['request_id']; ?>
+                                                        
                                                             <?php if (isset($chat_room_id['chat_room_id'])): ?>
                                                                 <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">chatting now</button>
                                                             <?php else:?>
-                                                                <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">searching for friends</button>
+                                                                <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">waiting</button>
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>

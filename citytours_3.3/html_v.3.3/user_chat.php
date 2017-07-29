@@ -6,39 +6,60 @@ require('../../common/functions.php'); // 関数ファイル読み込み
 
 $login_user = get_login_user($dbh);
 
+  // $_REQUESTを持っていない場合、即ち、不正に同URLに入って来ようとした場合にはedit_indexに飛ばす。
+  if(isset($_REQUEST['chat_room_id'])){
 
-// $login_user['user_id'] = '3';
-// chat_room_idが指定されてなければ、user_chat画面に遷移
-// if (empty($_REQUEST['chat_room_id'])) {
-//     header('Location: user_chat.php');
-//     exit();
-// }
+    // $_REQUEST['chat_room_id']== 'no' には以下の3パターンあり。
+    // ①新たにチャットルームを作った場合
+    // ②チャットルームを新規作成後、メッセージと投稿した場合。
+    // ③チャットルームを新規作成後、メッセージを投稿せずにページをreloadした場合。
+    if ($_REQUEST['chat_room_id'] == 'no' && !isset($chat_room_id)) {
 
-// ○クリックされたユーザーのIDを一件取得
-if(isset($_REQUEST['chat_room_id'])){
-  if ($_REQUEST['chat_room_id'] == 'no' && !isset($chat_room_id)) {
-    //チャットルームID生成
-    $sql = 'INSERT INTO chat_rooms SET request_id = ?,     
-                                       accept_user_id = ?,
-                                       created = NOW()';
-    $data = [$_REQUEST['request_id'], $login_user['user_id']];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
+          // ① or ②、③を判別するべく、すでにchat_room_idが存在しているかどうかのチェックを行うための存在有無確認sql
+          $sql = 'SELECT COUNT(*) AS total FROM chat_rooms WHERE request_id = ?
+                                                             AND accept_user_id = ?';
+          $data = [$_REQUEST['request_id'], $login_user['user_id']];
+          $stmt = $dbh->prepare($sql);
+          $stmt->execute($data);
+          $chat_room_count = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $sql = 'SELECT * FROM chat_rooms WHERE request_id = ? AND accept_user_id = ?';
-    $data = [$_REQUEST['request_id'], $login_user['user_id']];
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute($data);
-    $room=$stmt->fetch(PDO::FETCH_ASSOC);
+        // chat_roomが存在しない場合（つまり①の場合）はchat_roomを作成し、かつ、該当のchat_room_idを$chat_room_idに格納
+        if ($chat_room_count['total'] == 0) {
+          $sql = 'INSERT INTO chat_rooms SET request_id = ?,     
+                                             accept_user_id = ?,
+                                             created = NOW()';
+          $data = [$_REQUEST['request_id'], $login_user['user_id']];
+          $stmt = $dbh->prepare($sql);
+          $stmt->execute($data);
 
-    $chat_room_id = $room['chat_room_id'];
-  }else{
-    $chat_room_id = $_REQUEST['chat_room_id'];
+          // たった今登録したchat_room_idを$chat_room_idに渡す。
+          $sql = 'SELECT * FROM chat_rooms ORDER BY created desc limit 1';
+          $events_stmt = $dbh->prepare($sql);
+          $events_stmt->execute();
+          $chat_room_new = $events_stmt->fetch(PDO::FETCH_ASSOC);
+
+          $chat_room_id = $chat_room_new['chat_room_id'];
+
+        // chat_roomが存在する場合（②、③の場合）は、すでに存在するchat_room_idを$chat_room_idに渡す
+        } else{
+          $sql = 'SELECT * FROM chat_rooms WHERE request_id = ? AND accept_user_id = ?';
+          $data = [$_REQUEST['request_id'], $login_user['user_id']];
+          $stmt = $dbh->prepare($sql);
+          $stmt->execute($data);
+          $room=$stmt->fetch(PDO::FETCH_ASSOC);
+
+          $chat_room_id = $room['chat_room_id'];
+        }
+
+    //$_REQUEST['chat_room_id']はあるんだが、$_REQUEST['chat_room_id'] == 'no'ではない即ち、chat_room_idを元から持っている場合。
+    }else{
+      $chat_room_id = $_REQUEST['chat_room_id'];
+    }
+  } else {
+    header('Location: edit_index.php');
+    exit();
   }
-} else {
-  header('Location: event_detail.php');
-  exit();
-}
+
 
 //チャットルームID情報を取得
 $sql ='SELECT * FROM chat_rooms WHERE chat_room_id=?';
@@ -55,11 +76,6 @@ $sql ='SELECT * FROM chat_rooms, requests, events, request_categories WHERE chat
                                                          AND requests.event_id = events.event_id
                                                          AND requests.request_category_id = request_categories.request_category_id
                                                          AND (chat_rooms.accept_user_id = ? OR  requests.user_id = ?)';
-// $sql ='SELECT * FROM chat_rooms, requests, events, users WHERE chat_rooms.request_id = requests.request_id
-//                                                          AND requests.event_id = events.event_id
-//                                                          AND chat_rooms.accept_user_id = users.user_id
-//                                                          AND requests.user_id = users.user_id
-//                                                          AND (chat_rooms.accept_user_id = ? OR  requests.user_id = ?)';
 $data = [$login_user['user_id'], $login_user['user_id']];
 $stmt = $dbh->prepare($sql);
 $stmt->execute($data);
@@ -68,29 +84,6 @@ while ($event_chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $event_chat_rooms[] = $event_chat_room;
 }
 
-
-
-  // echo '<pre>';
-
-  // var_dump($event_chat_rooms);
-  // var_dump($login_user);
-  // echo '</pre>';
-
-// $sql ='SELECT c.*,u.*
-//       FROM chat_rooms c,users u
-//       WHERE c.accept_user_id=u.user_id OR c.request_user_id=u.user_id
-//       AND u.user_id=?';
-// $data = [$_SESSION['id']];
-// $stmt = $dbh->prepare($sql);
-// $stmt->execute($data);
-// $chat_rooms = [];
-// while ($chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $chat_rooms[] = $chat_room;
-// }
-// v($chat_rooms);
-
-// ○もし、ログインユーザーのidがchat_roomsテーブルのaccept_idかaccept_user_idと合えばメッセージ読み込み。そうでなければ、user_chat.php(チャットトップ)へ繊維
-// if($_SESSION['id'] == $request_id || $_SESSION['id'] == $accept_user_id){
     // ○チャットルームのデータを呼び出し
 $sql ='SELECT m.*,u.*
        FROM messages m,users u
@@ -104,26 +97,6 @@ while ($message = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $messages[] = $message;
 }
 
-// if (isset($chat_room_id)) {
-//   // ○イベントデータ取得
-//   $sql = 'SELECT * FROM caht_rooms WHERE chat_room_id=?';
-//   $data = [$chat_room_id];
-//   $stmt = $dbh->prepare($sql);
-//   $stmt->execute($data);
-//   $chat_room_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-//   $sql = 'SELECT * FROM events WHERE event_id=?';
-//   $data = [$chat_room_data['event_id']];
-//   $stmt = $dbh->prepare($sql);
-//   $stmt->execute($data);
-//   $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-// }
-// }else{
-//   // ログインユーザーidがrequest_user_idまたは、accept_user_idにも当てはまらない場合はuser_chat.php(チャットトップ)に遷移
-//   // header('Location: user_chat.php');
-//   //   exit();
-// }
-
 // ○メッセージをデータベースへ登録処理
 if (!empty($_POST['message'])) {
     $message = $_POST['message'];
@@ -133,69 +106,14 @@ if (!empty($_POST['message'])) {
                                         message = ?,     
                                         user_id = ?,
                                         created = NOW()';
-        $data = array($_REQUEST['chat_room_id'],$_POST['message'],$login_user['user_id']);
+        $data = array($chat_room_id, $_POST['message'], $login_user['user_id']);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
 
-        header('Location: user_chat.php?chat_room_id='. $_REQUEST['chat_room_id']);
+        header('Location: user_chat.php?chat_room_id='. $chat_room_id);
         exit();
     }
 }
-
-
-
-
-// $sql = 'SELECT t.*, m.nick_name, m.picture_path FROM tweets t, members m WHERE t.member_id=m.member_id ORDER BY t.created';
-// // $data = [$start];
-// $data = array();
-// $stmt = $dbh->prepare($sql);
-// $stmt->execute($data);
-// v($messages);
-
-// while ($message = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//     $messages[] = $message;
-// }
-
-
-
-
-// // イベント写真データ取得
-// // $sql = 'SELECT * FROM event_pics WHERE  ';
-// // $data = [$_REQUEST['chat_room_id']];
-// // $stmt = $dbh->prepare($sql);
-// // $stmt->execute($data);
-// // while ($event_pic = $stmt->fetch(PDO::FETCH_ASSOC)) {
-// //     $event_pics[] = $event_pic;
-// // }
-
-// // usersテーブルデータ取得
-// // $sql = 'SELECT * FROM users WHERE chat_room_id=?';
-// // $data = [$_REQUEST['chat_room_id']];
-// // $stmt = $dbh->prepare($sql);
-// // $stmt->execute($data);
-// // $event_data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// // if (!empty($_POST['messege'])) {
-// //     // データベースへ登録 tweetsテーブルに
-// // // データベースへ登録 tweetsテーブルに
-// //     $messege = $_POST['messege'];
-// //     if ($messege != '') {
-// //         $sql = 'INSERT INTO messages
-// //                         SET message=?,
-// //                             message_id=?,
-// //                             chat_room_id=?,
-// //                             user_id=?,
-// //                             created=NOW()';
-// //         $data = array($tweet, $login_user['member_id'], $_POST['rep']);
-// //         $stmt = $dbh->prepare($sql);
-// //         $stmt->execute($data);
-
-// //         // POST送信をGET送信で上書き
-// //         header('Location: user_chat.php');
-// //         exit();
-// //     }
-// }
-
 
 ?>
 
@@ -331,6 +249,7 @@ if (!empty($_POST['message'])) {
 </head>
 <body>
 
+<!-- ヘッダー読み込み -->
 <?php require('header_chat.php');  ?>
 
   <div class="row" style="margin-top: 90px; position: fixed; width: 100%; top: 0; left: 0; right: 0; bottom: 0; z-index: 200000;height: 50px; ">
@@ -366,26 +285,32 @@ if (!empty($_POST['message'])) {
 
         ?>
 
-        <div style="border: double 1px black; padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #E6E6E6">
+        <!-- 現在のチャットルームについてはbackground-colorをすこし変える -->
+        <?php if ($event_chat_room['chat_room_id'] == $chat_room_id): ?>
+          <div style="border: double 1px black; padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #FF6666">
+        <?php else: ?>
+          <div style="border: double 1px black; padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #1088FF">
+        <?php endif; ?>
 
-          <div class="row">
-            <div class="col-md-3 col-sm-3" style="text-align: right; padding-right: 3px;">
-                 <img src="<?php echo $opponent_info['pic_path']; ?>" alt="User Picture" class="img-circle" style="width: 80px; height: 60px;"> 
+            <div class="row">
+              <div class="col-md-3 col-sm-3" style="text-align: right; padding-right: 3px;">
+                   <img src="<?php echo $opponent_info['pic_path']; ?>" alt="User Picture" class="img-circle" style="width: 80px; height: 60px;"> 
+              </div>
+              <div class="col-md-9 col-sm-9">
+                  <a style="color: black;" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($event_chat_room['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($event_chat_room['request_id']); ?>">
+                    <div>Event : <?php echo $event_chat_room['e_name']; ?></div>
+                    <?php if ($event_chat_room['accept_user_id'] == $login_user['user_id']): ?>
+                      <div>Request User : <?php echo $opponent_info['nickname']; ?></div>
+                    <?php elseif($event_chat_room['user_id'] == $login_user['user_id']): ?>
+                      <div>Accept User : <?php echo $opponent_info['nickname']; ?></div>
+                    <?php endif; ?>
+                    <div>Reqest Category : <?php echo $event_chat_room['request_category']; ?></div>
+                  </a>
+              </div>
             </div>
-            <div class="col-md-9 col-sm-9">
-                <a href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($event_chat_room['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($event_chat_room['request_id']); ?>">
-                  <div>Event : <?php echo $event_chat_room['e_name']; ?></div>
-                  <?php if ($event_chat_room['accept_user_id'] == $login_user['user_id']): ?>
-                    <div>Request User : <?php echo $opponent_info['nickname']; ?></div>
-                  <?php elseif($event_chat_room['user_id'] == $login_user['user_id']): ?>
-                    <div>Accept User : <?php echo $opponent_info['nickname']; ?></div>
-                  <?php endif; ?>
-                  <div>Reqest Category : <?php echo $event_chat_room['request_category']; ?></div>
-                </a>
-            </div>
+
           </div>
 
-        </div>
 
       <?php } ?>
     </aside>
