@@ -489,7 +489,7 @@ $file_review = $_FILES['review_pic_path']['name'];
                       </div>
                     </a>
                   </div>
-                  <div class="tour_title">
+                  <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px; height:75px; display: table-cell; vertical-align: middle;">
                     <h3><strong><?php echo htmlspecialchars($likes[$i]['e_name']); ?></strong></h3>
                     <div><?php echo $duration; ?></div>
 

@@ -178,9 +178,9 @@ $past_count = count($past_events);
 // var_dump($login_user['o_id']);
 /*session-3 End*/
 
-  echo '<pre>';
-  var_dump($past_events);
-  echo '</pre>';
+  // echo '<pre>';
+  // var_dump($past_events);
+  // echo '</pre>';
 
 
 ?>
