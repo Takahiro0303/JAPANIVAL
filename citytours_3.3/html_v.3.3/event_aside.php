@@ -47,7 +47,9 @@ if (isset($_REQUEST['event_id'])) {
 
                         <!-- オーガナイザーIDとこのイベントの作成オーガナイザーIDが一致するときのみニュースの投稿ボタンを表示する -->
                         <?php if ( $login_user['o_id'] == $o_id['o_id']): ?>
-                            <input type="button" id="news_register_button" class="btn_full" value="News Register">
+                            <p>
+                                <a class="btn_full" name="request" data-toggle="modal" href="" data-text-original="Request to eve tomo" data-target="#myNews" style="margin-top: 5px; margin-bottom: 0px;">News Register</a>
+                            </p>
                         <?php endif; ?>
                     <?php endif; ?>
 
@@ -168,13 +170,11 @@ if (isset($_REQUEST['event_id'])) {
                             <div class="col-md-6 col-sm-6" style="padding-left: 0;">
                                 <div style="text-align: center">
                                     <img src="<?php echo htmlspecialchars($request['pic_path']); ?>" alt="Image" class="img-circle" style="width: 95px; height:95px; margin-top: 5px;">
-
                                     <h4 style="margin-top: 5px; text-align: center; margin-bottom: 5px; text-decoration: underline;"><?php echo htmlspecialchars($request['nickname']); ?></h4>
                                     <!-- <div style="text-align: center"> -->
                                     <?php $duration = date('Y/m/d H:i', strtotime($request['created'])) ?>
                                     <p style="margin-top: 5px; text-align: center; margin-bottom: 5px; text-decoration: underline;">登録:<?php echo htmlspecialchars($duration); ?></p>
                                     <!-- <div style="text-align: center"> -->
-
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6" align="center" style="padding : 0px;">
@@ -216,10 +216,6 @@ if (isset($_REQUEST['event_id'])) {
 
                                                 </div>
                                                 <div class="panel-body" style="padding : 5px">
-
-                                                    <?php echo $chat_room_id['chat_room_id']; ?>
-                                                    <?php echo $request['request_id']; ?>
-
                                                     <?php if (isset($chat_room_id['chat_room_id'])): ?>
                                                         <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
                                                     <?php else:?>
@@ -312,24 +308,10 @@ if (isset($_REQUEST['event_id'])) {
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
-
-
-
-
                                 <?php endif; ?>
-
-
-
                             </div>
-
                         </div>
                     </div>
-
-
                     <?php } ?>
 
                 <?php else: ?>

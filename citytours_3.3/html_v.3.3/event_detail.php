@@ -544,6 +544,9 @@ $e_lng = $record['e_Lng'];
     <!-- モーダル・リクエスト登録 -->
     <?php require('modal_register_request.php'); ?>
 
+    <!-- モーダル・ニュース登録 -->
+    <?php require('modal_register_news.php'); ?>
+
     <!-- モーダル・プロフィール -->
     <?php require('modal_profile.php') ?>
 
@@ -608,6 +611,7 @@ $e_lng = $record['e_Lng'];
 <script src="js/modal_register_user_ajax.js"></script>
 <script src="js/modal_register_organizer_ajax.js"></script>
 <script src="js/modal_register_request_ajax.js"></script>
+<script src="js/modal_register_news_ajax.js"></script>
 
 <!-- 自作のJS -->
 <script src="js/custom.js"></script>
