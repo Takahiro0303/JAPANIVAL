@@ -46,12 +46,10 @@ if (!empty($_POST)) {
         }
 
         if (!empty($_POST['new_password'])) {
-            //new_passwordが空じゃない場合
             if (strlen($_POST['new_password']) >= 6) {
                 $new_password = $_POST['new_password'];
                 $confirm_password = $_POST['confirm_password'];
                 if ($new_password != $confirm_password) {
-                    //new_passwordとconfirm_passwordが一致しなかった場合
                     $errors['confirm_password'] = 'wrong';
                 }
             } else {
@@ -87,11 +85,6 @@ if (!empty($_POST)) {
             $password = sha1($new_password);
         }
 
-        //pic_pathのパターン
-        //変更なし
-        //$login_user['pic_path']
-        //変更あり
-        //$submit_file_name
         if (empty($file_name)) {
             $submit_file_name = $login_user['pic_path'];
         }
@@ -143,29 +136,7 @@ while ($p_event = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $p_events[] = $p_event;
 }
 
-
-
-  // echo '<pre>';
-  // var_dump($events);
-  // echo '</pre>';
-
-   // echo $record[$i]['event_id'] . "iあり";
-    // echo "<br>";
-    // echo $record['event_id'] . "iなし";
-
-   // $sql = 'SELECT * FROM event_pics WHERE event_id=?';
-   //  $event_data =  [$records[$i]['event_id']];
-   //  $pic_stmt = $dbh->prepare($sql);
-   //  $pic_stmt->execute($event_data);
-   //  while ($pic = $pic_stmt->fetch(PDO::FETCH_ASSOC)) {
-   //      $pics[] = $pic;
-   //  }
-
-// v($events);
-// v($pics);
-
 // お気に入りページ
-
 $sql = 'SELECT * FROM likes, events WHERE likes.event_id = events.event_id AND likes.user_id=?';
 $like_data = [$login_user['user_id']];
 $like_stmt = $dbh->prepare($sql);
@@ -175,10 +146,6 @@ while ($like = $like_stmt->fetch(PDO::FETCH_ASSOC)) {
     $likes[] = $like;
 }
 
-// v($likes);
-
-
-// reviewDB登録
 $review_rating = '';
 $review_comment = '';
 
@@ -192,9 +159,6 @@ if (!empty($_POST)) {
   $review_stmt->execute($review);
 
 }
-
-// v($review_comment);
-// v($review_rating);
     
 if (isset($_FILES['review_pic_path']['name'])) {
 
@@ -216,15 +180,12 @@ $file_review = $_FILES['review_pic_path']['name'];
             $stmt = $dbh->prepare($sql);
             $stmt->execute($data);
         }
-  # code...
 }
 // v($_FILES['review_pic_path']);
 
 ?>
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="ie ie8"> <![endif]-->
-<!--[if IE 9]><html class="ie ie9"> <![endif]-->
 <html lang="en">
 
 <head>
@@ -252,11 +213,6 @@ $file_review = $_FILES['review_pic_path']['name'];
   <!-- SPECIFIC CSS -->
   <link href="css/admin.css" rel="stylesheet">
   <link href="css/jquery.switch.css" rel="stylesheet">
-
-  <!--[if lt IE 9]>
-      <script src="js/html5shiv.min.js"></script>
-      <script src="js/respond.min.js"></script>
-    <![endif]-->
 
 </head>
 
@@ -419,58 +375,50 @@ $file_review = $_FILES['review_pic_path']['name'];
           <section id="section-2">
           <div class="row">
 
-
+          <?php if (isset($likes)): ?>
             <?php for ($i=0; $i < count($likes) ; $i++) { ?>
-            <?php
+              <?php
+
+                $starts = explode('-', $likes[$i]['e_start_date']);
+                $ends = explode('-', $likes[$i]['e_end_date']);
+
+                if ($starts[0] != $ends[0]) {
+                    $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+                } elseif($starts[1] != $ends[1]){
+                    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
+                } elseif($starts[2] != $ends[2]){
+                    $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
+                } else{
+                    $duration = date('F d, Y', strtotime(implode('-', $starts)));
+                }
+
+                $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
+
+                $data = [$likes[$i]['event_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $l_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                  // echo '<pre>';
+                  // var_dump($likes[$i]);
+                  // echo '</pre>';
+
+                //join数カウント
+                $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
+                $data = [$likes[$i]['event_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                //like数カウント
+                $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
+                $data = [$likes[$i]['event_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-              // $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-
-              // $data = [$records[$i]['event_id']];
-              // $stmt = $dbh->prepare($sql);
-              // $stmt->execute($data);
-              // $event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
-
-              $starts = explode('-', $likes[$i]['e_start_date']);
-              $ends = explode('-', $likes[$i]['e_end_date']);
-
-              if ($starts[0] != $ends[0]) {
-                  $duration = date('F d, Y', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
-              } elseif($starts[1] != $ends[1]){
-                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('F d, Y', strtotime(implode('-', $ends)));
-              } elseif($starts[2] != $ends[2]){
-                  $duration = date('F d', strtotime(implode('-', $starts))) .' - ' . date('d, Y', strtotime(implode('-', $ends)));
-              } else{
-                  $duration = date('F d, Y', strtotime(implode('-', $starts)));
-              }
-
-              $sql = 'SELECT * FROM event_pics WHERE event_id=? limit 1';
-
-              $data = [$likes[$i]['event_id']];
-              $stmt = $dbh->prepare($sql);
-              $stmt->execute($data);
-              $l_event_pic = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                // echo '<pre>';
-                // var_dump($likes[$i]);
-                // echo '</pre>';
-
-              //join数カウント
-              $sql = 'SELECT COUNT(*) AS total FROM joins WHERE event_id=?';
-              $data = [$likes[$i]['event_id']];
-              $stmt = $dbh->prepare($sql);
-              $stmt->execute($data);
-              $join_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
-
-              //like数カウント
-              $sql = 'SELECT COUNT(*) AS total FROM likes WHERE event_id=?';
-              $data = [$likes[$i]['event_id']];
-              $stmt = $dbh->prepare($sql);
-              $stmt->execute($data);
-              $like_count_total = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-            ?>
+              ?>
 
 
               <div class="col-md-4 col-sm-6">
@@ -501,156 +449,16 @@ $file_review = $_FILES['review_pic_path']['name'];
               </div>
               <!-- End col-md-6 -->
 
-          <?php } ?>
-           </div>
+            <?php } ?>
+          <?php else: ?>
+            <p>LIKE済みのイベントはありません。</p>
+          <?php endif; ?>
+          </div>
           </section>
 
           <!-- End section 2 -->
 
-<!-- 
-  ####  ###### #### ###### ###### ####  ##  ##        ####   
- ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
- ##     ##    ##      ##     ##  ##  ## ### ##           ##  
-  ####  ##### ##      ##     ##  ##  ## ######  ###### ###   
-     ## ##    ##      ##     ##  ##  ## ## ###           ##  
- ##  ## ##    ##  ##  ##     ##  ##  ## ##  ##       ##  ##  
-   ###  ###### ####   ##   ###### ####  ##  ##        ####   
 
- #####  ###### ##  ## ###### ###### ##   ## 
- ##  ## ##     ##  ##   ##   ##     ##   ## 
- ##  ## ##     ##  ##   ##   ##     ## # ## 
- #####  #####  ##  ##   ##   #####  ## # ## 
- ## ##  ##     ##  ##   ##   ##     ####### 
- ##  ## ##      ####    ##   ##     ### ### 
- ##  ## ######   ##   ###### ###### ##   ## 
- -->
-
-<!-- 
-
-          <section id="section-3">
-            <div class="row">
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your password</h4>
-                <div class="form-group">
-                  <label>Old password</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New password</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new password</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Password</button>
-              </div>
-              <div class="col-md-6 col-sm-6 add_bottom_30">
-                <h4>Change your email</h4>
-                <div class="form-group">
-                  <label>Old email</label>
-                  <input class="form-control" name="old_password" id="old_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>New email</label>
-                  <input class="form-control" name="new_password" id="new_password" type="password">
-                </div>
-                <div class="form-group">
-                  <label>Confirm new email</label>
-                  <input class="form-control" name="confirm_new_password" id="confirm_new_password" type="password">
-                </div>
-                <button type="submit" class="btn_1 green">Update Email</button>
-              </div>
-            </div> -->
-            <!-- End row -->
-
-<!--             <hr>
-            <br>
-            <div class="row">
-              <div class="col-md-6 col-sm-6">
-                <h4>Notification settings</h4>
-                <table class="table table-striped options_cart">
-                  <tbody>
-                    <tr>
-                      <td style="width:10%">
-                        <i class="icon_set_1_icon-33"></i>
-                      </td>
-                      <td style="width:60%">
-                        New Citytours Tours
-                      </td>
-                      <td style="width:35%">
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_1" id="option_1" checked value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-6"></i>
-                      </td>
-                      <td>
-                        New Citytours Hotels
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_2" id="option_2" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-26"></i>
-                      </td>
-                      <td>
-                        New Citytours Transfers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_3" id="option_3" value="" checked>
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <i class="icon_set_1_icon-81"></i>
-                      </td>
-                      <td>
-                        New Citytours special offers
-                      </td>
-                      <td>
-                        <label class="switch-light switch-ios pull-right">
-                          <input type="checkbox" name="option_4" id="option_4" value="">
-                          <span>
-              <span>No</span>
-                          <span>Yes</span>
-                          </span>
-                          <a></a>
-                        </label>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button type="submit" class="btn_1 green">Update notifications settings</button>
-              </div>
-            </div> -->
-            <!-- End row -->
-<!--           </section> -->
-          <!-- End section 3 -->
 
 <!-- 
   ####  ###### #### ###### ###### ####  ##  ##            ##   
@@ -710,8 +518,8 @@ $file_review = $_FILES['review_pic_path']['name'];
                   <div class="col-md-2 col-sm-2">
                       <?php if ($review_count['total'] == 0) { ?>
 
-                        <div class="" style="margin-top: 17px;">
-                        <a href="#" class="btn_1 add_bottom_30" data-toggle="modal" data-target="#myReview" id="<?php echo htmlspecialchars($p_events[$i]['event_id']); ?>" style="margin-bottom: 0px; width: 100%;" >Review</a>
+                        <div class="booking_buttons" style="margin-top: 5px;">
+                        <a href="#" class="btn_2" data-toggle="modal" data-target="#myReview" id="<?php echo htmlspecialchars($p_events[$i]['event_id']); ?>" style="font-size: 14px; font-weight: 400; line-height: 1.42857143">Review</a>
                         
                       <?php } else if($review_count['total'] > 0){ ?>
 
@@ -1186,6 +994,11 @@ $file_review = $_FILES['review_pic_path']['name'];
     <!-- モーダル・主催者登録 -->
     <?php require('modal_register_organizer.php'); ?>
 
+    <!-- モーダル・レビュー登録 -->
+    <?php require('modal_review.php'); ?>
+
+
+
   <div id="toTop"></div><!-- Back to top button -->
   
   <!-- Search Menu -->
@@ -1217,68 +1030,7 @@ $file_review = $_FILES['review_pic_path']['name'];
   <!-- 郵便番号 -->
   <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
 
-  <!-- Modal Review -->
-  <form method="POST" action="admin_user.php" enctype="multipart/form-data">
-   <div class="modal fade" id="myReview" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4 class="modal-title" id="myReviewLabel">Write your review</h4>
-              </div>
-              <div class="modal-body">
-                  <div id="message-review"></div>
-                  <form method="post" action="assets/review_tour.php" name="review_tour" id="review_tour">
 
-                      <!-- End row -->
-
-                      <!-- End row -->
-                      <div class="row">
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label>Position</label>
-                                  <select class="form-control" name="review_rating" id="position_review">
-                                      <option value="">Please review</option>
-                                      <option value="1">1</option>
-                                      <option value="2">2</option>
-                                      <option value="3">3</option>
-                                      <option value="4">4</option>
-                                      <option value="5">5</option>
-                                  </select>
-                              </div>
-                          </div>
-                      </div>
-                      <!-- End row -->
-
-                      <!-- End row -->
-                      <div class="form-group">
-                          <textarea name="review_comment" id="review_text" class="form-control" style="height:100px" placeholder="Write your review"></textarea>
-                      </div>
-                      <div class="form-group">
-                          <span class="btn btn-primary">
-                          <input type="file" name="review_pic_path" multiple>
-                          </span>
-                      </div>
-                      <div>
-                        <input type="hidden" name="event_id" value="" id="modal_event_id">
-                      </div>
-                      <div>
-                        <input class="btn btn-primary" type="submit">
-                      </div>
-                  </div>
-          </div>
-      </div>
-    </div>
-  </form>
-
-  <!-- <footer class="revealed">
-  <div class="container">
-  <div class="row">
-  ※requireで呼び出し
-  </div>
-  </div> -->
-  <!-- End modal review -->
 
       <!-- Common scripts -->
       <script src="js/jquery-2.2.4.min.js"></script>

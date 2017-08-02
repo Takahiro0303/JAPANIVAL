@@ -824,7 +824,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
 <script src="js/common_scripts_min.js"></script>
 <script src="js/functions.js"></script>
 
-<script>
+<!-- <script>
 //Search bar
 $(function () {
 "use strict";
@@ -834,58 +834,18 @@ $("#searchDropdownBox").change(function(){
     $("#nav-search-in-content").text(Search_Str);
   });
 });
-</script>
+</script> -->
 
 
     <!-- tabs側のJS -->
     <!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
     <script src="rs-plugin/js/jquery.themepunch.tools.min.js"></script>
-    <script src="rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
-    <script src="js/revolution_func.js"></script>
     
     <script src="js/tabs.js"></script>
     <script>new CBPFWTabs( document.getElementById( 'tabs' ) );</script>
 
-    <!-- all tour list側のjs -->
-    <!-- Specific scripts -->
-    <!-- Cat nav mobile -->
-    <script src="js/cat_nav_mobile.js"></script>
-    <script>
-        $('#cat_nav').mobileMenu();
-    </script>
-    <!-- Check and radio inputs -->
-    <script src="js/icheck.js"></script>
-    <script>
-        $('input').iCheck({
-            checkboxClass: 'icheckbox_square-grey',
-            radioClass: 'iradio_square-grey'
-        });
-    </script>
-    <!-- Map -->
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/infobox.js"></script>
-
-
-    <!-- all-hotels-map-listingからの引用 -->
-    <!-- Map -->
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
-    <script src="js/map_listing_hotels.js"></script>
-    <script src="js/infobox.js"></script>
-
-
     <!-- SLIDER REVOLUTION SCRIPTS  -->
-    <script type="text/javascript" src="rev-slider-files/js/jquery.themepunch.tools.min.js"></script>
     <script type="text/javascript" src="rev-slider-files/js/jquery.themepunch.revolution.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.actions.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.carousel.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.kenburn.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.layeranimation.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.migration.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.navigation.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.parallax.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.slideanims.min.js"></script>
-    <script type="text/javascript" src="rev-slider-files/js/extensions/revolution.extension.video.min.js"></script>
     <script type="text/javascript">
         var tpj=jQuery;
             var revapi13;

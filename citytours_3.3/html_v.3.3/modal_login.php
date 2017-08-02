@@ -1,8 +1,8 @@
-<div class="modal fade" id="modal_login" tabindex="-1" role="dialog" aria-labelledby="myReviewLabel" aria-hidden="true">
-    <div class="modal-dialog" > <!-- ここにstyle="width: 400px;"を入れれば、広い画面ではちょうど良いが、画面を狭くすると微妙にずれる。 -->
+<div class="modal fade" id="modal_login" tabindex="4" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog" style="height: 100%;"> <!-- ここにstyle="width: 400px;"を入れれば、広い画面ではちょうど良いが、画面を狭くすると微妙にずれる。 -->
         <div class="modal-content">
-            <section class="login">
-                <div id="modal_login" >
+<!--             <section class="login" style="height: 100%;"> -->
+                <div id="modal_login" style="min-height: 600px;">
                     <div class="text-center"><img src="img/japanival_logo.png" width="240" height="70" alt="JAPANIVAL" data-retina="true" style="max-width: 100%;height: auto;" ></div>
                     <hr>
                     <form method="POST" action="">
@@ -25,10 +25,10 @@
                         </p> -->
                         <input type="button" id="modal_login_button" class="form-control btn-default" value="SIGN IN" style="border: 2px solid #0080FF; font-weight: bold; color: #0080FF;">
                         <br>
-                        <a href="register_user.html " class="btn_full_outline">Register</a>
+                        <a href="register_user.html " class="btn_full_outline" style="height: 40px;">Register</a>
                     </form>
                 </div>
-            </section>
+<!--             </section> -->
         </div>
     </div>
 </div>
