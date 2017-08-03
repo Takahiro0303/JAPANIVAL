@@ -156,7 +156,7 @@ if (isset($_REQUEST['event_id'])) {
                     <?php foreach ($requests as $request) { ?>
                     <?php  
 
-                    $sql = 'SELECT chat_room_id FROM chat_rooms WHERE request_id = ?';
+                    $sql = 'SELECT * FROM chat_rooms WHERE request_id = ?';
                     $data = [$request['request_id']];
                     $stmt = $dbh->prepare($sql);
                     $stmt->execute($data);
@@ -225,7 +225,7 @@ if (isset($_REQUEST['event_id'])) {
                                             </div>
                                         </div>
 
-                                        <!-- ユーザーでかつ、もし自分のリクエストでないならば -->
+                                    <!-- ユーザーでかつ、もし自分のリクエストでないならば -->
                                     <?php else: ?>
 
                                         <div class="col-md-12 col-sm-12" style="padding : 0px; ">
@@ -258,8 +258,22 @@ if (isset($_REQUEST['event_id'])) {
                                                     <?php echo $chat_room_id['chat_room_id']; ?>
                                                     <?php echo $request['request_id']; ?>
 
+                                                    <!-- チャットルームがすでに存在している場合 -->
                                                     <?php if (isset($chat_room_id['chat_room_id'])): ?>
-                                                        <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
+
+                                                        <!-- かつ、アクセプトしたのが自分（ログインユーザー）の場合 -->
+                                                        <?php if($chat_room_id['accept_user_id'] == $login_user['user_id']): ?>
+
+                                                            <a class="btn btn-success" href="user_chat.php?chat_room_id=<?php echo htmlspecialchars($chat_room_id['chat_room_id']); ?>&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;width:100%; line-height: 40px;"><i class=" icon-chat"></i>Keep on Chat</a>
+
+                                                        <?php else:?>
+                                                        
+                                                            <!-- かつ、アクセプトしたのが自分（ログインユーザー）でないならば場合 -->
+                                                            <button type="button" class="btn btn-danger disabled" style="width: 100%; font-weight: 500;">chatting now</button>
+
+                                                        <?php endif;?>
+
+                                                    <!-- チャットルームがすでに存在していない場合。 -->
                                                     <?php else:?>
                                                         <a class="btn_full_outline" href="user_chat.php?chat_room_id=no&request_id=<?php echo htmlspecialchars($request['request_id']); ?>" style="padding : 0px; height: 40px;line-height: 40px;"><i class=" icon-chat"></i>Start Chat</a>
                                                     <?php endif; ?>
@@ -268,7 +282,7 @@ if (isset($_REQUEST['event_id'])) {
                                         </div>
                                     <?php endif; ?>
 
-                                    <!-- ユーザー以外の場合は -->
+                                <!-- ユーザー以外の場合は -->
                                 <?php else: ?>
                                     <div class="col-md-12 col-sm-12" style="padding : 0px; ">
                                         <div class="panel panel-danger" style="margin-bottom: 5px;">

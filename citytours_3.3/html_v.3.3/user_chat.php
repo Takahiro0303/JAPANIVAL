@@ -90,7 +90,7 @@ while ($event_chat_room = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 // ○チャットルームのデータを呼び出し
-$sql ='SELECT m.*,u.*
+$sql ='SELECT m.*, u.user_id
 FROM messages m,users u
 WHERE m.user_id=u.user_id
 AND m.chat_room_id=?';
@@ -107,10 +107,10 @@ if (!empty($_POST['message'])) {
     $message = $_POST['message'];
     if ($message != '') {
 // DBへの登録処理
-        $sql = 'INSERT INTO messages SET chat_room_id=?,
-        message = ?,     
-        user_id = ?,
-        created = NOW()';
+        $sql = 'INSERT INTO messages SET chat_room_id = ?,
+                                              message = ?,     
+                                              user_id = ?,
+                                              created = NOW()';
         $data = array($chat_room_id, $_POST['message'], $login_user['user_id']);
         $stmt = $dbh->prepare($sql);
         $stmt->execute($data);
@@ -162,94 +162,6 @@ if (!empty($_POST['message'])) {
     <link href="css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
 
     <!-- REVOLUTION SLIDER CSS -->
-    <link rel="stylesheet" type="text/css" href="rev-slider-files/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css">
-    <link rel="stylesheet" type="text/css" href="rev-slider-files/fonts/font-awesome/css/font-awesome.css">
-    <link rel="stylesheet" type="text/css" href="rev-slider-files/css/settings.css">
-
-    <!-- REVOLUTION LAYERS STYLES -->
-    <style>
-        .tp-caption.News-Title,
-        .News-Title {
-            color: rgba(255, 255, 255, 1.00);
-            font-size: 70px;
-            line-height: 60px;
-            font-weight: 700;
-            font-style: normal;
-            text-decoration: none;
-            background-color: transparent;
-            border-color: transparent;
-            border-style: none;
-            border-width: 0px;
-            border-radius: 0 0 0 0px
-        }
-
-        .tp-caption.News-Subtitle,
-        .News-Subtitle {
-            color: rgba(255, 255, 255, 1.00);
-            font-size: 15px;
-            line-height: 24px;
-            font-weight: 700;
-            font-style: normal;
-            font-family: Roboto Slab;
-            text-decoration: none;
-            background-color: rgba(255, 255, 255, 0);
-            border-color: transparent;
-            border-style: none;
-            border-width: 0px;
-            border-radius: 0 0 0 0px
-        }
-
-        .tp-caption.News-Subtitle:hover,
-        .News-Subtitle:hover {
-            color: rgba(255, 255, 255, 0.65);
-            text-decoration: none;
-            background-color: rgba(255, 255, 255, 0);
-            border-color: transparent;
-            border-style: solid;
-            border-width: 0px;
-            border-radius: 0 0 0px 0
-        }
-    </style>
-    <style type="text/css">
-        @import url(http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700);
-    </style>
-    <style type="text/css">
-        .hermes.tp-bullets {}
-
-        .hermes .tp-bullet {
-            overflow: hidden;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            background-color: rgba(0, 0, 0, 0);
-            box-shadow: inset 0 0 0 2px rgb(255, 255, 255);
-            -webkit-transition: background 0.3s ease;
-            transition: background 0.3s ease;
-            position: absolute
-        }
-
-        .hermes .tp-bullet:hover {
-            background-color: rgba(0, 0, 0, 0.21)
-        }
-
-        .hermes .tp-bullet:after {
-            content: ' ';
-            position: absolute;
-            bottom: 0;
-            height: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgb(255, 255, 255);
-            box-shadow: 0 0 1px rgb(255, 255, 255);
-            -webkit-transition: height 0.3s ease;
-            transition: height 0.3s ease
-        }
-
-        .hermes .tp-bullet.selected:after {
-            height: 100%
-        }
-    </style>
-
 
 </head>
 <body>
@@ -292,10 +204,10 @@ $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
 <!-- 現在のチャットルームについてはbackground-colorをすこし変える -->
 <?php if ($event_chat_room['chat_room_id'] == $chat_room_id): ?>
-    <div style="border: double 1px black; padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #FF6666">
-    <?php else: ?>
-        <div style="border: double 1px black; padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #1088FF">
-        <?php endif; ?>
+    <div style="padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #FF6666">
+<?php else: ?>
+    <div style="padding:8px; margin-bottom: 3px; border-radius: 5px; background-color: #1088FF">
+<?php endif; ?>
 
         <div class="row">
             <div class="col-md-3 col-sm-3" style="text-align: right; padding-right: 3px;">
@@ -328,39 +240,83 @@ $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="row">
         <div id="messages" style="overflow-y: auto; width: 100%; height: 500px;" class="chat-frame">
 
-            <?php foreach($messages as $message){ ?>
-            <!--             <section class="comment-list "> -->
-            <!-- チャット相手からのメッセージ -->
-            <?php if ($message['user_id'] != $_SESSION['id']) { ?>
-            <article class=" chat-talk">
-                <span class="talk-icon">
-                    <img class="img-responsive" src="<?php echo $opponent_info['pic_path']; ?>" style="width:50px; height: 50px;" >
-                </span>
-                <span class="talk-content">
-                    <?php echo $message['message']; ?>
-                </span>
-            </article>
-            <?php }elseif($message['user_id'] == $_SESSION['id']){ ?>
+        <?php for ($i=0; $i < count($messages); $i++) { ?>
+
+            <?php if ( $i == 0 ): ?>
+            
+                <?php
+                    $ato = date_parse($messages[$i]['created']);
+                ?>
+
+                    <div style="text-align: center; margin-top: 10px; margin-bottom:10px; margin:0 auto; width:150px; background-color: #CCCCCC; border-radius: 5px;">    <?php echo ($ato['year'] . '年' . $ato['month'] . '月' .  $ato['day'] . '日'); ?>   
+                    </div>
+
+            <?php elseif ( $i != 0 ): ?>
+            
+                <?php
+                    $j = $i - 1;
+                    $mae = date_parse($messages[$j]['created']);
+                    $ato = date_parse($messages[$i]['created']);
+                ?>
+
+                <?php if ($mae['year'] != $ato['year']): ?>
+                    <div style="text-align: center; margin-top: 10px; margin-bottom:10px; margin:0 auto;">
+                        <?php echo ($ato['year'] . '年' . $ato['month'] . '月' .  $ato['day'] . '日'); ?>
+                    </div>
+                <?php elseif($mae['month'] != $ato['month'] || $mae['day'] != $ato['day']): ?>
+                    <div style="margin-bottom: 10px; margin-top: 10px;">
+                        <div style="text-align: center; margin:0 auto; width:150px; background-color: #CCCCCC; border-radius: 5px;">    <?php echo ($ato['month'] . '月' .  $ato['day'] . '日'); ?>    
+                        </div>
+                    </div>
+                <?php endif; ?> 
+
+            <?php endif; ?>
+
+                <!-- チャット相手からのメッセージ -->
+            <?php if ($messages[$i]['user_id'] != $_SESSION['id']) { ?>
+
+                <article class=" chat-talk">
+            
+                    <span class="talk-icon">
+                        <img class="img-responsive" src="<?php echo $opponent_info['pic_path']; ?>" style="width:50px; height: 50px;" >
+                    </span>
+
+                    <span class="talk-content">
+                        <?php echo $messages[$i]['message']; ?>
+                    </span>
+
+                    <span class="" style="display: inline-block;  margin-top: 25px;">
+                        <?php if(strlen($ato['minute']) == '1'):?>
+                            <?php $ato['minute'] = '0' . $ato['minute']; ?>
+                        <?php endif; ?>
+                        <?php echo $ato['hour'] . ':' . $ato['minute']; ?>
+                    </span>
+
+                </article>
+
             <!-- 自分が送ったメッセージ -->
-            <article class=" chat-talk mytalk">
+            <?php }elseif($messages[$i]['user_id'] == $_SESSION['id']){ ?>
 
-                <span class="talk-icon">
-                    <img class="img-responsive" src="<?php echo $login_user['pic_path']; ?>" style="width:50px; height: 50px;">
-                </span>
+                <article class=" chat-talk mytalk">
 
-                <span class="talk-content">
-                    <?php echo $message['message']; ?>
-                </span>
+                    <span class="talk-icon">
+                        <img class="img-responsive" src="<?php echo $login_user['pic_path']; ?>" style="width:50px; height: 50px;">
+                    </span>
 
+                    <span class="talk-content">
+                        <?php echo $messages[$i]['message']; ?>
+                    </span>
 
+                    <span class="" style="display: inline-block; float:right;  margin-top: 25px;">
+                        <?php if(strlen($ato['minute']) == '1'):?>
+                            <?php $ato['minute'] = '0' . $ato['minute']; ?>
+                        <?php endif; ?>
+                        <?php echo $ato['hour'] . ':' . $ato['minute']; ?>
+                    </span>
 
-
-
-            </article>
-
+                </article>
 
             <?php }; ?>
-        </section>
         <?php } ?>
     </div>
     <form method="POST" action="">
