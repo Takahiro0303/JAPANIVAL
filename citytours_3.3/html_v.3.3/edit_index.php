@@ -465,7 +465,7 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                 <?php endif; ?>
 
                             </div>
-                            <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px; height:75px; display: table-cell; vertical-align: middle;">
+                            <div class="tour_title" style="padding-top: 8px; padding-bottom: 7px; height:78px; display: table-cell; vertical-align: middle;">
                                 <div class="row" style="height: 100%;">
                                     <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 5px;">
                                         <h3 style="display: table-cell; vertical-align: middle;"><strong><?php echo htmlspecialchars($records[$i]['e_name']); ?></strong></h3>

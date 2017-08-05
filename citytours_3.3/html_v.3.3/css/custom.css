@@ -377,6 +377,7 @@ h2 {
   text-align: right;
   float: right;
   margin: 0 20px 0 auto;
+  max-width: 615px;
   color: #000;
   background: #66CCFF;
 }

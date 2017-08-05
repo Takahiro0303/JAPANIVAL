@@ -190,17 +190,47 @@ if (!empty($_POST['message'])) {
             <?php foreach($event_chat_rooms as $event_chat_room){ ?>
             <?php 
 
-            $sql ='SELECT * FROM users WHERE user_id = ?';
-if ($event_chat_room['accept_user_id'] == $login_user['user_id']) {//ログインユーザがアクセプトユーザの場合
-    $data = [$event_chat_room['user_id']];
-} else if($event_chat_room['user_id'] == $login_user['user_id']){//ログインユーザがリクエストユーザの場合
-    $data = [$event_chat_room['accept_user_id']];
-}
-$stmt = $dbh->prepare($sql);
-$stmt->execute($data);
-$opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
+                $sql ='SELECT * FROM users WHERE user_id = ?';
+                if ($event_chat_room['accept_user_id'] == $login_user['user_id']) {//ログインユーザがアクセプトユーザの場合
+                    $data = [$event_chat_room['user_id']];
+                } else if($event_chat_room['user_id'] == $login_user['user_id']){//ログインユーザがリクエストユーザの場合
+                    $data = [$event_chat_room['accept_user_id']];
+                }
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-?>
+                $sql ='SELECT * FROM messages WHERE chat_room_id = ? ORDER BY created DESC';
+                $data = [$event_chat_room['chat_room_id']];
+                $stmt = $dbh->prepare($sql);
+                $stmt->execute($data);
+                $latest_unit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                $latest_array = date_parse($latest_unit['created']);
+
+                //まず表示したい曜日文字を配列に入れます
+                $arweek = array("(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)");
+                 
+                //さっきの $catch4を使います。
+                $time1 = strtotime($latest_unit['created']);
+                 
+                //曜日の数字を取得します
+                $week_n = date("w", $time1);
+                 
+                //配列に照らし合わせます
+                $week = $arweek[$week_n];
+
+
+                // if (strtotime($latest_unit['created'] +1day) < strtotime('now')) {
+                if ($latest_array['year'] != date("Y")) {
+                    $latest = $latest_array['year'] . '年' . $latest_array['month'] . '月' .  $latest_array['day'] . '日' . $week;
+                } elseif( $latest_array['month'] != date("m") || $latest_array['day'] != date("d")){
+                    $latest = $latest_array['month'] . '月' .  $latest_array['day'] . '日' . $week;
+                } else{
+                    $latest = $latest_array['hour'] . ':' . $latest_array['minute'];
+                }
+
+            ?>
 
 <!-- 現在のチャットルームについてはbackground-colorをすこし変える -->
 <?php if ($event_chat_room['chat_room_id'] == $chat_room_id): ?>
@@ -222,6 +252,7 @@ $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
                         <div>Accept User : <?php echo $opponent_info['nickname']; ?></div>
                     <?php endif; ?>
                     <div>Reqest Category : <?php echo $event_chat_room['request_category']; ?></div>
+                    <div>Latest Message : <?php echo $latest; ?></div>
                 </a>
             </div>
         </div>
@@ -242,13 +273,29 @@ $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
         <?php for ($i=0; $i < count($messages); $i++) { ?>
 
+            <?php
+            //まず表示したい曜日文字を配列に入れます
+            $arweek = array("(日)", "(月)", "(火)", "(水)", "(木)", "(金)", "(土)");
+             
+            //さっきの $catch4を使います。
+            $time1 = strtotime($messages[$i]['created']);
+             
+            //曜日の数字を取得します
+            $week_n = date("w", $time1);
+             
+            //配列に照らし合わせます
+            $week = $arweek[$week_n];
+
+            ?>
+
+
             <?php if ( $i == 0 ): ?>
             
                 <?php
                     $ato = date_parse($messages[$i]['created']);
                 ?>
 
-                    <div style="text-align: center; margin-top: 10px; margin-bottom:10px; margin:0 auto; width:150px; background-color: #CCCCCC; border-radius: 5px;">    <?php echo ($ato['year'] . '年' . $ato['month'] . '月' .  $ato['day'] . '日'); ?>   
+                    <div style="text-align: center; margin-top: 10px; margin-bottom:10px; margin:0 auto; width:150px; background-color: #CCCCCC; border-radius: 5px;">    <?php echo ($ato['year'] . '年' . $ato['month'] . '月' .  $ato['day'] . '日' . $week); ?>   
                     </div>
 
             <?php elseif ( $i != 0 ): ?>
@@ -261,11 +308,11 @@ $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 <?php if ($mae['year'] != $ato['year']): ?>
                     <div style="text-align: center; margin-top: 10px; margin-bottom:10px; margin:0 auto;">
-                        <?php echo ($ato['year'] . '年' . $ato['month'] . '月' .  $ato['day'] . '日'); ?>
+                        <?php echo ($ato['year'] . '年' . $ato['month'] . '月' .  $ato['day'] . '日' . $week); ?>
                     </div>
                 <?php elseif($mae['month'] != $ato['month'] || $mae['day'] != $ato['day']): ?>
                     <div style="margin-bottom: 10px; margin-top: 10px;">
-                        <div style="text-align: center; margin:0 auto; width:150px; background-color: #CCCCCC; border-radius: 5px;">    <?php echo ($ato['month'] . '月' .  $ato['day'] . '日'); ?>    
+                        <div style="text-align: center; margin:0 auto; width:150px; background-color: #CCCCCC; border-radius: 5px;"><?php echo ($ato['month'] . '月' .  $ato['day'] . '日' . $week); ?>    
                         </div>
                     </div>
                 <?php endif; ?> 
@@ -285,36 +332,40 @@ $opponent_info = $stmt->fetch(PDO::FETCH_ASSOC);
                         <?php echo $messages[$i]['message']; ?>
                     </span>
 
-                    <span class="" style="display: inline-block;  margin-top: 25px;">
+                    <div class="" style="clear:both; float: left; margin-left:70px;">
                         <?php if(strlen($ato['minute']) == '1'):?>
                             <?php $ato['minute'] = '0' . $ato['minute']; ?>
                         <?php endif; ?>
                         <?php echo $ato['hour'] . ':' . $ato['minute']; ?>
-                    </span>
+                    </div>
 
                 </article>
 
             <!-- 自分が送ったメッセージ -->
             <?php }elseif($messages[$i]['user_id'] == $_SESSION['id']){ ?>
 
-                <article class=" chat-talk mytalk">
+                <div class=" chat-talk mytalk">
 
                     <span class="talk-icon">
                         <img class="img-responsive" src="<?php echo $login_user['pic_path']; ?>" style="width:50px; height: 50px;">
                     </span>
 
-                    <span class="talk-content">
+                    <div class="talk-content" style="display:block;">
                         <?php echo $messages[$i]['message']; ?>
-                    </span>
+                    </div>
 
-                    <span class="" style="display: inline-block; float:right;  margin-top: 25px;">
+                    <div class="" style="clear:both; float: right; margin-right:70px;">
                         <?php if(strlen($ato['minute']) == '1'):?>
                             <?php $ato['minute'] = '0' . $ato['minute']; ?>
                         <?php endif; ?>
                         <?php echo $ato['hour'] . ':' . $ato['minute']; ?>
-                    </span>
+                    </div>
 
-                </article>
+                </div>
+
+
+
+
 
             <?php }; ?>
         <?php } ?>
