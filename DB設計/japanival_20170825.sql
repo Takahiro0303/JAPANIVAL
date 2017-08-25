@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017 年 7 月 26 日 13:00
+-- Generation Time: 2017 年 8 月 25 日 02:35
 -- サーバのバージョン： 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -40,11 +40,12 @@ CREATE TABLE `chat_rooms` (
 --
 
 INSERT INTO `chat_rooms` (`chat_room_id`, `request_id`, `accept_user_id`, `created`) VALUES
-(19, 3, 3, '2017-07-26 08:31:49'),
-(20, 2, 3, '2017-07-26 08:31:59'),
-(21, 8, 3, '2017-07-26 09:23:18'),
-(22, 6, 3, '2017-07-26 09:34:36'),
-(23, 11, 3, '2017-07-26 15:01:48');
+(63, 18, 5, '2017-07-29 14:52:22'),
+(64, 17, 5, '2017-07-29 14:53:42'),
+(65, 16, 5, '2017-07-29 14:56:38'),
+(66, 21, 3, '2017-07-29 15:19:18'),
+(67, 20, 3, '2017-08-04 06:13:01'),
+(68, 22, 5, '2017-08-04 06:16:16');
 
 -- --------------------------------------------------------
 
@@ -115,7 +116,6 @@ INSERT INTO `events` (`event_id`, `o_id`, `e_name`, `e_start_date`, `e_end_date`
 (25, 4, 'Shoju Raiko Nerikuyoeshiki', '2017-10-08', '2017-10-08', 'Nara', '639-0276', 'Nara-ken, Katsuragi-shi, Taima,1263', 34.5160956, 135.6924488, 'Taima dera', 'From Shin-Osaka, go to Tennoji station on the JR line / Underground, then walk to Osaka-Abenobashi station on Kintetsu line, then go to Taimadera station (approx. 35 min.), then walk 15 min.\n', '', '', '', 'The high priest Eshin Sozu began Shoju Raiko Nerikuyoeshiki in 1005, to mark the anniversary of the death of Chujo Hime who died at the age of 29. She was the Nara period princess known for embroidering a mandala of the Pure Land of Amitabha Buddha in one night, using lotus thread. The ceremony consists of the preaching of Buddhist teachings at the temple, and a memorial service for the deceased. A procession is held, in which participants are disguised as the Bodhisattvas coming to welcome the spirit of the dead. Nerikuyo ceremonies in Japan are said to have started here. When the sun starts to set over Mt. Nijo, the parade of Kannon and other deities accompanied by 25 Bodhisattvas is a magnificent sight, and people pray for peace in their lives.', '', 0, 0, 0, 0, '', '', '', '', '', '2017-07-15 22:17:00', '2017-07-16 14:17:00'),
 (26, 5, 'Kawazu Cherry Blossom Festival', '2018-02-10', '2018-03-10', 'Shizuoka', '413-0512', 'Kawazu Tourist Association, 72-12, sasahara, kawazu-cho, kamo-gun, Shizuoka', 34.7507109, 138.9897319, 'Kawazu Sakura Matsuri in Kawazu Town', 'about 4 hours from tokyo by car', '', '', '', 'Here, I share with you my insider tips on the best things to do and explore. My all time favorite part of any hanami expedition is viewing sakura as long as I get tired, and Kawazu Cherry Blossom Festival has it in abundance as you really have to walk to experience millions of sakura blossoms. With the festival on, there are so many things you could explore here such as you can taste local dishes, buy unique souvenirs, stroll around the whole town, stage performance, and have a relax time at local onsen including footbath. Staying a night will not be a bad idea. In fact, I stayed a night at one of the local onsen in Kawazu. The service was excellent!', '', 0, 0, 0, 0, '', '', '', 'http://kawazu-onsen.com/sakura/index.html', '', '2017-07-16 22:17:00', '2017-07-17 14:17:00'),
 (27, 6, 'dessert tour in Wakura-Onsen 2017', '2017-04-01', '2018-03-31', 'Ishikawa', '926-0175', ' Ishikawa-ken, Nanao-sh,Wakuramachi,wa5-1', 37.0882791, 136.9144146, 'Wakura Onsen', 'about 6 hours from tokyo by car', '', '', '', 'you can eat some sweet foods here', '', 0, 0, 0, 0, '', '', '', 'http://www.wakura.or.jp/sightseeing/event/item285/', '', '2017-07-17 22:17:00', '2017-07-18 14:17:00'),
-(28, 7, 'Kyushu Beer Festival 2017 in Kurume', '2017-08-08', '2017-08-13', 'Fukuoka', '\n830-0031', '\n8-1 Rokkunmachi Kurume-shi, Fukuoka ', 33.313936, 130.513155, 'Kurume city plaza', 'about 3 hours from haneda airport by car', '', '', '', 'Kyushu\'s largest craft-beer festival is making its second appearance in Kurume this year, featuring craft beers from all over Japan as well as food booths from local Kurume restaurants.', '', 0, 0, 0, 0, '', '', '', 'http://www.kyushubeerfestival.com/', '', '2017-07-18 22:17:00', '2017-07-19 14:17:00'),
 (29, 1, 'Kokusekiji Sominsai', '2018-02-03', '2018-02-03', 'Iwate', '023-0101', '\nIwate,Oshu,Mizusawa Ward Kuroishi Town Yamauchi 17', 39.084301, 141.2043822, 'Mizusawaku Kuroishicho', 'about 6hours from tokyo by car', '', '', '', 'All these men fighting with all their hearts in the bitter cold to become blessed makes it closer to a sport than a festival. Actually, this festival is open to anyone who applies, but there are rules like you can\'t eat meat, fish, eggs, or garlic for a week before the festival, so it\'s actually pretty difficult...', '', 0, 0, 0, 0, '', '', '', '', '', '2017-07-19 22:17:00', '2017-07-20 14:17:00'),
 (30, 2, 'Sapporo Matsuri', '2018-06-14', '2018-06-16', 'Hokkaido', '064-0946', 'Hokkaid?_ Sapporo-shi, Chū?_ku, Futagoyama, 4 Chome??_??_??_3\n', 43.049104, 141.325607, 'Hokkaido Jingu', 'Get off at JR Sapporo station, take the Namboku subway line to Odori station, then the Tozai subway line to Maruyama Koen station. Approx. 15 min. walk.Approx. 15 min. by taxi from JR Sapporo station.', '', '', '', '', '', 0, 0, 0, 0, '', '', '', 'http://www.hokkaidojingu.or.jp/', '', '2017-07-11 22:17:00', '2017-07-12 14:17:00'),
 (31, 3, 'Takayama Festival(Spring Festival)', '2018-04-14', '2018-04-15', 'Gifu', '506-0822', '156 Shiroyama, Takayama-shi', 36.133214, 137.261459, 'Hie Shrine', 'Train: Takayama Station on JR Takayama Main Line. 25 minutes??_walk from the station.\nCar: Takashiyama-Nishi IC on Chubu- Jukan Expressway. Free parking is available. ', '', '', '', 'The Takayama Festival (高山祭, Takayama Matsuri) is ranked as one of Japan\'s three most beautiful festivals alongside Kyoto\'s Gion Matsuri and the Chichibu Yomatsuri. It is held twice a year in spring and autumn in the old town of Takayama and attracts large numbers of spectators.\nThe Spring Festival (April 14-15) is the annual festival of the Hie Shrine in the southern half of Takayama\'s old town. Since the shrine is also known as Sanno-sama, the spring festival is also called Sanno Festival.\n\nLikewise, the Autumn Festival (October 9-10) is the annual festival of the Hachiman Shrine in the northern half of the old town, and the festival is also known as Hachiman Festival.\n\nThe spring and autumn festivals have similar attractions and schedules. Each festival features its own set of about a dozen festival floats (yatai). During the year, the tall and heavily decorated floats are stored in storehouses, which are scattered across Takayama\'s old town (except the floats exhibited in the Yatai Kaikan). A set of replica floats are, furthermore, exhibited year round at the Matsuri no Mori festival museum.', '', 0, 0, 0, 0, 'about 210,000', 'about 210,000', 'about 210,000', 'http://kankou.city.takayama.lg.jp/2000002/2000024/', '', '2017-07-30 22:17:00', '2017-07-30 14:17:00'),
@@ -127,7 +127,10 @@ INSERT INTO `events` (`event_id`, `o_id`, `e_name`, `e_start_date`, `e_end_date`
 (37, 2, 'Meguro Sanma Festival', '2018-09-02', '2018-09-02', 'Tokyo', '152-0000', 'Meguro-ku', 35.633472, 139.715586, 'aroud Meguro Station', 'From Meguro station on the Yamanote line:\n-- 12 minute direct ride to Shinjuku\n-- 5 minute direct ride to Shibuya\n-- 18 minute direct ride to Tokyo', '', '', '', '\nDoes the prospect of free fish get you excited? If the answer is yes, head down to Meguro Station on the JR Yamanote Line and the Mita and Namboku Subway Lines for the annual Meguro Sanma Festival from 10am on the first Sunday of September. About 6,000 grilled Sanma (pacific saury) will be given away to mark the beginning of the season. You’ll have to wait in perhaps the longest queue you have ever seen, but presumably it’s worth it! The fish will be sourced from the tsunami affected port of Miyako in Iwate Prefecture.', '', 0, 0, 0, 0, '', '', '', '', '', '2017-07-27 22:17:00', '2017-07-27 14:17:00'),
 (38, 3, 'Takayama Festival(Fall Festival)', '2018-04-14', '2018-04-15', 'Gifu', '506-0822', '156 Shiroyama, Takayama-shi', 36.133214, 137.261459, 'Hie Shrine', 'Train: Takayama Station on JR Takayama Main Line. 25 minutes??_walk from the station.\nCar: Takashiyama-Nishi IC on Chubu- Jukan Expressway. Free parking is available. ', '', '', '', 'The Takayama Festival (高山祭, Takayama Matsuri) is ranked as one of Japan\'s three most beautiful festivals alongside Kyoto\'s Gion Matsuri and the Chichibu Yomatsuri. It is held twice a year in spring and autumn in the old town of Takayama and attracts large numbers of spectators.\nThe Spring Festival (April 14-15) is the annual festival of the Hie Shrine in the southern half of Takayama\'s old town. Since the shrine is also known as Sanno-sama, the spring festival is also called Sanno Festival.\n\nLikewise, the Autumn Festival (October 9-10) is the annual festival of the Hachiman Shrine in the northern half of the old town, and the festival is also known as Hachiman Festival.\n\nThe spring and autumn festivals have similar attractions and schedules. Each festival features its own set of about a dozen festival floats (yatai). During the year, the tall and heavily decorated floats are stored in storehouses, which are scattered across Takayama\'s old town (except the floats exhibited in the Yatai Kaikan). A set of replica floats are, furthermore, exhibited year round at the Matsuri no Mori festival museum.', '', 0, 0, 0, 0, 'about 210,000', 'about 210,000', 'about 210,000', 'http://kankou.city.takayama.lg.jp/2000002/2000024/', '', '2017-07-30 22:17:00', '2017-07-30 14:17:00'),
 (39, 4, 'Tamaseseri', '2018-01-03', '2018-01-03', 'Fukuoka', '812-8655', '1-22-1, Hakozaki, Higashi-ku, Fukuoka', 33.614593, 130.423405, 'Hakozaki Shrine', '5 minutes walk from the subway Hakozaki Miyamae Station', '', '', '', 'Men wearing only loincloths compete for an 8-kg treasure ball (takara-no-tama) 30-cm in diameter which is believed to bring good fortune upon the person who can lift it over his head. The men are divided into the Land Team made up of farmers who mainly work on the land and the Sea Team consisting of fishermen who work at sea. Whether the New Year will bring a rich harvest or a large catch will be determined by which team wins the ball and hands it to the Shinto priest. This is one of the three main festivals of Kyushu. With a history of 500 years, its origins are said to lie in the legend of the dragon god (ryujin) offering two balls to Empress Jingu (170-269).\n\nOne o’clock in the afternoon. Two purified balls ??_a “yang??_(representing masculinity) ball and a “yin??_(representing femininity) ball ??_are carried to Tamatori Ebisu Shrine. The “yin??_ball is dedicated to this shrine. At first, children carry the “yang??_ball in the direction of Hakozaki Shrine. They then hand it to some men waiting halfway. These men start scrambling for the ball, and amid cries of “Oisa! Oisa!??_the atmosphere becomes one of feverish excitement. This excitement reaches its peak by the time the men pass under the torii gate. All the while, they are splashed relentlessly with cold water despite the winter cold, as are the spectators who get soaked from head to toe. Because it is believed that just touching the ball will bring good luck, the spectators also struggle to reach the ball, creating greater panic. The Shinto priest at the shrine is waiting at the romon tower gate. If the Land Team hands him the ball it means a year of rich harvest. But if the Sea Team is the winner, it will be a year with a bumper catch.', '', 0, 0, 0, 0, 'about 50,000', 'about 50,000', 'about 50,000', 'http://www.hakozakigu.or.jp/omatsuri/tamatorisai/', '', '2017-07-29 22:17:00', '2017-07-29 14:17:00'),
-(40, 5, 'Omizutori', '2018-03-01', '2018-03-14', 'Nara', '630-8587', '1 Zōshi-ch?_ Nara,', 34.890969, 135.667758, 'Todai-ji', 'Omizutori is held at Nigatsudo, a ten minute walk uphill from Todaiji Temple\'s main building.', '', '', '', 'Todaiji (東大寺, Tōdaiji, \"Great Eastern Temple\") is one of Japan\'s most famous and historically significant temples and a landmark of Nara. The temple was constructed in 752 as the head temple of all provincial Buddhist temples of Japan and grew so powerful that the capital was moved from Nara to Nagaoka in 784 in order to lower the temple\'s influence on government affairs.\n\nTodaiji\'s main hall, the Daibutsuden (Big Buddha Hall) is the world\'s largest wooden building, despite the fact that the present reconstruction of 1692 is only two thirds of the original temple hall\'s size. The massive building houses one of Japan\'s largest bronze statues of Buddha (Daibutsu). The 15 meters tall, seated Buddha represents Vairocana and is flanked by two Bodhisattvas.\n\nSeveral smaller Buddhist statues and models of the former and current buildings are also on display in the Daibutsuden Hall. Another popular attraction is a pillar with a hole in its base that is the same size as the Daibutsu\'s nostril. It is said that those who can squeeze through this opening will be granted enlightenment in their next life.\n\nAlong the approach to Todaiji stands the Nandaimon Gate, a large wooden gate watched over by two fierce looking statues. Representing the Nio Guardian Kings, the statues are designated national treasures together with the gate itself. Temple visitors will also encounter some deer from the adjacent Nara Park, begging for shika senbei, special crackers for deer that are sold for around 150 yen.', '', 0, 0, 0, 0, 'about 30,000', 'about 30,000', 'about 30,000', '', '', '2017-07-29 22:17:00', '2017-07-29 14:17:00');
+(40, 5, 'Omizutori', '2018-03-01', '2018-03-14', 'Nara', '630-8587', '1 Zōshi-ch?_ Nara,', 34.890969, 135.667758, 'Todai-ji', 'Omizutori is held at Nigatsudo, a ten minute walk uphill from Todaiji Temple\'s main building.', '', '', '', 'Todaiji (東大寺, Tōdaiji, \"Great Eastern Temple\") is one of Japan\'s most famous and historically significant temples and a landmark of Nara. The temple was constructed in 752 as the head temple of all provincial Buddhist temples of Japan and grew so powerful that the capital was moved from Nara to Nagaoka in 784 in order to lower the temple\'s influence on government affairs.\n\nTodaiji\'s main hall, the Daibutsuden (Big Buddha Hall) is the world\'s largest wooden building, despite the fact that the present reconstruction of 1692 is only two thirds of the original temple hall\'s size. The massive building houses one of Japan\'s largest bronze statues of Buddha (Daibutsu). The 15 meters tall, seated Buddha represents Vairocana and is flanked by two Bodhisattvas.\n\nSeveral smaller Buddhist statues and models of the former and current buildings are also on display in the Daibutsuden Hall. Another popular attraction is a pillar with a hole in its base that is the same size as the Daibutsu\'s nostril. It is said that those who can squeeze through this opening will be granted enlightenment in their next life.\n\nAlong the approach to Todaiji stands the Nandaimon Gate, a large wooden gate watched over by two fierce looking statues. Representing the Nio Guardian Kings, the statues are designated national treasures together with the gate itself. Temple visitors will also encounter some deer from the adjacent Nara Park, begging for shika senbei, special crackers for deer that are sold for around 150 yen.', '', 0, 0, 0, 0, 'about 30,000', 'about 30,000', 'about 30,000', '', '', '2017-07-29 22:17:00', '2017-07-29 14:17:00'),
+(41, 0, 'アンパンマン', '2017-07-29', '2017-07-30', '福岡県', '', '北九州市', 33.8834093, 130.8752161, '実家', 'あ', NULL, NULL, NULL, '夕食を作りながら、ＴＶつけたらアンパンマンやってました。\r\n\r\nそこで登場する一般人の「カバオ君」とその友達。\r\n\r\nこのカバオ君、もう随分老舗（？）の脇役としてその地位を確立しています。\r\n\r\n「少々大げさすぎる言い方じゃないの？アンパンマンには魅力的なキャラが沢山いるのに？」\r\n\r\nこういうツッコミもあるかもしれません。\r\n\r\nしかし彼をじっと見て、その思考パターンを見てたら非常に物語を進める上でのキーになっている事が多いのです。\r\n\r\nそして彼の振る舞いから子ども達に対してのメッセージを感じます。\r\n\r\nどんなところか？\r\n\r\nそこをじらさずに語りましょうか。\r\n\r\n純粋に信じるのは大事だけど…\r\n\r\n', NULL, NULL, 0, 0, 0, NULL, NULL, NULL, 'あ', NULL, '2017-07-27 16:00:12', '2017-07-27 08:00:12'),
+(42, 0, 'アンパンマン', '2017-07-29', '2017-07-30', '福岡県', '', '北九州市', 33.8834093, 130.8752161, '実家', 'あ', NULL, NULL, NULL, '夕食を作りながら、ＴＶつけたらアンパンマンやってました。\r\n\r\nそこで登場する一般人の「カバオ君」とその友達。\r\n\r\nこのカバオ君、もう随分老舗（？）の脇役としてその地位を確立しています。\r\n\r\n「少々大げさすぎる言い方じゃないの？アンパンマンには魅力的なキャラが沢山いるのに？」\r\n\r\nこういうツッコミもあるかもしれません。\r\n\r\nしかし彼をじっと見て、その思考パターンを見てたら非常に物語を進める上でのキーになっている事が多いのです。\r\n\r\nそして彼の振る舞いから子ども達に対してのメッセージを感じます。\r\n\r\nどんなところか？\r\n\r\nそこをじらさずに語りましょうか。\r\n\r\n純粋に信じるのは大事だけど…\r\n\r\n', NULL, NULL, 0, 0, 0, NULL, NULL, NULL, 'あ', NULL, '2017-07-27 16:01:16', '2017-07-27 08:01:16'),
+(43, 0, 'テスト', '2017-07-28', '2017-07-29', '福岡県', '', '北九州市小倉北区金田二丁目1-7', 33.8816149, 130.866675, '実家', 'ああああああああ', NULL, NULL, NULL, 'ああああああああああああああああああああああああああああああああ', NULL, NULL, 0, 0, 0, NULL, NULL, NULL, 'ああああああ', NULL, '2017-07-27 18:02:03', '2017-07-27 10:02:03');
 
 -- --------------------------------------------------------
 
@@ -244,16 +247,16 @@ CREATE TABLE `event_pics` (
 --
 
 INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, `created`) VALUES
-(1, 5, '../../event_pictures/1383782074_1.jpg', 0, '2017-06-21 22:17:00'),
+(1, 5, '../../event_pictures/1364378982_1.jpg', 0, '2017-06-21 22:17:00'),
 (2, 5, '../../event_pictures/1383781983_1.jpg', 0, '2017-06-21 22:17:00'),
 (3, 5, '../../event_pictures/1378431839_1.jpg', 0, '2017-06-21 22:17:00'),
-(4, 5, '../../event_pictures/1364378982_1.jpg', 0, '2017-06-21 22:17:00'),
+(4, 5, '../../event_pictures/1-1374815210_8.jpg', 0, '2017-06-21 22:17:00'),
 (5, 5, '../../event_pictures/1-1383885972_8.jpg', 0, '2017-06-21 22:17:00'),
-(6, 5, '../../event_pictures/1-1374815210_8.jpg', 0, '2017-06-21 22:17:00'),
-(7, 2, '../../event_pictures/soccer.JPG', 0, '2017-06-21 22:17:00'),
+(6, 5, '../../event_pictures/1383782074_1.jpg', 0, '2017-06-21 22:17:00'),
+(7, 2, '../../event_pictures/valleyball.JPG', 0, '2017-06-21 22:17:00'),
 (8, 2, '../../event_pictures/handball.JPG', 0, '2017-06-21 22:17:00'),
 (9, 2, '../../event_pictures/tennis.JPG', 0, '2017-06-21 22:17:00'),
-(10, 2, '../../event_pictures/valleyball.JPG', 0, '2017-06-21 22:17:00'),
+(10, 2, '../../event_pictures/soccer.JPG', 0, '2017-06-21 22:17:00'),
 (11, 2, '../../event_pictures/yokohamabeachfesta.jpg', 0, '2017-06-21 22:17:00'),
 (12, 9, '../../event_pictures/waraimaturi.jpg', 0, '2017-06-21 22:17:00'),
 (13, 9, '../../event_pictures/warau.jpg', 0, '2017-06-21 22:17:00'),
@@ -263,10 +266,10 @@ INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, 
 (17, 4, '../../event_pictures/toukaiti3.jpg', 0, '2017-06-21 22:17:00'),
 (18, 4, '../../event_pictures/toukaiti4.jpg', 0, '2017-06-21 22:17:00'),
 (19, 4, '../../event_pictures/toukaiti5.jpg', 0, '2017-06-21 22:17:00'),
-(20, 7, '../../event_pictures/annai.jpg', 0, '2017-06-21 22:17:00'),
+(20, 7, '../../event_pictures/negi2.jpg', 0, '2017-06-21 22:17:00'),
 (21, 7, '../../event_pictures/poster-min.jpg', 0, '2017-06-21 22:17:00'),
 (22, 7, '../../event_pictures/negi.jpg', 0, '2017-06-21 22:17:00'),
-(23, 7, '../../event_pictures/negi2.jpg', 0, '2017-06-21 22:17:00'),
+(23, 7, '../../event_pictures/annai.jpg', 0, '2017-06-21 22:17:00'),
 (24, 7, '../../event_pictures/negi3.jpg', 0, '2017-06-21 22:17:00'),
 (25, 10, '../../event_pictures/kamakura.jpg', 0, '2017-06-21 22:17:00'),
 (26, 10, '../../event_pictures/kamakura2.jpg', 0, '2017-06-21 22:17:00'),
@@ -324,13 +327,13 @@ INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, 
 (78, 16, '../../event_pictures/hirosaki_sakura3.jpg', 0, '2017-06-21 22:17:00'),
 (79, 16, '../../event_pictures/hirosaki_sakura4.jpg', 0, '2017-06-21 22:17:00'),
 (80, 16, '../../event_pictures/hirosaki_sakura5.jpg', 0, '2017-06-21 22:17:00'),
-(81, 17, '../../event_pictures/imoni1.jpg', 0, '2017-06-21 22:17:00'),
+(81, 17, '../../event_pictures/imoni3.jpg', 0, '2017-06-21 22:17:00'),
 (82, 17, '../../event_pictures/imoni2.jpg', 0, '2017-06-21 22:17:00'),
-(83, 17, '../../event_pictures/imoni3.jpg', 0, '2017-06-21 22:17:00'),
-(84, 18, '../../event_pictures/Kurasankan1.jpg', 0, '2017-06-21 22:17:00'),
+(83, 17, '../../event_pictures/imoni1.jpg', 0, '2017-06-21 22:17:00'),
+(84, 18, '../../event_pictures/Kurasankan4.jpg', 0, '2017-06-21 22:17:00'),
 (85, 18, '../../event_pictures/Kurasankan2.jpg', 0, '2017-06-21 22:17:00'),
 (86, 18, '../../event_pictures/Kurasankan3.jpg', 0, '2017-06-21 22:17:00'),
-(87, 18, '../../event_pictures/Kurasankan4.jpg', 0, '2017-06-21 22:17:00'),
+(87, 18, '../../event_pictures/Kurasankan1.jpg', 0, '2017-06-21 22:17:00'),
 (88, 18, '../../event_pictures/Kurasankan5.jpg', 0, '2017-06-21 22:17:00'),
 (89, 19, '../../event_pictures/Fukuotoko_erabi1.jpg', 0, '2017-06-21 22:17:00'),
 (90, 19, '../../event_pictures/Fukuotoko_erabi2.jpg', 0, '2017-06-21 22:17:00'),
@@ -359,16 +362,16 @@ INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, 
 (113, 23, '../../event_pictures/Ashinoshiri3.jpg', 0, '2017-06-21 22:17:00'),
 (114, 23, '../../event_pictures/Ashinoshiri4.jpg', 0, '2017-06-21 22:17:00'),
 (115, 23, '../../event_pictures/Ashinoshiri5.jpg', 0, '2017-06-21 22:17:00'),
-(116, 24, '../../event_pictures/Nanakuri1.jpg', 0, '2017-06-21 22:17:00'),
+(116, 24, '../../event_pictures/Nanakuri5.jpg', 0, '2017-06-21 22:17:00'),
 (117, 24, '../../event_pictures/Nanakuri2.jpg', 0, '2017-06-21 22:17:00'),
 (118, 24, '../../event_pictures/Nanakuri3.jpg', 0, '2017-06-21 22:17:00'),
 (119, 24, '../../event_pictures/Nanakuri4.jpg', 0, '2017-06-21 22:17:00'),
-(120, 24, '../../event_pictures/Nanakuri5.jpg', 0, '2017-06-21 22:17:00'),
-(121, 25, '../../event_pictures/Ashinoshiri1.jpg', 0, '2017-06-21 22:17:00'),
+(120, 24, '../../event_pictures/Nanakuri1.jpg', 0, '2017-06-21 22:17:00'),
+(121, 25, '../../event_pictures/Ashinoshiri5.jpg', 0, '2017-06-21 22:17:00'),
 (122, 25, '../../event_pictures/Ashinoshiri2.jpg', 0, '2017-06-21 22:17:00'),
 (123, 25, '../../event_pictures/Ashinoshiri3.jpg', 0, '2017-06-21 22:17:00'),
 (124, 25, '../../event_pictures/Ashinoshiri4.jpg', 0, '2017-06-21 22:17:00'),
-(125, 25, '../../event_pictures/Ashinoshiri5.jpg', 0, '2017-06-21 22:17:00'),
+(125, 25, '../../event_pictures/Ashinoshiri1.jpg', 0, '2017-06-21 22:17:00'),
 (126, 26, '../../event_pictures/Kawazu1.jpg', 0, '2017-06-21 22:17:00'),
 (127, 26, '../../event_pictures/Kawazu2.jpg', 0, '2017-06-21 22:17:00'),
 (128, 26, '../../event_pictures/Kawazu3.jpg', 0, '2017-06-21 22:17:00'),
@@ -379,11 +382,6 @@ INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, 
 (133, 27, '../../event_pictures/desert1.jpg', 0, '2017-06-21 22:17:00'),
 (134, 27, '../../event_pictures/desert1.jpg', 0, '2017-06-21 22:17:00'),
 (135, 27, '../../event_pictures/desert1.jpg', 0, '2017-06-21 22:17:00'),
-(136, 28, '../../event_pictures/Kyushu1.jpg', 0, '2017-06-21 22:17:00'),
-(137, 28, '../../event_pictures/Kyushu2.jpg', 0, '2017-06-21 22:17:00'),
-(138, 28, '../../event_pictures/Kyushu3.jpg', 0, '2017-06-21 22:17:00'),
-(139, 28, '../../event_pictures/Kyushu4.jpg', 0, '2017-06-21 22:17:00'),
-(140, 28, '../../event_pictures/Kyushu5.jpg', 0, '2017-06-21 22:17:00'),
 (141, 29, '../../event_pictures/Kokusekiji1.jpg', 0, '2017-06-21 22:17:00'),
 (142, 29, '../../event_pictures/Kokusekiji2.jpg', 0, '2017-06-21 22:17:00'),
 (143, 29, '../../event_pictures/Kokusekiji3.jpg', 0, '2017-06-21 22:17:00'),
@@ -420,20 +418,20 @@ INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, 
 (174, 36, '../../event_pictures/sakura_matsuri_3.jpg', 0, '2017-06-21 22:17:00'),
 (175, 36, '../../event_pictures/sakura_matsuri_4.jpg', 0, '2017-06-21 22:17:00'),
 (176, 36, '../../event_pictures/sakura_matsuri_5.jpeg', 0, '2017-06-21 22:17:00'),
-(177, 37, '../../event_pictures/sanma_1.jpg', 0, '2017-06-21 22:17:00'),
+(177, 37, '../../event_pictures/sanma_5.jpeg', 0, '2017-06-21 22:17:00'),
 (178, 37, '../../event_pictures/sanma_2.jpg', 0, '2017-06-21 22:17:00'),
 (179, 37, '../../event_pictures/sanma_3.jpg', 0, '2017-06-21 22:17:00'),
 (180, 37, '../../event_pictures/sanma_4.jpg', 0, '2017-06-21 22:17:00'),
-(181, 37, '../../event_pictures/sanma_5.jpeg', 0, '2017-06-21 22:17:00'),
+(181, 37, '../../event_pictures/sanma_1.jpg', 0, '2017-06-21 22:17:00'),
 (182, 38, '../../event_pictures/takayama_aki_1.jpg', 0, '2017-06-21 22:17:00'),
 (183, 38, '../../event_pictures/takayama_aki_2.jpeg', 0, '2017-06-21 22:17:00'),
 (184, 38, '../../event_pictures/takayama_aki_3.jpeg', 0, '2017-06-21 22:17:00'),
-(185, 39, '../../event_pictures/tamaseseri_1.jpg', 0, '2017-06-21 22:17:00'),
+(185, 39, '../../event_pictures/tamaseseri_6.jpg', 0, '2017-06-21 22:17:00'),
 (186, 39, '../../event_pictures/tamaseseri_2.jpg', 0, '2017-06-21 22:17:00'),
 (187, 39, '../../event_pictures/tamaseseri_3.jpg', 0, '2017-06-21 22:17:00'),
 (188, 39, '../../event_pictures/tamaseseri_4.jpg', 0, '2017-06-21 22:17:00'),
 (189, 39, '../../event_pictures/tamaseseri_5.jpg', 0, '2017-06-21 22:17:00'),
-(190, 39, '../../event_pictures/tamaseseri_6.jpg', 0, '2017-06-21 22:17:00'),
+(190, 39, '../../event_pictures/tamaseseri_1.jpg', 0, '2017-06-21 22:17:00'),
 (191, 40, '../../event_pictures/omizutori_1.jpeg', 0, '2017-06-21 22:17:00'),
 (192, 40, '../../event_pictures/omizutori_2.jpeg', 0, '2017-06-21 22:17:00'),
 (193, 40, '../../event_pictures/omizutori_3.jpg', 0, '2017-06-21 22:17:00'),
@@ -447,7 +445,19 @@ INSERT INTO `event_pics` (`e_pic_id`, `event_id`, `e_pic_path`, `top_pic_flag`, 
 (201, 21, '../../event_pictures/20170726090637スクリーンショット 2017-07-14 5.08.46.png', 0, '2017-07-26 15:07:38'),
 (202, 21, '../../event_pictures/20170726090637スクリーンショット 2017-07-14 4.29.04.png', 0, '2017-07-26 15:07:38'),
 (203, 21, '../../event_pictures/20170726090637スクリーンショット 2017-07-14 4.28.55.png', 0, '2017-07-26 15:07:38'),
-(204, 21, '../../event_pictures/20170726090637スクリーンショット 2017-07-14 4.28.47.png', 0, '2017-07-26 15:07:38');
+(204, 21, '../../event_pictures/20170726090637スクリーンショット 2017-07-14 4.28.47.png', 0, '2017-07-26 15:07:38'),
+(205, 41, '../../event_pictures/20170727095323batako.jpg', 0, '2017-07-27 16:00:12'),
+(206, 41, '../../event_pictures/20170727095323kabao.jpg', 0, '2017-07-27 16:00:12'),
+(207, 41, '../../event_pictures/20170727095323baikin.jpg', 0, '2017-07-27 16:00:12'),
+(208, 41, '../../event_pictures/20170727095323anpan.png', 0, '2017-07-27 16:00:12'),
+(209, 42, '../../event_pictures/20170727095323batako.jpg', 0, '2017-07-27 16:01:16'),
+(210, 42, '../../event_pictures/20170727095323kabao.jpg', 0, '2017-07-27 16:01:16'),
+(211, 42, '../../event_pictures/20170727095323baikin.jpg', 0, '2017-07-27 16:01:16'),
+(212, 42, '../../event_pictures/20170727095323anpan.png', 0, '2017-07-27 16:01:16'),
+(213, 43, '../../event_pictures/20170727120141jam.jpeg', 0, '2017-07-27 18:02:03'),
+(214, 43, '../../event_pictures/20170727120141batako.jpg', 0, '2017-07-27 18:02:03'),
+(215, 43, '../../event_pictures/20170727120141meron.jpg', 0, '2017-07-27 18:02:03'),
+(216, 43, '../../event_pictures/20170727120141kabao.jpg', 0, '2017-07-27 18:02:03');
 
 -- --------------------------------------------------------
 
@@ -498,7 +508,15 @@ INSERT INTO `joins` (`user_id`, `event_id`, `created`) VALUES
 (3, 109, '0000-00-00 00:00:00'),
 (3, 108, '0000-00-00 00:00:00'),
 (5, 11, '0000-00-00 00:00:00'),
-(3, 11, '0000-00-00 00:00:00');
+(3, 11, '0000-00-00 00:00:00'),
+(5, 37, '0000-00-00 00:00:00'),
+(3, 10, '0000-00-00 00:00:00'),
+(14, 3, '0000-00-00 00:00:00'),
+(4, 7, '0000-00-00 00:00:00'),
+(16, 3, '0000-00-00 00:00:00'),
+(18, 37, '0000-00-00 00:00:00'),
+(5, 21, '0000-00-00 00:00:00'),
+(3, 21, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -549,7 +567,16 @@ INSERT INTO `likes` (`user_id`, `event_id`, `created`) VALUES
 (3, 15, '0000-00-00 00:00:00'),
 (3, 109, '0000-00-00 00:00:00'),
 (3, 108, '0000-00-00 00:00:00'),
-(5, 11, '0000-00-00 00:00:00');
+(5, 11, '0000-00-00 00:00:00'),
+(5, 37, '0000-00-00 00:00:00'),
+(3, 10, '0000-00-00 00:00:00'),
+(14, 3, '0000-00-00 00:00:00'),
+(4, 7, '0000-00-00 00:00:00'),
+(3, 31, '0000-00-00 00:00:00'),
+(18, 37, '0000-00-00 00:00:00'),
+(5, 12, '0000-00-00 00:00:00'),
+(5, 21, '0000-00-00 00:00:00'),
+(3, 21, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -574,7 +601,88 @@ INSERT INTO `messages` (`message_id`, `chat_room_id`, `user_id`, `message`, `rea
 (1, 1, 3, 'aa', 0, '2017-07-23 20:06:27'),
 (2, 0, 3, 'ああああああああ', 0, '2017-07-23 21:27:22'),
 (3, 0, 3, 'iiiiiiiiiiiiiiiiiiiiiii', 0, '2017-07-23 21:27:29'),
-(4, 0, 3, 'lllllllllllllllll', 0, '2017-07-26 08:12:31');
+(4, 0, 3, 'lllllllllllllllll', 0, '2017-07-26 08:12:31'),
+(5, 0, 5, 'aaaaaaaaaaaa', 0, '2017-07-27 07:01:49'),
+(6, 28, 5, 'aaaaaaa', 0, '2017-07-27 07:11:38'),
+(7, 28, 5, 'bbbbbbbbbbb', 0, '2017-07-27 07:11:42'),
+(8, 28, 5, 'bbbbbbbbbbb', 0, '2017-07-27 07:16:40'),
+(9, 29, 5, '確認でーす', 0, '2017-07-27 07:44:32'),
+(10, 29, 5, 'aaaaaaaaa', 0, '2017-07-27 08:24:53'),
+(11, 29, 5, 'ああああああ', 0, '2017-07-27 08:25:04'),
+(12, 29, 5, 'ああああああ', 0, '2017-07-27 08:25:08'),
+(13, 29, 5, 'ああああああ', 0, '2017-07-27 08:25:12'),
+(14, 28, 3, 'こんにちは', 0, '2017-07-27 09:47:53'),
+(15, 28, 3, '元気ですか？', 0, '2017-07-27 09:50:32'),
+(16, 29, 3, '連呼しすぎです', 0, '2017-07-27 10:40:47'),
+(17, 0, 6, 'ヤッホー', 0, '2017-07-27 10:44:48'),
+(19, 33, 3, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 0, '2017-07-27 10:55:15'),
+(20, 33, 3, 'やあああああああああああああああああ', 0, '2017-07-27 13:13:37'),
+(21, 33, 3, 'かっっっっっっっっっっっっっっっっっっっっｋ', 0, '2017-07-27 13:13:50'),
+(22, 34, 3, 'チャットシステム', 0, '2017-07-27 13:14:36'),
+(23, 33, 14, 'ああああああああああああああああああああああ', 0, '2017-07-27 13:16:09'),
+(24, 0, 4, 'あああああああああああああああああああああああああああ', 0, '2017-07-27 15:33:54'),
+(25, 0, 4, 'あああああああああああああああああああああああああああ', 0, '2017-07-27 15:34:10'),
+(26, 37, 4, 'あああああああああああああ', 0, '2017-07-27 15:34:23'),
+(27, 35, 4, 'ああああああああああああああ', 0, '2017-07-27 15:34:30'),
+(28, 35, 4, 'いいいいいいいいいいいいいいいい', 0, '2017-07-27 15:34:58'),
+(29, 38, 4, 'aaaaaaaaaaaaaaaaa', 0, '2017-07-27 17:10:33'),
+(30, 41, 4, 'aaaaaaaaaaaaaaa', 0, '2017-07-27 17:11:43'),
+(31, 42, 17, 'ハロー', 0, '2017-07-27 17:54:19'),
+(32, 42, 17, 'かわいいこちゃん', 0, '2017-07-27 17:54:31'),
+(33, 42, 17, 'いsy余に', 0, '2017-07-27 17:54:37'),
+(34, 42, 17, '一緒に', 0, '2017-07-27 17:54:42'),
+(35, 42, 17, 'ネギ食べに行かない？', 0, '2017-07-27 17:54:51'),
+(36, 42, 16, 'あら、こんにちは', 0, '2017-07-27 17:56:06'),
+(37, 42, 16, 'しいですね', 0, '2017-07-27 17:56:09'),
+(38, 42, 16, 'いいですね', 0, '2017-07-27 17:56:13'),
+(39, 42, 16, '一緒に', 0, '2017-07-27 17:56:18'),
+(40, 42, 16, '亜行きましょ', 0, '2017-07-27 17:56:22'),
+(41, 0, 5, 'aaaaaaaaa', 0, '2017-07-29 10:28:28'),
+(42, 0, 3, 'aaaaaaaaaaaaa', 0, '2017-07-29 11:15:15'),
+(43, 0, 3, 'あああああああああああああああああああああ', 0, '2017-07-29 13:17:23'),
+(44, 0, 3, 'あああああああああああああああああああああ', 0, '2017-07-29 13:20:33'),
+(45, 0, 3, 'あああああああああああああああああああああ', 0, '2017-07-29 13:20:39'),
+(46, 0, 3, 'aaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 13:24:54'),
+(47, 0, 3, 'aaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 13:27:19'),
+(48, 0, 3, 'aaaaaaaaaaaaaaa', 0, '2017-07-29 13:28:31'),
+(49, 0, 3, 'aaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 13:40:56'),
+(50, 0, 3, 'aaaaaaaaaaaaaaaa', 0, '2017-07-29 13:51:07'),
+(51, 0, 5, 'aaaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 13:53:54'),
+(52, 60, 5, 'aaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 13:53:59'),
+(53, 60, 5, 'aaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 13:54:19'),
+(54, 0, 5, 'ああああああああああああああああ', 0, '2017-07-29 14:52:26'),
+(55, 64, 5, 'aaaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 14:53:46'),
+(56, 65, 5, 'aaaaaaaaaaaa', 0, '2017-07-29 14:56:40'),
+(57, 63, 5, 'うんこ', 0, '2017-07-29 15:14:52'),
+(58, 63, 5, 'あああああああああああああ', 0, '2017-07-29 15:14:58'),
+(59, 63, 5, 'ｄｆｄっｆｄ', 0, '2017-07-29 15:15:03'),
+(60, 63, 3, 'aaaaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 15:17:39'),
+(61, 63, 3, 'aaaaaaaaaaaaaaaaaaaaaa', 0, '2017-07-29 15:18:37'),
+(62, 66, 3, 'aaaaaaaaaaaaaaa', 0, '2017-07-29 15:25:33'),
+(63, 63, 18, 'aaaaaaaaaaaaaaa', 0, '2017-08-03 21:06:49'),
+(64, 63, 18, 'aaaaaaaaaaaaaaaaa', 0, '2017-08-03 21:06:53'),
+(65, 63, 3, 'aaaaaaaaaaaaaaaaaa', 0, '2017-08-03 23:16:42'),
+(66, 63, 3, 'あ', 0, '2017-08-03 23:20:04'),
+(67, 63, 3, 'い', 0, '2017-08-03 23:20:14'),
+(68, 63, 3, 'う', 0, '2017-08-03 23:20:26'),
+(69, 63, 3, 'え', 0, '2017-08-03 23:20:45'),
+(70, 66, 3, '梅谷', 0, '2017-08-03 23:30:36'),
+(71, 65, 3, 'ぴょぴょぴょ', 0, '2017-08-03 23:31:18'),
+(72, 63, 3, 'かああああああああああああああ', 0, '2017-08-04 00:01:48'),
+(73, 64, 3, 'あああああああああああああ', 0, '2017-08-04 06:11:00'),
+(74, 66, 3, 'young sky waker', 0, '2017-08-04 06:11:18'),
+(75, 67, 3, 'I\'ll be back', 0, '2017-08-04 06:13:21'),
+(76, 68, 5, 'aaaaaaaaaaaaaaaaaaaaaaaa', 0, '2017-08-04 06:16:44'),
+(77, 65, 5, 'あああああああああああああああああああ', 0, '2017-08-04 18:22:38'),
+(78, 65, 5, 'あああああああああああああ', 0, '2017-08-04 18:22:46'),
+(79, 65, 5, 'あああああああああああああ', 0, '2017-08-04 18:51:19'),
+(80, 67, 5, 'あああああああああああああああああ', 0, '2017-08-04 18:51:27'),
+(81, 67, 5, 'aaaaaaaaaaaaaaaaa', 0, '2017-08-05 10:47:56'),
+(82, 66, 5, 'あああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ', 0, '2017-08-05 10:50:31'),
+(83, 66, 5, 'あああああああ', 0, '2017-08-05 10:55:28'),
+(84, 63, 5, 'aaaaaaaaaaaaaaaa', 0, '2017-08-05 12:14:42'),
+(85, 63, 3, 'aaaaaaaaaaaaaaaa', 0, '2017-08-05 12:20:57'),
+(86, 66, 3, 'あああああああああああああああああああああ', 0, '2017-08-11 16:44:08');
 
 -- --------------------------------------------------------
 
@@ -599,7 +707,14 @@ INSERT INTO `news` (`news_id`, `event_id`, `news_title`, `news_comment`, `create
 (1, 1, '', '天気悪し', '2017-07-08 21:48:30', '2017-07-14 05:00:08'),
 (2, 1, 'お知らせです', 'っっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｂ', '2017-07-13 00:00:00', '2017-07-14 05:00:08'),
 (3, 11, '天気悪目', 'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ', '2017-07-24 00:00:00', '2017-07-23 16:00:00'),
-(4, 11, '天気良さげ', 'っっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｋ', '2017-07-25 00:00:00', '2017-07-24 16:00:00');
+(4, 11, '天気良さげ', 'っっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっっｋ', '2017-07-25 00:00:00', '2017-07-24 16:00:00'),
+(5, 7, '渋滞情報について', '当日の会場までのアクセスについて、例年、・・・・', '2017-07-25 00:00:00', '2017-07-27 09:05:26'),
+(6, 7, '当日の天候につきまして', '○月○日当日の天候につきまして、現在、天気予報等で、明け方から正午にかけて、荒天が予想されており', '2017-07-28 00:00:00', '2017-07-27 09:07:07'),
+(7, 37, '渋滞情報について', '当日の会場までのアクセスについて、例年、・・・・', '2017-07-25 00:00:00', '2017-07-31 10:48:11'),
+(8, 37, '当日の天候につきまして', '○月○日当日の天候につきまして、現在、天気予報等で、明け方から正午にかけて、荒天が予想されており', '2017-07-28 00:00:00', '2017-07-31 10:48:17'),
+(9, 29, 'テスト', 'テスト', '2017-08-01 16:58:01', '2017-08-01 08:58:01'),
+(10, 29, 'ああああああああああああああああああああああああああああああああああああああああああああああああああ', 'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ', '2017-08-01 17:01:52', '2017-08-01 09:01:52'),
+(11, 29, 'テストタイトル', 'テスト本文', '2017-08-02 17:33:03', '2017-08-02 09:33:03');
 
 -- --------------------------------------------------------
 
@@ -672,7 +787,11 @@ INSERT INTO `organizers` (`o_id`, `o_name`, `o_f_name`, `o_l_name`, `o_email`, `
 (6, 'o4umetani', 'o4umetani', NULL, 'o4umetani@gmail.com', '福岡県', '8030816', '北九州市', '0935612169', 'e27da9e75e8899b1e2df18caa76bd6bd87d6b973', '', 'a', '2017-07-17 22:09:39', '2017-07-17 14:09:39'),
 (7, 'o5umetani', 'o5umetani', NULL, '05umetani', '福岡県', '8030816', '北九州市', '0935612169', '04c8d1dc95db8cfc57746c4817414218edb0cdd0', '', 'a', '2017-07-17 22:11:12', '2017-07-17 14:11:12'),
 (8, 'o6umetani', 'o6umetani', NULL, 'o6umetani@gmail.com', '福岡県', '8030816', '北九州市', '0935612169', '9272f680e241de0c088ed8437436058f36c9890c', '', 'a', '2017-07-17 22:12:51', '2017-07-17 14:12:51'),
-(9, 'o7umetani', 'o7umetani', NULL, 'o7umetani@gmail.com', '福岡県', '8030816', '北九州市', '0935612169', '53af8daf68524a78a4c784e138c7cd8ef319ac2b', '', 'a', '2017-07-17 22:17:41', '2017-07-17 14:17:41');
+(9, 'o7umetani', 'o7umetani', NULL, 'o7umetani@gmail.com', '福岡県', '8030816', '北九州市', '0935612169', '53af8daf68524a78a4c784e138c7cd8ef319ac2b', '', 'a', '2017-07-17 22:17:41', '2017-07-17 14:17:41'),
+(10, '10dantai', '10dantai', NULL, '10dantai@gmail.com', '東京都', '1700002', '豊島区', '09050896307', '93ced5f65a5d04755eb9eab3d8afa9f5821b13ac', '', 'a', '2017-07-27 13:19:24', '2017-07-27 05:19:24'),
+(11, '11dantai', '11dantai', NULL, '11dantai@gmail.com', '東京都', '1700002', '豊島区', '09050896307', 'c32d01bc2cebf4f42dacaecb57bb75fb30f3cf5f', '', 'a', '2017-07-27 15:48:47', '2017-07-27 07:48:47'),
+(12, '12dantai', '12dantai', NULL, '12dantai@gmail.com', '福岡県', '1700002', '北九州市小倉北区', '09050896307', 'c53b69b479a4f25cc9521a92da7491ae7abcd3e5', '', 'a', '2017-07-27 17:59:55', '2017-07-27 09:59:55'),
+(13, '101dantai', '101dantai', NULL, '101dantai@gmail.com', '福岡県', '1700002', '北九州市', '09050896307', '12f803c365e306e55a79e1f617dee351a7e15883', '', 'a', '2017-08-02 17:35:43', '2017-08-02 09:35:43');
 
 -- --------------------------------------------------------
 
@@ -694,16 +813,16 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`request_id`, `user_id`, `event_id`, `request_category_id`, `created`, `modified`) VALUES
-(1, 4, 10, 1, '2017-08-23 00:00:00', '2017-07-23 06:59:36'),
-(6, 3, 11, 3, '2017-07-25 22:10:11', '2017-07-25 14:10:11'),
-(7, 3, 11, 0, '2017-07-25 22:11:12', '2017-07-25 14:11:12'),
-(8, 5, 11, 1, '2017-07-26 09:01:13', '2017-07-26 01:01:13'),
-(9, 5, 11, 1, '2017-07-26 09:04:05', '2017-07-26 01:04:05'),
-(10, 3, 11, 2, '2017-07-26 09:31:45', '2017-07-26 01:31:45'),
-(11, 3, 3, 1, '2017-07-26 14:51:07', '2017-07-26 06:51:07'),
-(12, 3, 3, 1, '2017-07-26 14:57:55', '2017-07-26 06:57:55'),
-(13, 3, 3, 3, '2017-07-26 14:58:06', '2017-07-26 06:58:06'),
-(14, 3, 3, 3, '2017-07-26 15:01:26', '2017-07-26 07:01:26');
+(16, 3, 37, 1, '2017-07-29 13:53:11', '2017-07-29 05:53:11'),
+(17, 3, 37, 2, '2017-07-29 13:53:16', '2017-07-29 05:53:16'),
+(18, 3, 37, 3, '2017-07-29 13:53:20', '2017-07-29 05:53:20'),
+(19, 5, 7, 1, '2017-07-29 15:16:22', '2017-07-29 07:16:22'),
+(20, 5, 7, 2, '2017-07-29 15:16:27', '2017-07-29 07:16:27'),
+(21, 5, 7, 3, '2017-07-29 15:16:32', '2017-07-29 07:16:32'),
+(22, 3, 7, 2, '2017-08-04 06:12:44', '2017-08-03 22:12:44'),
+(23, 5, 3, 2, '2017-08-04 18:16:20', '2017-08-04 10:16:20'),
+(24, 5, 30, 3, '2017-08-04 18:20:44', '2017-08-04 10:20:44'),
+(25, 5, 21, 1, '2017-08-04 18:21:36', '2017-08-04 10:21:36');
 
 -- --------------------------------------------------------
 
@@ -750,7 +869,8 @@ INSERT INTO `reviews` (`review_id`, `event_id`, `user_id`, `rating`, `comment`, 
 (2, 14, 2, 4, 'どりゃああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああどりゃああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああどりゃああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああどりゃああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああどりゃああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ', '2017-07-25 00:00:00', '2017-07-24 16:00:00'),
 (3, 14, 3, 5, 'せろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろせろろろろ', '2017-07-26 00:00:00', '2017-07-25 16:00:00'),
 (4, 14, 4, 1, 'じょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょじょ', '2017-07-27 00:00:00', '2017-07-26 16:00:00'),
-(5, 16, 3, 4, 'よかった', '2017-07-26 15:03:34', '2017-07-26 07:03:34');
+(5, 16, 3, 4, 'よかった', '2017-07-26 15:03:34', '2017-07-26 07:03:34'),
+(6, 7, 3, 4, 'ネギが美味しかったです。', '2017-07-27 00:00:00', '2017-07-26 16:00:00');
 
 -- --------------------------------------------------------
 
@@ -877,17 +997,22 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `user_flag`, `f_name`, `l_name`, `nickname`, `email`, `nationality`, `gender`, `japanese_level`, `password`, `self_intro`, `pic_path`, `created`, `modified`) VALUES
 (1, 0, '', '', 'manager', 'manager@gmail.com', 'Afganistan', 'male', NULL, '1a8565a9dc72048ba03b4156be3e569f22771f23', '管理者です。', '20170705130810japanival_icon.png', '2017-07-05 19:08:10', '2017-07-05 11:08:39'),
 (2, 1, '', '', 'umetani', 'umetani@gmail.com', 'Albania', 'female', NULL, '56ca78f2319ab20ed3c881bb89f02d608111bb69', 'umetani', '20170705130941スクリーンショット 2017-07-03 18.41.01.png', '2017-07-05 19:09:41', '2017-07-05 11:09:41'),
-(3, 1, '', '', 'uumetani', 'uumetani@gmail.com', 'Afganistan', 'male', NULL, '4a9318160a56a36c151476167f282968c8de6b74', 'ユーザーです', '../../event_pictures/20170719004953スクリーンショット 2017-07-14 4.28.55.png', '2017-07-05 20:00:40', '2017-07-25 12:00:59'),
-(4, 1, '', '', 'wada tamotsu', 'wadatamotsu@gmail.com', 'Afganistan', 'male', NULL, 'e94046d2b2b705ab3ab7b81b2c8da846d9931e81', 'aaaaaaa', '../../event_pictures/20170719004953スクリーンショット 2017-07-14 4.28.52.png', '2017-07-15 20:32:53', '2017-07-25 12:00:33'),
-(5, 1, '', '', '1umetani', '1umetani@gmail.com', 'nationality', 'other', 'Advanced', '65c5eaefc61d0ebcf4539344a84518bab2fea9d4', '', 'a', '2017-07-16 21:25:32', '2017-07-16 13:25:32'),
-(6, 1, '', '', '2umetani', '2umetani@gmail.com', 'nationality', 'other', 'Advanced', 'ff41bca6222a3871635341e86b3cfe097eff1dfe', '', 'a', '2017-07-16 21:31:30', '2017-07-16 13:31:30'),
+(3, 1, '', '', 'uumetani', 'uumetani@gmail.com', 'Afganistan', 'male', NULL, '4a9318160a56a36c151476167f282968c8de6b74', 'ユーザーです', '../../users_pic/anpan.png', '2017-07-05 20:00:40', '2017-07-27 01:14:32'),
+(4, 1, '', '', 'wada tamotsu', 'wadatamotsu@gmail.com', 'Afganistan', 'male', NULL, 'e94046d2b2b705ab3ab7b81b2c8da846d9931e81', 'aaaaaaa', '../../users_pic/baikin.jpg', '2017-07-15 20:32:53', '2017-07-27 01:15:09'),
+(5, 1, '', '', '1umetani', '1umetani@gmail.com', 'nationality', 'other', 'Advanced', '65c5eaefc61d0ebcf4539344a84518bab2fea9d4', '', '../../users_pic/batako.jpg', '2017-07-16 21:25:32', '2017-07-27 01:15:31'),
+(6, 1, '', '', '2umetani', '2umetani@gmail.com', 'nationality', 'other', 'Advanced', 'ff41bca6222a3871635341e86b3cfe097eff1dfe', '', '../../users_pic/jam.jpeg', '2017-07-16 21:31:30', '2017-07-27 01:16:02'),
 (7, 1, '', '', '3umetani', '3umetani', 'nationality', 'other', 'Advanced', 'c0fc1925fcc79786f6a821b136aa040ddb898e34', '', 'a', '2017-07-16 21:33:40', '2017-07-16 13:33:40'),
-(8, 1, '', '', '4umetani', '4umetani@gmail.com', 'nationality', 'other', 'Advanced', '46878cc5f7c13790bb61cdfb093617ea9c5ce509', '', 'a', '2017-07-16 22:05:43', '2017-07-16 14:05:43'),
-(9, 1, '', '', '5umetani', '5umetani@gmail.com', 'nationality', 'other', 'Advanced', '826970b3e0784fa6f319377d72cd4d878557a344', '', 'a', '2017-07-17 21:23:12', '2017-07-17 13:23:12'),
+(8, 1, '', '', '4umetani', '4umetani@gmail.com', 'nationality', 'other', 'Advanced', '46878cc5f7c13790bb61cdfb093617ea9c5ce509', '', '../../users_pic/kabao.jpg', '2017-07-16 22:05:43', '2017-07-27 01:16:32'),
+(9, 1, '', '', '5umetani', '5umetani@gmail.com', 'nationality', 'other', 'Advanced', '826970b3e0784fa6f319377d72cd4d878557a344', '', '../../users_pic/meron.jpg', '2017-07-17 21:23:12', '2017-07-27 01:16:54'),
 (10, 1, '', '', 'o7umetani', 'o7umetani@gmail.com', 'nationality', 'other', 'Advanced', '53af8daf68524a78a4c784e138c7cd8ef319ac2b', '', 'a', '2017-07-19 15:10:06', '2017-07-19 07:10:06'),
 (11, 1, '', '', '6umetani', '6umetani@gmail.com', 'nationality', 'other', 'Advanced', 'f2cf4066fa3fcbb6739ccfbe4b09c2c2d6333852', '', 'a', '2017-07-21 15:39:07', '2017-07-21 07:39:07'),
 (12, 1, '', '', '梅谷梅谷', 'umetaniumetani@gmail.com', 'nationality', 'other', 'Advanced', '083a8ffd06a17e0feb1955de198bd52b928678c2', '', 'a', '2017-07-23 18:04:03', '2017-07-23 10:04:03'),
-(13, 1, '', '', 'umeume', 'umeume@gmail.com', 'nationality', 'other', 'Advanced', '28a1cc19abf355a0085cf9145ba8bb7f120b5844', '', 'a', '2017-07-23 18:10:39', '2017-07-23 10:10:39');
+(13, 1, '', '', 'umeume', 'umeume@gmail.com', 'nationality', 'other', 'Advanced', '28a1cc19abf355a0085cf9145ba8bb7f120b5844', '', 'a', '2017-07-23 18:10:39', '2017-07-23 10:10:39'),
+(14, 1, '', '', '10umetani', '10umetani@gmail.com', 'nationality', 'other', 'Advanced', '7876372ceede69bf62259c51701ba5471ab285d7', '', 'a', '2017-07-27 13:08:49', '2017-07-27 05:08:49'),
+(15, 1, '', '', 'ジョリコ', 'joliko[gmail.com', 'Afganistan', 'female', 'Advanced', '595df39c0487998dc9c6e5b4bccbc7bb16822ae8', '', 'a', '2017-07-27 15:39:27', '2017-07-27 07:39:27'),
+(16, 1, '', '', 'ジョリコ', 'joliko@gmail.com', 'Afganistan', 'female', 'Advanced', '595df39c0487998dc9c6e5b4bccbc7bb16822ae8', '', 'a', '2017-07-27 15:41:04', '2017-07-27 07:41:04'),
+(17, 1, '', '', 'jolio', 'jolio@gmail.com', 'nationality', 'other', 'Advanced', 'd685944a1d4c37f12885d06fc7b26abf09fef10d', '', 'a', '2017-07-27 17:51:38', '2017-07-27 09:51:38'),
+(18, 1, '', '', '101umetani', '101umetani@gmail.com', 'nationality', 'other', 'Advanced', 'cf1d9e7d077ffd19d4d260ba28df1db4deb02c13', '', 'a', '2017-08-02 17:38:15', '2017-08-02 09:38:15');
 
 --
 -- Indexes for dumped tables
@@ -979,12 +1104,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `chat_rooms`
 --
 ALTER TABLE `chat_rooms`
-  MODIFY `chat_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `chat_room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 --
 -- AUTO_INCREMENT for table `event_movies`
 --
@@ -994,17 +1119,17 @@ ALTER TABLE `event_movies`
 -- AUTO_INCREMENT for table `event_pics`
 --
 ALTER TABLE `event_pics`
-  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=205;
+  MODIFY `e_pic_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `notifications`
 --
@@ -1019,17 +1144,17 @@ ALTER TABLE `notification_categories`
 -- AUTO_INCREMENT for table `organizers`
 --
 ALTER TABLE `organizers`
-  MODIFY `o_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `o_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `review_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `review_photos`
 --
@@ -1039,7 +1164,7 @@ ALTER TABLE `review_photos`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

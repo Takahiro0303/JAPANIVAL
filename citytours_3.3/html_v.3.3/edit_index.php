@@ -420,14 +420,15 @@ if (isset($_POST['request_category_id'])) { // リクエストカテゴリ指定
                                                     <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
                                                     <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
                                                     <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="like">
+                                                </div>
                                                 <?php else: ?>
                                                 <div class="like_button_color" style="display:inline-block;" >  
                                                     <i class="icon_set_1_icon-82 like_button" style="font-size: 40px; cursor: pointer; margin-right: 0px;"></i>
                                                     <input type="hidden" class="event_id_like" name="event_id" value="<?php echo htmlspecialchars($records[$i]['event_id']); ?>">
                                                     <input type="hidden" class="user_id_like" name="user_id" value="<?php echo htmlspecialchars($login_user['user_id']); ?>">
                                                     <input type="hidden" class="like_or_not_<?php echo htmlspecialchars($records[$i]['event_id']); ?>" name="user_id" value="unlike">
-                                                <?php endif; ?>
                                                 </div>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
                                         <div class="col-md-2 col-sm-2 col-xs-2">
